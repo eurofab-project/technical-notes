@@ -1,17 +1,12 @@
-# talks
+# technical-notes
 
-Archive of talks of the EuroFab project.
+Technical notes produced during the EuroFab project.
 
-## Create a new slide deck
+## Create a new note
 
-1. Open the `slides` folder, copy the `template.qmd` and rename it.
+1. Open the `note` folder and create a new `.qmd` file.
 2. Edit the contents.
-3. Add to the list of talks in `index.qmd`.
+3. Add to the list of notes in `index.qmd`.
 4. Commit & Push!
-5. Open https://eurofab-project.github.io/talks/slides/slides_name.html
 
-## See docs for more
-
-The slide deck template is based on Quarto. See the docs for more.
-
-[https://quarto.org/docs/presentations/revealjs/](https://quarto.org/docs/presentations/revealjs/)
+The GitHub Action will render both HTML and PDF.
