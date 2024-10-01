@@ -1,0 +1,11 @@
+---
+title: "Technical notes"
+---
+
+Technical notes produced during the EuroFab project.
+
+## List of notes
+
+- [Consolidated Stakeholder Requirements Specification](notes/stakeholders.qmd) ([PDF](notes/stakeholders.pdf))
+- [Algorithm Design and Theoretical Basis Description](notes/algorithm-design.qmd) ([PDF](notes/algorithm-design.pdf))
+- [Reference Data Selection](notes/data-selection.qmd) ([PDF](notes/data-selection.pdf))

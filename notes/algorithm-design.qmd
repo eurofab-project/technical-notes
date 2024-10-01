@@ -1,0 +1,10 @@
+---
+title: "Algorithm Design and Theoretical Basis Description"
+subtitle: "Add subtitle here"
+author: "Waldo Tobler"
+institute: "Charles University"
+format: pdf
+---
+
+This is some text.
+
