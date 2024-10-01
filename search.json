@@ -12,5 +12,26 @@
     "title": "Technical notes",
     "section": "List of notes",
     "text": "List of notes\n\nConsolidated Stakeholder Requirements Specification (PDF)\nAlgorithm Design and Theoretical Basis Description (PDF)\nReference Data Selection (PDF)"
+  },
+  {
+    "objectID": "notes/algorithm-design.html",
+    "href": "notes/algorithm-design.html",
+    "title": "Algorithm Design and Theoretical Basis Description",
+    "section": "",
+    "text": "This is some text."
+  },
+  {
+    "objectID": "notes/data-selection.html",
+    "href": "notes/data-selection.html",
+    "title": "Reference Data Selection",
+    "section": "",
+    "text": "This is some text."
+  },
+  {
+    "objectID": "notes/stakeholders.html",
+    "href": "notes/stakeholders.html",
+    "title": "Consolidated Stakeholder Requirements Specification",
+    "section": "",
+    "text": "This is some text."
   }
 ]
