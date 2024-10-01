@@ -3,7 +3,14 @@ title: "Reference Data Selection"
 subtitle: "Add subtitle here"
 author: "Waldo Tobler"
 institute: "Charles University"
-format: pdf
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+  html:
+    toc: true
+    css: styles.css
 ---
 
 This is some text.
