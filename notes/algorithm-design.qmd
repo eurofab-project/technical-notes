@@ -1,8 +1,8 @@
 ---
 title: "Algorithm Design and Theoretical Basis Description"
-subtitle: "Add subtitle here"
-author: "Waldo Tobler"
-institute: "Charles University"
+subtitle: "Foundation models for urban fabric segmentation"
+author: "Barbara Metzler and Dani Arribas-Bel"
+institute: "Alan Turing Institute"
 format:
   pdf:
     toc: true
@@ -13,5 +13,208 @@ format:
     css: styles.css
 ---
 
-This is some text.
+# AI model
+
+The AI model development is split into the following sections:
+* **AI model design:** June-October 2024
+* **AI model development and training:** September-November 2024
+* **European space-time urban strategy:** December-March 2025
+
+This report includes the preliminary research and experiments run to design an AI model for making predictions on spatial signatures.
+
+
+## AI model design
+
+We
+* **Scale:** Pixel vs patch (size)
+* **Task:** Classification vs segmentation
+* **Model:** Network architectures and foundation models
+
+
+## Baseline model
+We implemented a baseline model with a moderate prediction accuracy of around 61%.
+The model is based on a classification task, in which image embeddings from satellite image tiles (42x42x3) are used to make predictions on spatial signatures on a tile basis.
+The image embeddings are created with the SatlasPretrain model. 
+We use a XGBoost model to make the predictions with the embeddings.
+
+
+![](../figures/algo_design/baseline.png){.nostretch fig-align="center" height="400"}
+
+
+---
+
+## Baseline: Results
+
+![](../figures/algo_design/baseline_tile_level.png){.nostretch fig-align="center" height="420"}
+
+
+# WP 202: AI model design
+
+![](../figures/algo_design/overview.png){.nostretch fig-align="center"}
+
+
+## Data preprocessing
+
+* 224 x 224 x 3 image tiles
+    - 26,942 tiles (.tif)
+
+* Labels:
+    - Spatial signatures (.tif)
+
+- Train/test split: stratified 80/20% (stratified by distribution in dataset)
+
+---
+
+### Train/test 
+80/20%
+![](../figures/algo_design/train_df.png){.nostretch fig-align="left" height="400"}
+![](../figures/algo_design/test_df.png){.nostretch fig-align="right" height="400"}
+
+
+---
+
+### Unbalanced dataset
+
+![](../figures/algo_design/unbalanced.png){.nostretch fig-align="center" height="420"}
+
+---
+
+### Example
+
+![](../figures/algo_design/random_sample.png){.nostretch fig-align="center" height="420"}
+
+---
+
+
+## Model design
+![](../figures/algo_design/example.png){.nostretch fig-align="center" height="400"}
+
+## Model design
+![](../figures/algo_design/setup.png){.nostretch fig-align="center"}
+
+
+## Backbone: foundation models
+
+- Satlas
+- Clay
+- IBM/NASA (Prithvi)
+
+![](../figures/algo_design/foundation_models.png){.nostretch fig-align="center" height="200"}
+
+
+---
+
+## Comparison of backbones
+
+| Model | Architecture | #Labels | Images |
+|---------|:-----|------:|:------:|
+| Satlas   | SwinT    | 302M | Sentinel-2  |
+| Clay     | MAE/ViT  | 70M  |Sentinel-2/Landsat/NAIP/LINZ |
+| Prithvi | MAE/ViT  | 250 PB |  Sentinel-2/Landsat   |
+
+
+## Loss
+
+* **CrossEntropy Loss** ("ce"):
+    - penalizes pixel-wise misclassifications
+
+* **Focal Loss** ("focal"):
+    - reduces the contribution of easily classified examples and puts more weight on hard-to-classify pixels.
+
+## Validation metric
+
+* **IoU** (Intersection over Union)
+    - Overlap between predicted and ground truth segmentations; 0 (no overlap) to 1 (perfect overlap).
+
+* **F1 Score** (Weighted)
+    - Balancing precision (how much of the prediction is correct) and recall (how much of the actual segmentation is captured).
+
+* **Accuracy** (Weighted)
+    - Percentage of correctly classified pixels.
+
+---
+
+### Model A: Satlas
+![](../figures/algo_design/satlas_model.png){.nostretch fig-align="center" height="400"}
+
+---
+
+### Model B: Clay
+![](../figures/algo_design/clay_model.png){.nostretch fig-align="center" height="400"}
+
+---
+
+### Model C: Prithvi
+![](../figures/algo_design/prithvi_model.png){.nostretch fig-align="center" height="400"}
+
+
+---
+
+
+### Results: fine-tuning
+
+| Model          | Satlas | Clay   | Prithvi |
+|----------------|--------|--------|---------|
+| Run time (per epoch) (with GPU)  | 9 mins | 8 mins | 20 mins |
+| # parameters      | 90M | 86M  | 120M |
+| Implementation | 5/10   | 6/10   | 7/10    |
+| Hyperparameter tracking   | Own setup | Wandb.ai | Tensorboard |
+
+---
+
+### Results: fine-tuning 10 epochs
+
+|           | Satlas | Clay   | Prithvi |
+|----------------|--------|--------|---------|
+| Accuracy (weighted)     | 0.57   | **0.72**   | 0.62    |
+| IoU (weighted) (0-1)    | 0.33  | **0.58**  | 0.41   |
+| F1 (weighted)          | 0.41  | **0.69**  | 0.58   |
+
+
+Without hyperparameter tuning!
+
+---
+
+### Results: fine-tuning w/ focal loss
+
+|           | Satlas | Clay   | Prithvi |
+|----------------|--------|--------|---------|
+| Accuracy (weighted)      | 0.25  | **0.72**   | 0.59     |
+| IoU (weighted) (0-1)  | 0.2  | **0.58**  | 0.42   |
+| F1 (weighted)     | 0.21  | **0.69**  | 0.59    |
+
+---
+
+
+## Prithvi: CE vs focal loss
+
+![](../figures/algo_design/class_acc_ce_loss.png){.nostretch fig-align="left" height="300"}
+![](../figures/algo_design/class_acc_focal_loss_prithvi.png){.nostretch fig-align="right" height="300"}
+
+
+## Clay predictions
+
+![](../figures/algo_design/class_acc.png){.nostretch fig-align="center" height="430"}
+
+
+## Summary: model comparison
+
+- Clay is the winner!
+- Training loss is important
+- Some classes still very much underdetected!
+
+
+
+##Main AI model
+We cut the UK satellite data into 26,942 image tiles with shape 224 x 224 x 3 (RGB)
+The main model is based on a segmentation task, in which we predict the spatial signatures on a pixel level.
+The spatial signatures dataset is quite imbalanced.
+We carry out a comparison between three foundation models as backbones: Satlas, Clay, Prithvi.
+Based on our experiments, the model with Clay backbone performed the best, and better than the baseline model with a weighted accuracy of 0.72.
+The Clay model uses focal loss as loss function, which could be the reason why the model performed better than the other models that use cross entropy loss. We, thus, further implemented all models with focal loss but the Clay model still performed best.
+Based on the initial results, some classes are still very much underdetected and the prediction performance is especially high for classes with lots of training examples.
+For the next steps, we will look at hyperparameter tuning for the Clay model and create a hierarchical approach, where we first predict urban/non-urban classes and then in a second model predict more detailed urban fabric.
+We are also working on finding good ways to compare the classification with the segmentation model results (baseline vs main AI model). This is a non-trivial task because the image tiles do not correspond to each other and do not perfectly overlap (42px vs 224 px).
+The detailed results of the AI model development will be shared in the technical note two weeks before the next progress meeting.
+
 
