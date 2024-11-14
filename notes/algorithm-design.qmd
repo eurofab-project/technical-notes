@@ -263,7 +263,6 @@ Our research encountered several significant challenges:
 
 # Conclusions
 
-Our research demonstrates that combining classification with hierarchical spatial structuring (H3) provides the most effective approach for urban fabric segmentation. While foundation models show promise, their effectiveness varies significantly, with Clay emerging as the most suitable backbone for our specific use case. The use of appropriate loss functions, particularly focal loss, proves crucial in handling dataset imbalances. These findings provide a solid foundation for future development of urban fabric analysis tools and methodologies.
 
 
 

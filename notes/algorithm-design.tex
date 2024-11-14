@@ -128,7 +128,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Algorithm Design and Theoretical Basis Description},
+  pdftitle={AI Model Development for Urban Fabric Segmentation},
   pdfauthor={Barbara Metzler and Dani Arribas-Bel},
   colorlinks=true,
   linkcolor={blue},
@@ -137,14 +137,7 @@
   urlcolor={Blue},
   pdfcreator={LaTeX via pandoc}}
 
-\title{Algorithm Design and Theoretical Basis Description}
-\usepackage{etoolbox}
-\makeatletter
-\providecommand{\subtitle}[1]{% add subtitle to \maketitle
-  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
-}
-\makeatother
-\subtitle{Foundation models for urban fabric segmentation}
+\title{AI Model Development for Urban Fabric Segmentation}
 \author{Barbara Metzler and Dani Arribas-Bel}
 \date{}
 
@@ -157,86 +150,103 @@
 \setcounter{tocdepth}{3}
 \tableofcontents
 }
-\section{AI model}\label{ai-model}
-
-The AI model development is split into the following sections: -
-\textbf{AI model design:} June-October 2024 - \textbf{AI model
-development and training:} September-November 2024 - \textbf{European
-space-time urban strategy:} December-March 2025
-
 This report includes the preliminary research and experiments run to
-design an AI model for making predictions on spatial signatures.
+design an AI model for making predictions on the urban fabric of
+England, as of November 2024.
 
-\subsection{AI model design}\label{ai-model-design}
+\section{Executive Summary}\label{executive-summary}
 
-We * \textbf{Scale:} Pixel vs patch (size) * \textbf{Task:}
-Classification vs segmentation * \textbf{Model:} Network architectures
-and foundation models
+This technical report details the development and evaluation of
+artificial intelligence (AI) models for urban fabric classification and
+segmentation using satellite imagery. The project spans from June 2024
+to March 2025, encompassing model design, development, training, and
+application to European urban strategy analysis. Our research compares
+various approaches including classification and segmentation tasks,
+using different foundation models as backbones. The primary goal is to
+develop accurate and efficient methods for predicting urban fabric from
+satellite imagery.
 
-\subsection{Baseline model}\label{baseline-model}
+\section{Classification vs
+segmentation}\label{classification-vs-segmentation}
 
-We implemented a baseline model with a moderate prediction accuracy of
-around 61\%. The model is based on a classification task, in which image
-embeddings from satellite image tiles (42x42x3) are used to make
-predictions on spatial signatures on a tile basis. The image embeddings
-are created with the SatlasPretrain model. We use a XGBoost model to
-make the predictions with the embeddings.
+In satellite image analysis, classification and segmentation address
+spatial labeling at different levels of granularity, with classification
+assigning a single label to an image tile or cell, while segmentation
+provides pixel-level detail. In our study, the label dataset does not
+always correspond directly to identifiable features in the imagery,
+making classification a potentially more suitable approach as it
+generalizes each tile's dominant land cover type without requiring exact
+pixel alignment. However, we explore both approaches: classification for
+broader pattern recognition and segmentation for finer,
+boundary-specific mapping. This dual approach enables us to evaluate how
+each method performs given the scale and feature alignment limitations
+within the dataset.
 
-\begin{center}
-\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/baseline.png}
-\end{center}
+\section{Methods}\label{methods}
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\subsection{Data}\label{data}
 
-\subsection{Baseline: Results}\label{baseline-results}
+\subsubsection{Satellite imagery (input)}\label{satellite-imagery-input}
 
-\begin{center}
-\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/baseline_tile_level.png}
-\end{center}
+The satellite image data used is accessed from the GHS-composite-S2
+R2020A dataset \footnote{Corbane, C. et al., 2020. A global cloud-free
+  pixel-based image composite from Sentinel-2 data. Data in brief, 31,
+  p.105737.}. The dataset is a global, cloud-free image composite
+derived from Sentinel-2 L1C data, covering the period from January 2017
+to December 2018. We use three bands (RGB) and the images have a
+resolution of 10 meters per pixel.
 
-\section{WP 202: AI model design}\label{wp-202-ai-model-design}
+\subsubsection{Urban fabric classes
+(outcome)}\label{urban-fabric-classes-outcome}
 
-\begin{center}
-\includegraphics{../figures/algo_design/overview.png}
-\end{center}
+We use labels from the Spatial Signatures Framework \footnote{Fleischmann,
+  M. \& Arribas-Bel, D., 2022. Geographical characterisation of British
+  urban form using the spatial signatures framework. Scientific Data,
+  9(1), p.546.}, which provides a typology of British urban environments
+based on both form (physical appearance) and function (usage). Spatial
+signatures capture complex urban characterizations, offering insights
+into how different areas look and operate. While our primary interest is
+in urban fabric classification focused on form---an approach we expect
+may be simpler since form is visible in imagery---this classification
+scheme is still under development. Therefore, we currently use the more
+comprehensive Spatial Signatures Framework as a proxy, as it aligns with
+the goals of urban characterization in our project.
 
 \subsection{Data preprocessing}\label{data-preprocessing}
 
-\begin{itemize}
-\tightlist
-\item
-  224 x 224 x 3 image tiles
+For our analysis, we use two datasets of image tiles at different
+scales: larger tiles (224 x 224 pixels, covering 2240 x 2240 meters) for
+segmentation tasks, and smaller tiles (56 x 56 pixels, covering 560 x
+560 meters) for classification tasks. The segmentation dataset includes
+26,753 tiles (21,402 for training and 5,351 for testing), while the
+classification dataset consists of 403,722 tiles (342,648 for training
+and 61,074 for testing). For consistent sampling and comparison, we only
+use tiles that fully overlap with the spatial signatures, ensuring that
+each tile aligns with the urban form and function typology in our
+labeling framework. This alignment supports robust comparison of
+classification and segmentation outcomes on a pixel-level.
 
-  \begin{itemize}
-  \tightlist
-  \item
-    26,942 tiles (.tif)
-  \end{itemize}
-\item
-  Labels:
+\begin{center}
+\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/sampling.png}
+\end{center}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Spatial signatures (.tif)
-  \end{itemize}
-\item
-  Train/test split: stratified 80/20\% (stratified by distribution in
-  dataset)
-\end{itemize}
+A significant challenge in our dataset is class imbalance, where certain
+urban fabric types are substantially more represented than others. This
+imbalance influenced our decisions regarding model architecture and loss
+function selection, leading us to explore specialized approaches for
+handling uneven class distributions.
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\subsubsection{Train/test split}\label{traintest-split}
 
-\subsubsection{Train/test}\label{traintest}
+We split the dataset into 80\% train and 20\% test data. The test
+datasets for segmentation and classification overlap.
 
-80/20\% \begin{center}
+\begin{center}
 \includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/train_df.png}
 \end{center}
 \begin{center}
 \includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/test_df.png}
 \end{center}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \subsubsection{Unbalanced dataset}\label{unbalanced-dataset}
 
@@ -244,122 +254,135 @@ make the predictions with the embeddings.
 \includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/unbalanced.png}
 \end{center}
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\section{Model architectures}\label{model-architectures}
 
-\subsubsection{Example}\label{example}
-
-\begin{center}
-\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/random_sample.png}
-\end{center}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Model design}\label{model-design}
-
-\begin{center}
-\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/example.png}
-\end{center}
-
-\subsection{Model design}\label{model-design-1}
-
-\begin{center}
-\includegraphics{../figures/algo_design/setup.png}
-\end{center}
-
-\subsection{Backbone: foundation
-models}\label{backbone-foundation-models}
+Our study involves three main experiments to analyze urban fabric
+classification and segmentation. First, we conduct a baseline experiment
+using image embeddings from the SatlasPretrain model \footnote{Bastani,
+  F. et al., 2023. Satlaspretrain: A large-scale dataset for remote
+  sensing image understanding. In Proceedings of the IEEE/CVF
+  International Conference on Computer Vision, pp.~16772-16782.}, which
+we fit to an XGBoost classifier to predict urban fabric classes
+(Approach A). Second, we fine-tune three different geospatial foundation
+models---SatlasPretrain, Clay, and IBM/NASA's Prithvi model---to perform
+segmentation tasks (Approach B). Third, we take the best-performing
+geospatial foundation model from the segmentation experiments (Clay) and
+fine-tune it specifically for a classification task (Approach C). To
+evaluate and compare the results, we report weighted pixel-level
+accuracy, F1 score, and Intersection over Union (IoU) metrics across the
+experiments.
 
 \begin{itemize}
 \tightlist
 \item
-  Satlas
+  Approach A: Image embeddings + XGBoost model
 \item
-  Clay
+  Approach B: Fine-tuned geospatial foundation model (segmentation)
 \item
-  IBM/NASA (Prithvi)
+  Approach C: Fine-tuned geospatial foundation model (classification)
 \end{itemize}
 
+\subsection{Baseline approach (Approach
+A)}\label{baseline-approach-approach-a}
+
+The tiles are fed into the geospatial foundation model SatlasPretrain
+\footnote{Bastani, F. et al., 2023. Satlaspretrain: A large-scale
+  dataset for remote sensing image understanding. In Proceedings of the
+  IEEE/CVF International Conference on Computer Vision, pp.~16772-16782.}
+that has been pretrained with more than 302 million labels on a range of
+remote sensing and computer vision tasks.
+
+The model operates in two main steps:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Foundation Model: A vision transformer model with a feature pyramid
+  network (FPN) and a pooling layer is used to derive image
+  embeddings---lower-dimensional representations of the images (Fig. 2).
+\item
+  Machine Learning Classifier: The image embeddings are then input into
+  an XGBoost classifier to predict urban fabric classes across England.
+\end{enumerate}
+
+Our baseline model achieved a moderate prediction accuracy of
+approximately 61\% with varying accuracy across the various spatial
+signature classes as seen in the figure below.
+
 \begin{center}
-\includegraphics[width=\textwidth,height=2.08333in]{../figures/algo_design/foundation_models.png}
+\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/baseline.png}
 \end{center}
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+\subsubsection{Results across spatial
+signatures}\label{results-across-spatial-signatures}
 
-\subsection{Comparison of backbones}\label{comparison-of-backbones}
+\begin{center}
+\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/baseline_tile_level.png}
+\end{center}
 
-\begin{longtable}[]{@{}llrc@{}}
+\emph{Baseline approach (ordinal)}
+
+In addition to the general classification task, we explored an ordinal
+regression task to account for the continuous nature of the spatial
+signatures, which are not strictly categorical. We applied the following
+ordinal mapping:
+
+\texttt{ordinal\_mapping\ =\ \{\ \ \ \ \ \textquotesingle{}Wild\ countryside\textquotesingle{}:\ 0,\ \ \ \ \ \textquotesingle{}Countryside\ agriculture\textquotesingle{}:\ 1,\ \ \ \ \ \textquotesingle{}Urban\ buffer\textquotesingle{}:\ 2,\ \ \ \ \ \textquotesingle{}Open\ sprawl\textquotesingle{}:\ 3,\ \ \ \ \ \textquotesingle{}Disconnected\ suburbia\textquotesingle{}:\ 4,\ \ \ \ \ \textquotesingle{}Accessible\ suburbia\textquotesingle{}:\ 5,\ \ \ \ \ \textquotesingle{}Warehouse/Park\ land\textquotesingle{}:\ 6,\ \ \ \ \ \textquotesingle{}Gridded\ residential\ quarters\textquotesingle{}:\ 7,\ \ \ \ \ \textquotesingle{}Connected\ residential\ neighbourhoods\textquotesingle{}:\ 8,\ \ \ \ \ \textquotesingle{}Dense\ residential\ neighbourhoods\textquotesingle{}:\ 9,\ \ \ \ \ \textquotesingle{}Dense\ urban\ neighbourhoods\textquotesingle{}:\ 10,\ \ \ \ \ \textquotesingle{}Urbanity\textquotesingle{}:\ 11,\ \}}
+
+This ordinal approach produced a Mean Absolute Error (MAE) and Mean
+Squared Error (MSE) of 0.28, along with an R² score of 0.62. The Sankey
+diagram below highlights the primary misclassifications, which tend to
+occur between similar classes.
+
+\begin{center}
+\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/sankey.png}
+\end{center}
+
+\emph{Baseline approach + spatial context}
+
+To enhance model performance, we incorporated spatial context, enabling
+the model to account for regional location. We included H3 Level 5
+hexagon identifiers as a categorical variable, where each hexagon
+(approximately 560x560 meters) encompasses around 80 tiles.
+
+\begin{center}
+\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/hex_level5.png}
+\end{center}
+
+\subsection{Segmentation (Approach B)}\label{segmentation-approach-b}
+
+In Approach B, we fine-tuned a state-of-the-art geospatial foundation
+model for a segmentation task. We used the 224x224x3 image tiles as
+input. We evaluated three state-of-the-art foundation models, each with
+unique characteristics as listed below:
+
+\begin{longtable}[]{@{}llll@{}}
 \toprule\noalign{}
-Model & Architecture & \#Labels & Images \\
+Model & Architecture & Dataset Size & Image Sources \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Satlas & SwinT & 302M & Sentinel-2 \\
-Clay & MAE/ViT & 70M & Sentinel-2/Landsat/NAIP/LINZ \\
-Prithvi & MAE/ViT & 250 PB & Sentinel-2/Landsat \\
+Satlas \footnote{Corbane, C. et al., 2020. A global cloud-free
+  pixel-based image composite from Sentinel-2 data. Data in brief, 31,
+  p.105737.} & SwinT & 302M labels & Sentinel-2 \\
+Clay \footnote{https://huggingface.co/made-with-clay/Clay} & MAE/ViT &
+70M labels & Multiple+ \\
+Prithvi \footnote{https://huggingface.co/ibm-nasa-geospatial/Prithvi-100M}
+& MAE/ViT & 250 PB & Sentinel-2/Landsat \\
 \end{longtable}
 
-\subsection{Loss}\label{loss}
++Multiple sources include Sentinel-2, Landsat, NAIP, and LINZ
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{CrossEntropy Loss} (``ce''):
-
-  \begin{itemize}
-  \tightlist
-  \item
-    penalizes pixel-wise misclassifications
-  \end{itemize}
-\item
-  \textbf{Focal Loss} (``focal''):
-
-  \begin{itemize}
-  \tightlist
-  \item
-    reduces the contribution of easily classified examples and puts more
-    weight on hard-to-classify pixels.
-  \end{itemize}
-\end{itemize}
-
-\subsection{Validation metric}\label{validation-metric}
-
-\begin{itemize}
-\tightlist
-\item
-  \textbf{IoU} (Intersection over Union)
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Overlap between predicted and ground truth segmentations; 0 (no
-    overlap) to 1 (perfect overlap).
-  \end{itemize}
-\item
-  \textbf{F1 Score} (Weighted)
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Balancing precision (how much of the prediction is correct) and
-    recall (how much of the actual segmentation is captured).
-  \end{itemize}
-\item
-  \textbf{Accuracy} (Weighted)
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Percentage of correctly classified pixels.
-  \end{itemize}
-\end{itemize}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+The following visualisations show the varying model configurations for
+the three different approaches tested for the segmentation task. The
+main difference is the varying backbone.
 
 \subsubsection{Model A: Satlas}\label{model-a-satlas}
 
 \begin{center}
-\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/satlas_model.png}
+\includegraphics[width=6.25in,height=\textheight]{../figures/algo_design/satlas_model.png}
 \end{center}
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
@@ -367,7 +390,7 @@ Prithvi & MAE/ViT & 250 PB & Sentinel-2/Landsat \\
 \subsubsection{Model B: Clay}\label{model-b-clay}
 
 \begin{center}
-\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/clay_model.png}
+\includegraphics[width=6.25in,height=\textheight]{../figures/algo_design/clay_model.png}
 \end{center}
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
@@ -375,113 +398,215 @@ Prithvi & MAE/ViT & 250 PB & Sentinel-2/Landsat \\
 \subsubsection{Model C: Prithvi}\label{model-c-prithvi}
 
 \begin{center}
-\includegraphics[width=\textwidth,height=4.16667in]{../figures/algo_design/prithvi_model.png}
+\includegraphics[width=6.25in,height=\textheight]{../figures/algo_design/prithvi_model.png}
 \end{center}
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsubsection{Results: fine-tuning}\label{results-fine-tuning}
+After fine-tuning each foundation model for 10 epochs, we observed the
+following performance metrics:
 
 \begin{longtable}[]{@{}llll@{}}
 \toprule\noalign{}
-Model & Satlas & Clay & Prithvi \\
+Metric & Satlas & Clay & Prithvi \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-Run time (per epoch) (with GPU) & 9 mins & 8 mins & 20 mins \\
-\# parameters & 90M & 86M & 120M \\
-Implementation & 5/10 & 6/10 & 7/10 \\
-Hyperparameter tracking & Own setup & Wandb.ai & Tensorboard \\
+Weighted Accuracy & 0.57 & \textbf{0.72} & 0.62 \\
+Weighted IoU & 0.33 & \textbf{0.58} & 0.41 \\
+Weighted F1 & 0.41 & \textbf{0.69} & 0.58 \\
+Training Time/Epoch & 9 mins & 8 mins & 20 mins \\
+Parameters & 90M & 86M & 120M \\
+Implementation Score & 5/10 & 6/10 & 7/10 \\
 \end{longtable}
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+The Clay model consistently outperformed other foundation models across
+all metrics, while also maintaining reasonable training times and
+computational requirements.
 
-\subsubsection{Results: fine-tuning 10
-epochs}\label{results-fine-tuning-10-epochs}
+\textbf{Loss Function Impact:} The choice of loss function significantly
+influenced model performance. Focal loss proved particularly effective
+in handling class imbalance, especially when combined with the Clay
+model architecture.
 
-\begin{longtable}[]{@{}llll@{}}
-\toprule\noalign{}
-& Satlas & Clay & Prithvi \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Accuracy (weighted) & 0.57 & \textbf{0.72} & 0.62 \\
-IoU (weighted) (0-1) & 0.33 & \textbf{0.58} & 0.41 \\
-F1 (weighted) & 0.41 & \textbf{0.69} & 0.58 \\
-\end{longtable}
+\subsection{Classification (Approach
+C)}\label{classification-approach-c}
 
-Without hyperparameter tuning!
+Finally, in Approach C, we fine-tuned a geospatial foundation model for
+a classification task. We used the 56x56x3 image tiles as input.
 
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+For this approach we only used the Clay model as backbone, since it
+performed the best in the previous experiments.
 
-\subsubsection{Results: fine-tuning w/ focal
-loss}\label{results-fine-tuning-w-focal-loss}
-
-\begin{longtable}[]{@{}llll@{}}
-\toprule\noalign{}
-& Satlas & Clay & Prithvi \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-Accuracy (weighted) & 0.25 & \textbf{0.72} & 0.59 \\
-IoU (weighted) (0-1) & 0.2 & \textbf{0.58} & 0.42 \\
-F1 (weighted) & 0.21 & \textbf{0.69} & 0.59 \\
-\end{longtable}
-
-\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
-
-\subsection{Prithvi: CE vs focal loss}\label{prithvi-ce-vs-focal-loss}
-
-\begin{center}
-\includegraphics[width=\textwidth,height=3.125in]{../figures/algo_design/class_acc_ce_loss.png}
-\end{center}
-\begin{center}
-\includegraphics[width=\textwidth,height=3.125in]{../figures/algo_design/class_acc_focal_loss_prithvi.png}
-\end{center}
-
-\subsection{Clay predictions}\label{clay-predictions}
+The accuracy varied across the different classes as seen in the figure
+below:
 
 \begin{center}
 \includegraphics[width=\textwidth,height=4.47917in]{../figures/algo_design/class_acc.png}
 \end{center}
 
-\subsection{Summary: model comparison}\label{summary-model-comparison}
+This figure shows a comparison between the predicted classes for the
+fine-tuned geospatial foundation model with segmentation approach (B)
+and the classification (C).
 
-\begin{itemize}
-\tightlist
-\item
-  Clay is the winner!
-\item
-  Training loss is important
-\item
-  Some classes still very much underdetected!
-\end{itemize}
+\begin{center}
+\includegraphics[width=\textwidth,height=4.47917in]{../figures/algo_design/comparison_B_C.png}
+\end{center}
 
-\#\#Main AI model We cut the UK satellite data into 26,942 image tiles
-with shape 224 x 224 x 3 (RGB) The main model is based on a segmentation
-task, in which we predict the spatial signatures on a pixel level. The
-spatial signatures dataset is quite imbalanced. We carry out a
-comparison between three foundation models as backbones: Satlas, Clay,
-Prithvi. Based on our experiments, the model with Clay backbone
-performed the best, and better than the baseline model with a weighted
-accuracy of 0.72. The Clay model uses focal loss as loss function, which
-could be the reason why the model performed better than the other models
-that use cross entropy loss. We, thus, further implemented all models
-with focal loss but the Clay model still performed best. Based on the
-initial results, some classes are still very much underdetected and the
-prediction performance is especially high for classes with lots of
-training examples. For the next steps, we will look at hyperparameter
-tuning for the Clay model and create a hierarchical approach, where we
-first predict urban/non-urban classes and then in a second model predict
-more detailed urban fabric. We are also working on finding good ways to
-compare the classification with the segmentation model results (baseline
-vs main AI model). This is a non-trivial task because the image tiles do
+\subsubsection{Evaluation Metrics}\label{evaluation-metrics}
+
+We employed multiple complementary metrics to evaluate model
+performance, as follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Intersection over Union (IoU):} This metric measures the
+  overlap between predicted and ground truth segmentations, ranging from
+  0 (no overlap) to 1 (perfect overlap). IoU is calculated as the area
+  of intersection divided by the area of union between the predicted and
+  actual segmentation masks.
+\item
+  \textbf{Weighted F1 Score:} This metric provides a balanced measure of
+  precision and recall, particularly important for imbalanced datasets.
+  It is calculated as the harmonic mean of precision (how many of the
+  predicted positives are correct) and recall (how many of the actual
+  positives were identified), weighted by class frequencies.
+\item
+  \textbf{Weighted Accuracy:} This metric calculates the proportion of
+  correct predictions, weighted by class frequencies to account for
+  class imbalance. It provides a more representative measure of model
+  performance across all classes, regardless of their frequency in the
+  dataset.
+\end{enumerate}
+
+\section{Results}\label{results}
+
+Comparing the results is a non-trivial task because the image tiles do
 not correspond to each other and do not perfectly overlap (42px vs 224
-px). The detailed results of the AI model development will be shared in
-the technical note two weeks before the next progress meeting.
+px). To make a fair comparison we thus calculate the pixel-level
+accuracy scores across the approaches. For this purpose, we predict the
+full map of the test set and compare the overlapping tiles (as described
+in sampling). We then calculate the following metrics on a per-pixel
+level.
+
+\subsection{Overall model performance comparison
+(Pixel-level)}\label{overall-model-performance-comparison-pixel-level}
+
+Our comprehensive evaluation revealed varying levels of performance
+across the three different approaches:
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1754}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2807}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.2807}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.1754}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 8\tabcolsep) * \real{0.0877}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Approach
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Global Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Macro Accuracy
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+F1 Score
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+IoU
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Classification (embeddings) & 0.76 (0.66) & 0.22 (0.13) & 0.23 & 0.63 \\
+Classification + H3 level 5 & \textbf{0.87} (0.82) & \textbf{0.42}
+(0.35) & \textbf{0.45} & \textbf{0.79} \\
+Classification + H3 ordinal & 0.80 (0.80) & 0.26 (0.26) & 0.26 & 0.69 \\
+Classification (Clay) & 0.59 (0.68) & 0.09 & 0.12 & 0.38 \\
+Segmentation (Clay) & 0.73 & 0.31 & 0.30 & 0.58 \\
+\end{longtable}
+
+The baseline classification approaches demonstrated varying levels of
+success: - Basic embedding classification achieved 76\% global accuracy
+(66\% balanced) - Integration with H3 level 5 spatial indexing
+significantly improved performance to 87\% global accuracy (42\%
+balanced) - H3 level 5 ordinal classification reached 80\% accuracy
+(26\% balanced)
+
+The fine-tuned geospatial foundation model performed better than the
+fine-tuned classification, with an accuracy score of 0.56 and 0.73
+respectively.
+
+Overall, the baseline approach with regional information performed best.
+This approach is not only the best performing but also relatively
+efficient to implement. Once the image embeddings are created, the
+downstream classification can be done in minutes.
+
+\subsubsection{Prediction example:
+London}\label{prediction-example-london}
+
+The following figure shows an example of a prediction for the London
+area using the whole dataset. Each colour represents a different
+signature. The background colour represents the ground truth.
+
+\begin{center}
+\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/results_eurofab.png}
+\end{center}
+
+\section{Discussion}\label{discussion}
+
+\subsubsection{Spatial signatures: Example
+tiles}\label{spatial-signatures-example-tiles}
+
+\begin{center}
+\includegraphics[width=\textwidth,height=4.375in]{../figures/algo_design/random_sample.png}
+\end{center}
+
+\subsection{Key Findings}\label{key-findings}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Regional trends:} The integration of regional information into
+  the model significantly improving model performance across all
+  metrics.
+\item
+  \textbf{Model performance:}:
+\end{enumerate}
+
+\subsection{Challenges and
+Limitations}\label{challenges-and-limitations}
+
+Our research encountered several significant challenges:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Class Imbalance:} The dataset exhibited substantial variations
+  in class representation, which impacted model performance. While focal
+  loss helped address this issue, some classes remained challenging to
+  predict accurately.
+\item
+  \textbf{Computational Resources:} Training times varied significantly
+  between models, with Prithvi requiring substantially more
+  computational resources. This presents practical considerations for
+  model deployment and scaling.
+\item
+  \textbf{Comparison Complexity:} The different tile sizes between
+  classification (42px) and segmentation (224px) approaches made direct
+  comparisons challenging, requiring careful consideration of evaluation
+  metrics and methodology.
+\end{enumerate}
+
+\section{Conclusions}\label{conclusions}
+
+Our research demonstrates that combining classification with
+hierarchical spatial structuring (H3) provides the most effective
+approach for urban fabric segmentation. While foundation models show
+promise, their effectiveness varies significantly, with Clay emerging as
+the most suitable backbone for our specific use case. The use of
+appropriate loss functions, particularly focal loss, proves crucial in
+handling dataset imbalances. These findings provide a solid foundation
+for future development of urban fabric analysis tools and methodologies.
 
 
 
