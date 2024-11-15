@@ -100,8 +100,36 @@
   {
     "objectID": "notes/algorithm-design.html",
     "href": "notes/algorithm-design.html",
-    "title": "Consolidated Stakeholder Requirements Specification",
+    "title": "Algorithm Design and Theoretical Basis Description",
     "section": "",
-    "text": "This is some text."
+    "text": "Summary goes here."
+  },
+  {
+    "objectID": "notes/algorithm-design.html#morphometric-classification-homogenisation",
+    "href": "notes/algorithm-design.html#morphometric-classification-homogenisation",
+    "title": "Algorithm Design and Theoretical Basis Description",
+    "section": "Morphometric Classification Homogenisation",
+    "text": "Morphometric Classification Homogenisation\nA brief theoretical background."
+  },
+  {
+    "objectID": "notes/algorithm-design.html#ai-modelling-using-satellite-imagery",
+    "href": "notes/algorithm-design.html#ai-modelling-using-satellite-imagery",
+    "title": "Algorithm Design and Theoretical Basis Description",
+    "section": "AI Modelling using Satellite Imagery",
+    "text": "AI Modelling using Satellite Imagery\nA brief theoretical background."
+  },
+  {
+    "objectID": "notes/algorithm-design.html#morphometric-classification-homogenisation-1",
+    "href": "notes/algorithm-design.html#morphometric-classification-homogenisation-1",
+    "title": "Algorithm Design and Theoretical Basis Description",
+    "section": "Morphometric Classification Homogenisation",
+    "text": "Morphometric Classification Homogenisation\n\nModel architecture\nOne paragraph summarising the whole thing.\n\n\nData preprocessing\n\n\nMorphometric characterisation\n\n\nTarget labels\n\n\nTrain/test/validation split\n\n\nTraining and validation"
+  },
+  {
+    "objectID": "notes/algorithm-design.html#ai-modelling-using-satellite-imagery-1",
+    "href": "notes/algorithm-design.html#ai-modelling-using-satellite-imagery-1",
+    "title": "Algorithm Design and Theoretical Basis Description",
+    "section": "AI Modelling using Satellite Imagery",
+    "text": "AI Modelling using Satellite Imagery\nMost of the stuff from technical_part_turing.qmd except the data description.\n\nData preprocessing\n\n\nTrain/test split\n\n\nUnbalanced dataset\n\n\nModel architectures\n\nBaseline approach (Approach A)\n\n\nSegmentation (Approach B)\n\n\nClassification (Approach C)\n\n\n\nEvaluation Metrics\n\n\nPreliminary results"
   }
 ]

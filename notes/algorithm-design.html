@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Waldo Tobler">
+<meta name="author" content="Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel">
 
-<title>Consolidated Stakeholder Requirements Specification – Technical notes</title>
+<title>Algorithm Design and Theoretical Basis Description – Technical notes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -83,15 +83,49 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="algorithm-design.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#exective-summary" id="toc-exective-summary" class="nav-link active" data-scroll-target="#exective-summary">Exective summary</a></li>
+  <li><a href="#theroetical-basis" id="toc-theroetical-basis" class="nav-link" data-scroll-target="#theroetical-basis">Theroetical basis</a>
+  <ul class="collapse">
+  <li><a href="#morphometric-classification-homogenisation" id="toc-morphometric-classification-homogenisation" class="nav-link" data-scroll-target="#morphometric-classification-homogenisation">Morphometric Classification Homogenisation</a></li>
+  <li><a href="#ai-modelling-using-satellite-imagery" id="toc-ai-modelling-using-satellite-imagery" class="nav-link" data-scroll-target="#ai-modelling-using-satellite-imagery">AI Modelling using Satellite Imagery</a></li>
+  </ul></li>
+  <li><a href="#algorithm-design" id="toc-algorithm-design" class="nav-link" data-scroll-target="#algorithm-design">Algorithm Design</a>
+  <ul class="collapse">
+  <li><a href="#morphometric-classification-homogenisation-1" id="toc-morphometric-classification-homogenisation-1" class="nav-link" data-scroll-target="#morphometric-classification-homogenisation-1">Morphometric Classification Homogenisation</a>
+  <ul class="collapse">
+  <li><a href="#model-architecture" id="toc-model-architecture" class="nav-link" data-scroll-target="#model-architecture">Model architecture</a></li>
+  <li><a href="#data-preprocessing" id="toc-data-preprocessing" class="nav-link" data-scroll-target="#data-preprocessing">Data preprocessing</a></li>
+  <li><a href="#morphometric-characterisation" id="toc-morphometric-characterisation" class="nav-link" data-scroll-target="#morphometric-characterisation">Morphometric characterisation</a></li>
+  <li><a href="#target-labels" id="toc-target-labels" class="nav-link" data-scroll-target="#target-labels">Target labels</a></li>
+  <li><a href="#traintestvalidation-split" id="toc-traintestvalidation-split" class="nav-link" data-scroll-target="#traintestvalidation-split">Train/test/validation split</a></li>
+  <li><a href="#training-and-validation" id="toc-training-and-validation" class="nav-link" data-scroll-target="#training-and-validation">Training and validation</a></li>
+  </ul></li>
+  <li><a href="#ai-modelling-using-satellite-imagery-1" id="toc-ai-modelling-using-satellite-imagery-1" class="nav-link" data-scroll-target="#ai-modelling-using-satellite-imagery-1">AI Modelling using Satellite Imagery</a>
+  <ul class="collapse">
+  <li><a href="#data-preprocessing-1" id="toc-data-preprocessing-1" class="nav-link" data-scroll-target="#data-preprocessing-1">Data preprocessing</a></li>
+  <li><a href="#traintest-split" id="toc-traintest-split" class="nav-link" data-scroll-target="#traintest-split">Train/test split</a></li>
+  <li><a href="#unbalanced-dataset" id="toc-unbalanced-dataset" class="nav-link" data-scroll-target="#unbalanced-dataset">Unbalanced dataset</a></li>
+  <li><a href="#model-architectures" id="toc-model-architectures" class="nav-link" data-scroll-target="#model-architectures">Model architectures</a></li>
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
+  <li><a href="#preliminary-results" id="toc-preliminary-results" class="nav-link" data-scroll-target="#preliminary-results">Preliminary results</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next steps</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="algorithm-design.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Consolidated Stakeholder Requirements Specification</h1>
-<p class="subtitle lead">Add subtitle here</p>
+<h1 class="title">Algorithm Design and Theoretical Basis Description</h1>
+<p class="subtitle lead">Technical Note D2</p>
 </div>
 
 
@@ -100,11 +134,11 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-meta-heading">Affiliation</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author">Waldo Tobler </p>
+    <p class="author">Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            Charles University
+            Charles University; The Alan Turing Institute
           </p>
       </div>
   </div>
@@ -121,9 +155,87 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is some text.</p>
+<!-- This tries to closely match what was promised in the project proposal. -->
+<section id="exective-summary" class="level1">
+<h1>Exective summary</h1>
+<p>Summary goes here.</p>
+</section>
+<section id="theroetical-basis" class="level1">
+<h1>Theroetical basis</h1>
+<p>Kind of lit review I suppose? Probably could be adapted stuff we have in the proposal.</p>
+<section id="morphometric-classification-homogenisation" class="level2">
+<h2 class="anchored" data-anchor-id="morphometric-classification-homogenisation">Morphometric Classification Homogenisation</h2>
+<p>A brief theoretical background.</p>
+</section>
+<section id="ai-modelling-using-satellite-imagery" class="level2">
+<h2 class="anchored" data-anchor-id="ai-modelling-using-satellite-imagery">AI Modelling using Satellite Imagery</h2>
+<p>A brief theoretical background.</p>
+</section>
+</section>
+<section id="algorithm-design" class="level1">
+<h1>Algorithm Design</h1>
+<section id="morphometric-classification-homogenisation-1" class="level2">
+<h2 class="anchored" data-anchor-id="morphometric-classification-homogenisation-1">Morphometric Classification Homogenisation</h2>
+<section id="model-architecture" class="level3">
+<h3 class="anchored" data-anchor-id="model-architecture">Model architecture</h3>
+<p>One paragraph summarising the whole thing.</p>
+</section>
+<section id="data-preprocessing" class="level3">
+<h3 class="anchored" data-anchor-id="data-preprocessing">Data preprocessing</h3>
+</section>
+<section id="morphometric-characterisation" class="level3">
+<h3 class="anchored" data-anchor-id="morphometric-characterisation">Morphometric characterisation</h3>
+</section>
+<section id="target-labels" class="level3">
+<h3 class="anchored" data-anchor-id="target-labels">Target labels</h3>
+</section>
+<section id="traintestvalidation-split" class="level3">
+<h3 class="anchored" data-anchor-id="traintestvalidation-split">Train/test/validation split</h3>
+</section>
+<section id="training-and-validation" class="level3">
+<h3 class="anchored" data-anchor-id="training-and-validation">Training and validation</h3>
+</section>
+</section>
+<section id="ai-modelling-using-satellite-imagery-1" class="level2">
+<h2 class="anchored" data-anchor-id="ai-modelling-using-satellite-imagery-1">AI Modelling using Satellite Imagery</h2>
+<p>Most of the stuff from <code>technical_part_turing.qmd</code> except the data description.</p>
+<section id="data-preprocessing-1" class="level3">
+<h3 class="anchored" data-anchor-id="data-preprocessing-1">Data preprocessing</h3>
+</section>
+<section id="traintest-split" class="level3">
+<h3 class="anchored" data-anchor-id="traintest-split">Train/test split</h3>
+</section>
+<section id="unbalanced-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="unbalanced-dataset">Unbalanced dataset</h3>
+</section>
+<section id="model-architectures" class="level3">
+<h3 class="anchored" data-anchor-id="model-architectures">Model architectures</h3>
+<section id="baseline-approach-approach-a" class="level4">
+<h4 class="anchored" data-anchor-id="baseline-approach-approach-a">Baseline approach (Approach A)</h4>
+</section>
+<section id="segmentation-approach-b" class="level4">
+<h4 class="anchored" data-anchor-id="segmentation-approach-b">Segmentation (Approach B)</h4>
+</section>
+<section id="classification-approach-c" class="level4">
+<h4 class="anchored" data-anchor-id="classification-approach-c">Classification (Approach C)</h4>
+</section>
+</section>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+</section>
+<section id="preliminary-results" class="level3">
+<h3 class="anchored" data-anchor-id="preliminary-results">Preliminary results</h3>
+</section>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+</section>
+<section id="next-steps" class="level1">
+<h1>Next steps</h1>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
