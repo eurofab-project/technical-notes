@@ -1,8 +1,8 @@
 ---
-title: "Consolidated Stakeholder Requirements Specification"
-subtitle: "Add subtitle here"
-author: "Waldo Tobler"
-institute: "Charles University"
+title: "Algorithm Design and Theoretical Basis Description"
+subtitle: "Technical Note D2"
+author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
+institute: "Charles University; The Alan Turing Institute"
 format:
   pdf:
     toc: true
@@ -13,6 +13,65 @@ format:
     css: styles.css
 ---
 
-This is some text.
+<!-- This tries to closely match what was promised in the project proposal. -->
+
+# Exective summary
+
+Summary goes here.
+
+# Theroetical basis
+
+Kind of lit review I suppose? Probably could be adapted stuff we have in the proposal.
+
+## Morphometric Classification Homogenisation
+
+A brief theoretical background.
+
+## AI Modelling using Satellite Imagery
+
+A brief theoretical background.
+
+# Algorithm Design
+
+## Morphometric Classification Homogenisation
+
+### Model architecture
+
+One paragraph summarising the whole thing.
+
+### Data preprocessing
+
+### Morphometric characterisation
+
+### Target labels
+
+### Train/test/validation split
+
+### Training and validation
 
 
+## AI Modelling using Satellite Imagery
+
+Most of the stuff from `technical_part_turing.qmd` except the data description.
+
+### Data preprocessing
+
+### Train/test split
+
+### Unbalanced dataset
+
+### Model architectures
+
+#### Baseline approach (Approach A)
+
+#### Segmentation (Approach B)
+
+#### Classification (Approach C)
+
+### Evaluation Metrics
+
+### Preliminary results
+
+# Discussion
+
+# Next steps
