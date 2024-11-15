@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Barbara Metzler and Dani Arribas-Bel">
+
+<title>AI Model Development for Urban Fabric Segmentation – Technical notes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive Summary</a></li>
+  <li><a href="#classification-vs-segmentation" id="toc-classification-vs-segmentation" class="nav-link" data-scroll-target="#classification-vs-segmentation">Classification vs segmentation</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a>
+  <ul class="collapse">
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a>
+  <ul class="collapse">
+  <li><a href="#satellite-imagery-input" id="toc-satellite-imagery-input" class="nav-link" data-scroll-target="#satellite-imagery-input">Satellite imagery (input)</a></li>
+  <li><a href="#urban-fabric-classes-outcome" id="toc-urban-fabric-classes-outcome" class="nav-link" data-scroll-target="#urban-fabric-classes-outcome">Urban fabric classes (outcome)</a></li>
+  </ul></li>
+  <li><a href="#data-preprocessing" id="toc-data-preprocessing" class="nav-link" data-scroll-target="#data-preprocessing">Data preprocessing</a>
+  <ul class="collapse">
+  <li><a href="#traintest-split" id="toc-traintest-split" class="nav-link" data-scroll-target="#traintest-split">Train/test split</a></li>
+  <li><a href="#unbalanced-dataset" id="toc-unbalanced-dataset" class="nav-link" data-scroll-target="#unbalanced-dataset">Unbalanced dataset</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#model-architectures" id="toc-model-architectures" class="nav-link" data-scroll-target="#model-architectures">Model architectures</a>
+  <ul class="collapse">
+  <li><a href="#baseline-approach-approach-a" id="toc-baseline-approach-approach-a" class="nav-link" data-scroll-target="#baseline-approach-approach-a">Baseline approach (Approach A)</a>
+  <ul class="collapse">
+  <li><a href="#results-across-spatial-signatures" id="toc-results-across-spatial-signatures" class="nav-link" data-scroll-target="#results-across-spatial-signatures">Results across spatial signatures</a></li>
+  </ul></li>
+  <li><a href="#segmentation-approach-b" id="toc-segmentation-approach-b" class="nav-link" data-scroll-target="#segmentation-approach-b">Segmentation (Approach B)</a>
+  <ul class="collapse">
+  <li><a href="#model-a-satlas" id="toc-model-a-satlas" class="nav-link" data-scroll-target="#model-a-satlas">Model A: Satlas</a></li>
+  <li><a href="#model-b-clay" id="toc-model-b-clay" class="nav-link" data-scroll-target="#model-b-clay">Model B: Clay</a></li>
+  <li><a href="#model-c-prithvi" id="toc-model-c-prithvi" class="nav-link" data-scroll-target="#model-c-prithvi">Model C: Prithvi</a></li>
+  </ul></li>
+  <li><a href="#classification-approach-c" id="toc-classification-approach-c" class="nav-link" data-scroll-target="#classification-approach-c">Classification (Approach C)</a>
+  <ul class="collapse">
+  <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#overall-model-performance-comparison-pixel-level" id="toc-overall-model-performance-comparison-pixel-level" class="nav-link" data-scroll-target="#overall-model-performance-comparison-pixel-level">Overall model performance comparison (Pixel-level)</a>
+  <ul class="collapse">
+  <li><a href="#prediction-example-london" id="toc-prediction-example-london" class="nav-link" data-scroll-target="#prediction-example-london">Prediction example: London</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
+  <ul class="collapse">
+  <li><a href="#spatial-signatures-example-tiles" id="toc-spatial-signatures-example-tiles" class="nav-link" data-scroll-target="#spatial-signatures-example-tiles">Spatial signatures: Example tiles</a></li>
+  <li><a href="#key-findings" id="toc-key-findings" class="nav-link" data-scroll-target="#key-findings">Key Findings</a></li>
+  <li><a href="#challenges-and-limitations" id="toc-challenges-and-limitations" class="nav-link" data-scroll-target="#challenges-and-limitations">Challenges and Limitations</a></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="technical_part_turing.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">AI Model Development for Urban Fabric Segmentation</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Barbara Metzler and Dani Arribas-Bel </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Alan Turing Institute
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This report includes the preliminary research and experiments run to design an AI model for making predictions on the urban fabric of England, as of November 2024.</p>
+<section id="executive-summary" class="level1">
+<h1>Executive Summary</h1>
+<p>This technical report details the development and evaluation of artificial intelligence (AI) models for urban fabric classification and segmentation using satellite imagery. The project spans from June 2024 to March 2025, encompassing model design, development, training, and application to European urban strategy analysis. Our research compares various approaches including classification and segmentation tasks, using different foundation models as backbones. The primary goal is to develop accurate and efficient methods for predicting urban fabric from satellite imagery.</p>
+</section>
+<section id="classification-vs-segmentation" class="level1">
+<h1>Classification vs segmentation</h1>
+<p>In satellite image analysis, classification and segmentation address spatial labeling at different levels of granularity, with classification assigning a single label to an image tile or cell, while segmentation provides pixel-level detail. In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalizes each tile’s dominant land cover type without requiring exact pixel alignment. However, we explore both approaches: classification for broader pattern recognition and segmentation for finer, boundary-specific mapping. This dual approach enables us to evaluate how each method performs given the scale and feature alignment limitations within the dataset.</p>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<section id="satellite-imagery-input" class="level3">
+<h3 class="anchored" data-anchor-id="satellite-imagery-input">Satellite imagery (input)</h3>
+<p>The satellite image data used is accessed from the GHS-composite-S2 R2020A dataset <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. The dataset is a global, cloud-free image composite derived from Sentinel-2 L1C data, covering the period from January 2017 to December 2018. We use three bands (RGB) and the images have a resolution of 10 meters per pixel.</p>
+</section>
+<section id="urban-fabric-classes-outcome" class="level3">
+<h3 class="anchored" data-anchor-id="urban-fabric-classes-outcome">Urban fabric classes (outcome)</h3>
+<p>We use labels from the Spatial Signatures Framework <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, which provides a typology of British urban environments based on both form (physical appearance) and function (usage). Spatial signatures capture complex urban characterizations, offering insights into how different areas look and operate. While our primary interest is in urban fabric classification focused on form—an approach we expect may be simpler since form is visible in imagery—this classification scheme is still under development. Therefore, we currently use the more comprehensive Spatial Signatures Framework as a proxy, as it aligns with the goals of urban characterization in our project.</p>
+</section>
+</section>
+<section id="data-preprocessing" class="level2">
+<h2 class="anchored" data-anchor-id="data-preprocessing">Data preprocessing</h2>
+<p>For our analysis, we use two datasets of image tiles at different scales: larger tiles (224 x 224 pixels, covering 2240 x 2240 meters) for segmentation tasks, and smaller tiles (56 x 56 pixels, covering 560 x 560 meters) for classification tasks. The segmentation dataset includes 26,753 tiles (21,402 for training and 5,351 for testing), while the classification dataset consists of 403,722 tiles (342,648 for training and 61,074 for testing). For consistent sampling and comparison, we only use tiles that fully overlap with the spatial signatures, ensuring that each tile aligns with the urban form and function typology in our labeling framework. This alignment supports robust comparison of classification and segmentation outcomes on a pixel-level.</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="../figures/algo_design/sampling.png" class="nostretch quarto-figure quarto-figure-left figure-img" height="400"></p>
+</figure>
+</div>
+<p>A significant challenge in our dataset is class imbalance, where certain urban fabric types are substantially more represented than others. This imbalance influenced our decisions regarding model architecture and loss function selection, leading us to explore specialized approaches for handling uneven class distributions.</p>
+<section id="traintest-split" class="level3">
+<h3 class="anchored" data-anchor-id="traintest-split">Train/test split</h3>
+<p>We split the dataset into 80% train and 20% test data. The test datasets for segmentation and classification overlap.</p>
+<p><img src="../figures/algo_design/train_df.png" class="nostretch quarto-figure quarto-figure-left" height="400"> <img src="../figures/algo_design/test_df.png" class="nostretch quarto-figure quarto-figure-right" height="400"></p>
+</section>
+<section id="unbalanced-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="unbalanced-dataset">Unbalanced dataset</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/unbalanced.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="model-architectures" class="level1">
+<h1>Model architectures</h1>
+<p>Our study involves three main experiments to analyze urban fabric classification and segmentation. First, we conduct a baseline experiment using image embeddings from the SatlasPretrain model <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, which we fit to an XGBoost classifier to predict urban fabric classes (Approach A). Second, we fine-tune three different geospatial foundation models—SatlasPretrain, Clay, and IBM/NASA’s Prithvi model—to perform segmentation tasks (Approach B). Third, we take the best-performing geospatial foundation model from the segmentation experiments (Clay) and fine-tune it specifically for a classification task (Approach C). To evaluate and compare the results, we report weighted pixel-level accuracy, F1 score, and Intersection over Union (IoU) metrics across the experiments.</p>
+<ul>
+<li>Approach A: Image embeddings + XGBoost model</li>
+<li>Approach B: Fine-tuned geospatial foundation model (segmentation)</li>
+<li>Approach C: Fine-tuned geospatial foundation model (classification)</li>
+</ul>
+<section id="baseline-approach-approach-a" class="level2">
+<h2 class="anchored" data-anchor-id="baseline-approach-approach-a">Baseline approach (Approach A)</h2>
+<p>The tiles are fed into the geospatial foundation model SatlasPretrain <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> that has been pretrained with more than 302 million labels on a range of remote sensing and computer vision tasks.</p>
+<p>The model operates in two main steps:</p>
+<ol type="1">
+<li>Foundation Model: A vision transformer model with a feature pyramid network (FPN) and a pooling layer is used to derive image embeddings—lower-dimensional representations of the images (Fig. 2).</li>
+<li>Machine Learning Classifier: The image embeddings are then input into an XGBoost classifier to predict urban fabric classes across England.</li>
+</ol>
+<p>Our baseline model achieved a moderate prediction accuracy of approximately 61% with varying accuracy across the various spatial signature classes as seen in the figure below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/baseline.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="400"></p>
+</figure>
+</div>
+<section id="results-across-spatial-signatures" class="level3">
+<h3 class="anchored" data-anchor-id="results-across-spatial-signatures">Results across spatial signatures</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/baseline_tile_level.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
+</figure>
+</div>
+<p><em>Baseline approach (ordinal)</em></p>
+<p>In addition to the general classification task, we explored an ordinal regression task to account for the continuous nature of the spatial signatures, which are not strictly categorical. We applied the following ordinal mapping:</p>
+<p><code>ordinal_mapping = {     'Wild countryside': 0,     'Countryside agriculture': 1,     'Urban buffer': 2,     'Open sprawl': 3,     'Disconnected suburbia': 4,     'Accessible suburbia': 5,     'Warehouse/Park land': 6,     'Gridded residential quarters': 7,     'Connected residential neighbourhoods': 8,     'Dense residential neighbourhoods': 9,     'Dense urban neighbourhoods': 10,     'Urbanity': 11, }</code></p>
+<p>This ordinal approach produced a Mean Absolute Error (MAE) and Mean Squared Error (MSE) of 0.28, along with an R² score of 0.62. The Sankey diagram below highlights the primary misclassifications, which tend to occur between similar classes.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/sankey.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
+</figure>
+</div>
+<p><em>Baseline approach + spatial context</em></p>
+<p>To enhance model performance, we incorporated spatial context, enabling the model to account for regional location. We included H3 Level 5 hexagon identifiers as a categorical variable, where each hexagon (approximately 560x560 meters) encompasses around 80 tiles.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/hex_level5.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
+</figure>
+</div>
+</section>
+</section>
+<section id="segmentation-approach-b" class="level2">
+<h2 class="anchored" data-anchor-id="segmentation-approach-b">Segmentation (Approach B)</h2>
+<p>In Approach B, we fine-tuned a state-of-the-art geospatial foundation model for a segmentation task. We used the 224x224x3 image tiles as input. We evaluated three state-of-the-art foundation models, each with unique characteristics as listed below:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Architecture</th>
+<th>Dataset Size</th>
+<th>Image Sources</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Satlas <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></td>
+<td>SwinT</td>
+<td>302M labels</td>
+<td>Sentinel-2</td>
+</tr>
+<tr class="even">
+<td>Clay <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></td>
+<td>MAE/ViT</td>
+<td>70M labels</td>
+<td>Multiple+</td>
+</tr>
+<tr class="odd">
+<td>Prithvi <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></td>
+<td>MAE/ViT</td>
+<td>250 PB</td>
+<td>Sentinel-2/Landsat</td>
+</tr>
+</tbody>
+</table>
+<p>+Multiple sources include Sentinel-2, Landsat, NAIP, and LINZ</p>
+<p>The following visualisations show the varying model configurations for the three different approaches tested for the segmentation task. The main difference is the varying backbone.</p>
+<section id="model-a-satlas" class="level3">
+<h3 class="anchored" data-anchor-id="model-a-satlas">Model A: Satlas</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/satlas_model.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img" width="600"></p>
+</figure>
+</div>
+<hr>
+</section>
+<section id="model-b-clay" class="level3">
+<h3 class="anchored" data-anchor-id="model-b-clay">Model B: Clay</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/clay_model.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img" width="600"></p>
+</figure>
+</div>
+<hr>
+</section>
+<section id="model-c-prithvi" class="level3">
+<h3 class="anchored" data-anchor-id="model-c-prithvi">Model C: Prithvi</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/prithvi_model.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img" width="600"></p>
+</figure>
+</div>
+<p>After fine-tuning each foundation model for 10 epochs, we observed the following performance metrics:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Satlas</th>
+<th>Clay</th>
+<th>Prithvi</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Weighted Accuracy</td>
+<td>0.57</td>
+<td><strong>0.72</strong></td>
+<td>0.62</td>
+</tr>
+<tr class="even">
+<td>Weighted IoU</td>
+<td>0.33</td>
+<td><strong>0.58</strong></td>
+<td>0.41</td>
+</tr>
+<tr class="odd">
+<td>Weighted F1</td>
+<td>0.41</td>
+<td><strong>0.69</strong></td>
+<td>0.58</td>
+</tr>
+<tr class="even">
+<td>Training Time/Epoch</td>
+<td>9 mins</td>
+<td>8 mins</td>
+<td>20 mins</td>
+</tr>
+<tr class="odd">
+<td>Parameters</td>
+<td>90M</td>
+<td>86M</td>
+<td>120M</td>
+</tr>
+<tr class="even">
+<td>Implementation Score</td>
+<td>5/10</td>
+<td>6/10</td>
+<td>7/10</td>
+</tr>
+</tbody>
+</table>
+<p>The Clay model consistently outperformed other foundation models across all metrics, while also maintaining reasonable training times and computational requirements.</p>
+<p><strong>Loss Function Impact:</strong> The choice of loss function significantly influenced model performance. Focal loss proved particularly effective in handling class imbalance, especially when combined with the Clay model architecture.</p>
+</section>
+</section>
+<section id="classification-approach-c" class="level2">
+<h2 class="anchored" data-anchor-id="classification-approach-c">Classification (Approach C)</h2>
+<p>Finally, in Approach C, we fine-tuned a geospatial foundation model for a classification task. We used the 56x56x3 image tiles as input.</p>
+<p>For this approach we only used the Clay model as backbone, since it performed the best in the previous experiments.</p>
+<p>The accuracy varied across the different classes as seen in the figure below:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/class_acc.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="430"></p>
+</figure>
+</div>
+<p>This figure shows a comparison between the predicted classes for the fine-tuned geospatial foundation model with segmentation approach (B) and the classification (C).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/comparison_B_C.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="430"></p>
+</figure>
+</div>
+<section id="evaluation-metrics" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation-metrics">Evaluation Metrics</h3>
+<p>We employed multiple complementary metrics to evaluate model performance, as follows:</p>
+<ol type="1">
+<li><p><strong>Intersection over Union (IoU):</strong> This metric measures the overlap between predicted and ground truth segmentations, ranging from 0 (no overlap) to 1 (perfect overlap). IoU is calculated as the area of intersection divided by the area of union between the predicted and actual segmentation masks.</p></li>
+<li><p><strong>Weighted F1 Score:</strong> This metric provides a balanced measure of precision and recall, particularly important for imbalanced datasets. It is calculated as the harmonic mean of precision (how many of the predicted positives are correct) and recall (how many of the actual positives were identified), weighted by class frequencies.</p></li>
+<li><p><strong>Weighted Accuracy:</strong> This metric calculates the proportion of correct predictions, weighted by class frequencies to account for class imbalance. It provides a more representative measure of model performance across all classes, regardless of their frequency in the dataset.</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>Comparing the results is a non-trivial task because the image tiles do not correspond to each other and do not perfectly overlap (42px vs 224 px). To make a fair comparison we thus calculate the pixel-level accuracy scores across the approaches. For this purpose, we predict the full map of the test set and compare the overlapping tiles (as described in sampling). We then calculate the following metrics on a per-pixel level.</p>
+<section id="overall-model-performance-comparison-pixel-level" class="level2">
+<h2 class="anchored" data-anchor-id="overall-model-performance-comparison-pixel-level">Overall model performance comparison (Pixel-level)</h2>
+<p>Our comprehensive evaluation revealed varying levels of performance across the three different approaches:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 28%">
+<col style="width: 28%">
+<col style="width: 17%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Approach</th>
+<th>Global Accuracy</th>
+<th>Macro Accuracy</th>
+<th>F1 Score</th>
+<th>IoU</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Classification (embeddings)</td>
+<td>0.76 (0.66)</td>
+<td>0.22 (0.13)</td>
+<td>0.23</td>
+<td>0.63</td>
+</tr>
+<tr class="even">
+<td>Classification + H3 level 5</td>
+<td><strong>0.87</strong> (0.82)</td>
+<td><strong>0.42</strong> (0.35)</td>
+<td><strong>0.45</strong></td>
+<td><strong>0.79</strong></td>
+</tr>
+<tr class="odd">
+<td>Classification + H3 ordinal</td>
+<td>0.80 (0.80)</td>
+<td>0.26 (0.26)</td>
+<td>0.26</td>
+<td>0.69</td>
+</tr>
+<tr class="even">
+<td>Classification (Clay)</td>
+<td>0.59 (0.68)</td>
+<td>0.09</td>
+<td>0.12</td>
+<td>0.38</td>
+</tr>
+<tr class="odd">
+<td>Segmentation (Clay)</td>
+<td>0.73</td>
+<td>0.31</td>
+<td>0.30</td>
+<td>0.58</td>
+</tr>
+</tbody>
+</table>
+<p>The baseline classification approaches demonstrated varying levels of success: - Basic embedding classification achieved 76% global accuracy (66% balanced) - Integration with H3 level 5 spatial indexing significantly improved performance to 87% global accuracy (42% balanced) - H3 level 5 ordinal classification reached 80% accuracy (26% balanced)</p>
+<p>The fine-tuned geospatial foundation model performed better than the fine-tuned classification, with an accuracy score of 0.56 and 0.73 respectively.</p>
+<p>Overall, the baseline approach with regional information performed best. This approach is not only the best performing but also relatively efficient to implement. Once the image embeddings are created, the downstream classification can be done in minutes.</p>
+<section id="prediction-example-london" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-example-london">Prediction example: London</h3>
+<p>The following figure shows an example of a prediction for the London area using the whole dataset. Each colour represents a different signature. The background colour represents the ground truth.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/results_eurofab.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<section id="spatial-signatures-example-tiles" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-signatures-example-tiles">Spatial signatures: Example tiles</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/random_sample.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
+</figure>
+</div>
+</section>
+<section id="key-findings" class="level2">
+<h2 class="anchored" data-anchor-id="key-findings">Key Findings</h2>
+<ol type="1">
+<li><p><strong>Regional trends:</strong> The integration of regional information into the model significantly improving model performance across all metrics.</p></li>
+<li><p><strong>Model performance:</strong>:</p></li>
+</ol>
+</section>
+<section id="challenges-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-and-limitations">Challenges and Limitations</h2>
+<p>Our research encountered several significant challenges:</p>
+<ol type="1">
+<li><p><strong>Class Imbalance:</strong> The dataset exhibited substantial variations in class representation, which impacted model performance. While focal loss helped address this issue, some classes remained challenging to predict accurately.</p></li>
+<li><p><strong>Computational Resources:</strong> Training times varied significantly between models, with Prithvi requiring substantially more computational resources. This presents practical considerations for model deployment and scaling.</p></li>
+<li><p><strong>Comparison Complexity:</strong> The different tile sizes between classification (42px) and segmentation (224px) approaches made direct comparisons challenging, requiring careful consideration of evaluation metrics and methodology.</p></li>
+</ol>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Corbane, C. et al., 2020. A global cloud-free pixel-based image composite from Sentinel-2 data. Data in brief, 31, p.105737.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Fleischmann, M. &amp; Arribas-Bel, D., 2022. Geographical characterisation of British urban form using the spatial signatures framework. Scientific Data, 9(1), p.546.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Bastani, F. et al., 2023. Satlaspretrain: A large-scale dataset for remote sensing image understanding. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pp.&nbsp;16772-16782.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Bastani, F. et al., 2023. Satlaspretrain: A large-scale dataset for remote sensing image understanding. In Proceedings of the IEEE/CVF International Conference on Computer Vision, pp.&nbsp;16772-16782.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Corbane, C. et al., 2020. A global cloud-free pixel-based image composite from Sentinel-2 data. Data in brief, 31, p.105737.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>https://huggingface.co/made-with-clay/Clay<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>https://huggingface.co/ibm-nasa-geospatial/Prithvi-100M<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
