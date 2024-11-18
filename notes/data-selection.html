@@ -83,8 +83,22 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="data-selection.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive summary</a></li>
+  <li><a href="#moprhological-data" id="toc-moprhological-data" class="nav-link" data-scroll-target="#moprhological-data">Moprhological data</a>
+  <ul class="collapse">
+  <li><a href="#primus" id="toc-primus" class="nav-link" data-scroll-target="#primus">Primus</a></li>
+  <li><a href="#satellite-derived-building-footprints" id="toc-satellite-derived-building-footprints" class="nav-link" data-scroll-target="#satellite-derived-building-footprints">Satellite-derived building footprints</a></li>
+  <li><a href="#overture-maps---street-data" id="toc-overture-maps---street-data" class="nav-link" data-scroll-target="#overture-maps---street-data">Overture maps - street data</a></li>
+  <li><a href="#validation-data" id="toc-validation-data" class="nav-link" data-scroll-target="#validation-data">Validation data</a></li>
+  </ul></li>
+  <li><a href="#satellite-data" id="toc-satellite-data" class="nav-link" data-scroll-target="#satellite-data">Satellite data</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="data-selection.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -121,9 +135,34 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This is some text.</p>
+<section id="executive-summary" class="level1">
+<h1>Executive summary</h1>
+<p>Summary goes here.</p>
+</section>
+<section id="moprhological-data" class="level1">
+<h1>Moprhological data</h1>
+<section id="primus" class="level2">
+<h2 class="anchored" data-anchor-id="primus">Primus</h2>
+</section>
+<section id="satellite-derived-building-footprints" class="level2">
+<h2 class="anchored" data-anchor-id="satellite-derived-building-footprints">Satellite-derived building footprints</h2>
+<p>Satellite derived building footprints are becoming more widely adopted due to advanced in satellite techonolgy and computer vision algorithms. They have sucessfully been used in applications for city boundary delineation, disegregating population and others. <!--here i can city my phd or the papers if they are out--> There are multiple sources of global building footprints available - Google building footprints, Microsoft building footprints, Overture maps that combines various other sources, as well as other proprietary data.</p>
+<p>In this study, we use the Microsoft building footprints since they fully cover our study area - Central Europe. The dataset also has good worldwide coverage and the footprints are derived in a consistent way, which ensures scalability of our method to different countries. It should be noted that our approach can also work for other consistently derived building polygons, Google Footprints for example, so long as all the data is generated from the same source.</p>
+<p>However, the data does not come without issues. For example, in dense urban centres entire blocks can be delineated as individual buildings. Given that morphology calculations rely on precise local topological relations between neighbours, such as two buildings touching, this problem renders a whole number of possible measurements described in <span class="citation" data-cites="fleischmann2021measuring">[@fleischmann2021measuring]</span> meaningless. Furthermore, this issue affects even simpler calculations such as counting the number of buildings within a radius or topological neighbourhood. Other issues are that computer vision techniques sometimes miss entire buildings or misidentify building boundaries. Therefore, any approach that uses satellite-derived building footprints should be able to account for these three and potentially other problems.</p>
+</section>
+<section id="overture-maps---street-data" class="level2">
+<h2 class="anchored" data-anchor-id="overture-maps---street-data">Overture maps - street data</h2>
+<p>The street network is a direct download from Overture maps, a processed subset of data from Openstreetmap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to … . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.</p>
+</section>
+<section id="validation-data" class="level2">
+<h2 class="anchored" data-anchor-id="validation-data">Validation data</h2>
+</section>
+</section>
+<section id="satellite-data" class="level1">
+<h1>Satellite data</h1>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
