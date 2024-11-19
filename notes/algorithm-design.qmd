@@ -55,6 +55,7 @@ A brief theoretical background.
 
 The model architecture consists of the two main components: 1) derivation of predictive variables, and 2) development of the predictive model. Given the target of the prediction is morphological classification, we use morphometric measurements based on the sub-standard satellite-derived data as predictive variables, as they are conceptually related - the original target classification is a result of unsupervised learning on top of morphometric measurements based on cadastral data. The model's main job is then to capture the shift of meaning of individual characters from the original, when measured on precise geometries, to the derived one, measured on imperfect representation of urban form. Given the model will eventually perform a prediction out of the sample, we further build in a logic identifying the types of urban form it has not seen previously and ingesting then manually in the original taxonomy, forming an iterative feedback loop. The whole system is illustrated in a Figure XXX (TODO).
 
+TODO: ADD A DIAGRAM OF THE WHOLE THING, INCLUDING THE FEEDBACK LOOP.
 
 The data preparation and model training consists of four stages. The first and second stages cover the morphometric characterisation, which acts as the model's predictor variables, and the target variables generation. The third stage randomly splits the whole study area into model training and testing data taking into account spatial contiguity. The final stage is the model training and evaluation, based on a framework in which we empahsize the ability to flag unseen urban fabric types in five different scenarios. The full model training and evaluation framework will be implemented using scikit-learn pipelines.
 
@@ -64,15 +65,20 @@ The data preparation and model training consists of four stages. The first and s
 
 All available Microsoft building footprints for the study area are used for the analysis. Typically, building polygons required for morphological studies have to be of very high quality. For example, building polygons overlapping by a thousandth of a millimetre  break topological contiguity and therefore affect the calculation of morphological properties, such as the ratio of shared walls, or the number of adjacent buildings. Furthermore, even the highest quality available software suffers from numerical precision issues which exasperate the above problem. Another potential issue is the inclusion of artefacts we are not directly interested in such as sheds or market stalls. Most importantly, polygons shall represent individual buildings, not compounds of buildings that are adjacent. The footprints used for this study fall short of these standards. Therefore, our approach aims to accommodate less than ideal data and methods, first by processing the building data, and second, by adapting the morphological calculations to account for numerical issues.
 
+TODO: ADD A FIGURE SHOWING MS BUILDINGS NEXT TO CADASTRE TO PROVIDE A VISUAL CUE
+
 Before dealing with any morphological assessment, the polygons need to undergo basic topological preprocessing.
 
 The first step in the building data processing is to split up multi-polygons and make the geometries valid. The second step, is to simplify the polygons in order to accurately represent the corners of buildings and other shape related characteristics. Next, to filter out any buildings that have an area larger than 200,000 sq.m. This is done since some artefacts such as construction sites, mines or tunnels might be included in the data as buildings. The next step is to merge overlapping buildings that either: overlap for at least 10 percent of their areas, or one of them has less than 50 sq.m. in total area. This is done to merge buildings and building parts, since cadastre definitions of these two polygon types are inconsistent and sometimes buildings are assigned as building parts or vice versa. This step merges the buildings and its parts into one polygon. Finally, the preprocessing pipeline snaps nearby buildings together and fills gaps in the polygons that are less than 10 square cm. These two steps aim to address some common topological issues, such as missing slivers with almost zero areas between multiple or inside individual building polygons. Nevertheless, even after the preprocessing numerous topological issues remain and therefore we take this into account in subsequent analysis steps.
 
 #### Overture Streets
+
 The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to ... . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
 
 The second major stage of the street processing is the simplification of the entire street network for each subregion. The actual physical layout of the street is not important to the study - the number of lanes for example, or the exact structure of roundabouts. Rather, the focus is on the topological properties of the street network such as connections, as well as general physical characteristics such as lengths and widths. Therefore the overture street network is further processed by eliminating false nodes, combining lanes and simplifying roundabouts.
-<!--- this needs more explanation -->
+<!--- TODO this needs more explanation-->
+
+TODO: INCLUDE VISUAL REPRESENTATION OF INPUT AND SIMPLIFIED STREETS
 
 ### Morphometric characterisation
 
@@ -82,6 +88,8 @@ The morphometric characterisation is directly derived from the method of [@primu
 
 Since the study area of interest is large and contains tens of millions of buildings, it is divided into subregions to carry out all computation. The separation is done based on distances between buildings - buildings are split into subregions such that the building from one region and its closest neighbour (another building) from another region are at least 400 meters apart. This custom separation, rather than official administrative divisions, ensures that all elements that may affect morphological calculations are in the same set (subregion) and not split across political boundaries. All processing and character calculations are done for each region independently and in parallel.
 
+TODO: ADD A FIGURE OF REGIONS
+
 #### Elements and units
 
 There are five morphological elements used for the morphometric characterisation - two base ones - buildings and streets and three derived ones - enclosures, nodes, enclosed tessellation cells (ETC). Buildings and streets are the two elements from which all other units are derived. The core unit of analysis in the study is the enclosed tessellation cell, which breaks down the whole study area into small-scale units, which when taken together fully cover the area.
@@ -90,19 +98,27 @@ There are five morphological elements used for the morphometric characterisation
 
 The first type of derived element in the study are street nodes, which are defined as the intersection points between different streets. They are used to calculate characteristics of the street network that capture relationships between streets such as number of intersections, as well as relationships between neighbouring enclosures and ETCs.
 
+TODO: ADD A FIGURE OF NODES
+
 ##### Enclosures
 
 Enclosures capture the characteristics of plots of land that contain  from none to (usually) multiple buildings. They are operationalised as land delineations, surrounded by streets and other physical barriers, which can vary in size depending on the geographic context.  If an area is in the city centre, each enclosure would approximate a single block and multiple building units, however if it was in an industrial area it would potentially encompass a single, or very few large buildings.  In this study, only the street network is used for barriers to minimise the data dependency. Furthermore, enclosures are used to delineate the boundaries of enclosed tessellation cells to the surrounding streets - i.e. representing physical barriers.
 
 In this study, enclosure delineation is further modified by introducing a variable, individual bandwidth for every building, as opposed to the global one used by [@fleischmann2022methodological] or none using in generic enclosure delineation. This is done to limit the boundaries effects around the edges of cities and towns - i.e. cells on the edges of cities in [@fleischmann2022methodological] are always large because there are no surrounding buildings and their cells resemble those of large buildings with lots of empty space around them. The limits used here are calculated through a Gabriel graph-based filtration of the subregion, which takes into account the surrounding neighbours structure around every ETC. For example, in  row housing the buffer will be relatively small, in single family housing estates the buffer will be larger, and in industrial areas larger still; regardless of whether or not these buildings are in the middle of cities or around their edges. The detailed technical implementation is out of scope of this Technical Note.
 
+TODO: ADD A FIGURE OF ENCLOSURES
+
 ##### Enclosed Tessellation Cells
 
 Enclosed Tessellation Cells are the core unit used for the analysis and the one used to combine aspects of all of the other four elements. To operationalise it, the study follows the definition by [@fleischmann2022methodological] - “the portion of space that results from growing a morphological tessellation within an enclosure delineated by a series of natural or built barriers identified from the literature on urban form, function and perception”, where the morphological tessellation is a delineation of the space based on Voronoi polygons centred around buildings. The boundaries of ETCs also represent the closest area of land to each building, than to any other building within an enclosure. Because of this feature, ETCs intersect with all other elements and are the unit that links together the characteristics of the four other elements. In some cases, if there are no buildings within the enclosure the whole enclosure is treated as an 'empty' tessellation cell.
 
+TODO: ADD A FIGURE OF ETC
+
 ##### Morphometric Characters
 
 Characteristics describing the interactions of these elements, and the elements themselves are calculated at three scales: small - covering only aspects of the element; medium - covering aspects of the element and neighbouring elements and large - covering neighbouring elements up to five topological neighbours. In total there are 63 (TODO: CHECK) morphometric characters calculated described in Table XXX, which come directly from the list of characters used to derive the target classification.
+
+TODO: INCLUDE A TABLE OF CHARACTERS
 
 ### Target labels
 
@@ -112,12 +128,15 @@ Since the final output of [@primus] is a hierarchy, rather than a flat clusterin
 
 The specific selection of cutoff points will follow [@primus]. The first set of urban fabrics we will aim to predict, broadly differentiates -  different types of houses; from heterogenous historical urbanised areas; from recent modern urban developments - apartment blocks and industrial areas. The second set breaks down each of the first sets into multiple subsets. It goes into more detail and splits the houses into more classes, based on features such as size and proximity to cities; it also splits the historical areas based on origin - medieval, industrial-era and others; and splits the modern urban developments into subclasses such as modernist apartment blocks, industrial areas, offices and others. By analysing the model performance across two different hierarchical levels, we will understand what is the highest resolution detail the model can predict, given the shortcomings of the data and which factors affect predictions.
 
+TODO: FIGURE OF CLASSIFICATION IN AT LEAST TWO HIGH-LEVEL CUTS
 
 ### Train/test/validation split
 
 After assigning the target labels, we create a schema that will dictate how to split the data into a training and testing subsets for the classification models. Random subsetting does not work for this study, since we need to account for spatial dependency and the related data leakage between train and test data. The spatial leakage comes from both the nature of the data - spatial contiguity is one of the core aspects of morphological elements - but also from the way characters are calculated based on various nearest topological neighbours.
 
 To account for this, we aggregate nearby ETCs into higher granularity spatial units - level 5 H3 cells - and randomly split the these units into 80% train and 20% test data, based on contiguity. This ensures that the majority of the test set ETCs and their neighbours are not present in the training data and no morphological characters related to them affect the training set. We use level 5 H3 cells, which represent a delineation of the globe into hexagons with approximately 250 sq. km. area, rather than enclosures or ETC contiguity, to ensure that contiguous subsets of test data cover areas of heterogenous elements and present the model with a realistic validation scenario. This process is done once for the whole study area, before training any models.
+
+TODO: FIGURE OF TRAIN/TEST SPLIT BASED ON H3 ON A SINGLE CITY. IDEALLY MAPPED TO ETCS
 
 ### Training and validation
 
@@ -130,13 +149,15 @@ Since we want the final production model to be general and applicable to large a
 <!--evaluation setup-->
 To achieve this we train five iterations of each model on different subsets of the study area - so that that every country and every combination of countries is used as final hold-out validation data a and train/test pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its train/test pipeline, whereas Slovakia will be used as the hold-out data , in order to see the relationship between the final test score from the train/test pipeline and the models realistic performance on a whole unseen country's urban fabric. The data from the four countries in each train/test pipeline will be separated into training and test sets based on the spatial strategy described previously. The model training and evaluation will follow standard best practices - model coefficients and hyper parameter tuning, such as the decision threshold will be optimised based on the training subset, and the test subset will be used to give a final model accuracy score. Specifically, the models will use balanced accuracy as the optimisation metric in order to account for imbalances in the distribution of urban fabric classes. Our framework further extends the best practices with an additional layer of testing using the hold-out country for each train/test pipeline. All of the data in the hold-out country is used to score the model's performance and the spatial train/test split will be ignored for that particular iteration.
 
+TODO: DIAGRAM SHOWING THE EVAL SETUP
+
 This acts as an extra check against overfitting and ultimately enable us to see how the final production model will perform in realistic scenarios - applying it to whole countries which are not used for the training or testing at all. This comes with at least two advantages over simply reporting a test score on a random sample. First, it is a test of model performance on a dataset that does not have any spatial leakage with the training or testing data. Second, it ensures that we evaluate model performance on unseen urban fabric types from other countries. We can afford to do this in part due to the large size of the data we are working with. In every permutation there will be a rich variety of urban fabrics and tens of millions of ETCs used in the training part of each train/test pipeline.
 
 The final production model is trained on the whole dataset, using the same hyper parameter grid search configuration and training/test spatial split.  The extra validation steps we carry out with the hold-out countries will be used to used in three ways. First, to contextualise the final models' accuracy on the test data; second, to indicate how the model will perform on other countries; and third to see how it handles urban fabric types not seen in the training or test data in a realistic scenario.
 
 ### Preliminary results
 
-There are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions. The number of downloaded, unprocessed streets is similar to those in [@primus] - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries. These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 - the missing or wrongly merged building polygons. In turn these affect the third discussed issue - the interpretation of the values of the calculated morphological characters. Many characters from the original classification also completely lose their meaning. For example, the number of adjacent buildings in the EuroFab dataset is much smaller and therefore all characters based on adjacency have a much more limited utility. This also affects, to a relatively smaller, but nevertheless important extent, characters that rely on inter-building distances and counts.
+There are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions TODO: EXPLAIN WHY. The number of downloaded, unprocessed streets is similar to those in [@primus] - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries. These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 - the missing or wrongly merged building polygons. In turn these affect the third discussed issue - the interpretation of the values of the calculated morphological characters. Many characters from the original classification also completely lose their meaning. For example, the number of adjacent buildings in the EuroFab dataset is much smaller and therefore all characters based on adjacency have a much more limited utility. This also affects, to a relatively smaller, but nevertheless important extent, characters that rely on inter-building distances and counts.
 
 These results further point towards the need for a non-linear classification model, cable of accounting for these data discrepancies.
 
@@ -334,6 +355,4 @@ The following figure shows an example of a prediction for the London area using 
 ![](../figures/algo_design/results_eurofab.png){.nostretch fig-align="center" height="420"}
 
 
-# Discussion
-
-# Next steps
+# Final remarks and next steps
