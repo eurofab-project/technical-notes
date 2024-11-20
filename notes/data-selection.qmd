@@ -1,6 +1,6 @@
 ---
 title: "Reference Data Selection"
-subtitle: "Technical Note D1"
+subtitle: "Technical Note D3"
 author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
 institute: "Charles University; The Alan Turing Institute"
 format:
@@ -27,6 +27,7 @@ Summary goes here.
 The main aim of this project is to create a predictive model that is capable of classifying urban fabric.
 To achieve this we need to use existing urban fabric classifications as ground truth data for model training.
 We have chosen the [@primus] classification to act as the ground truth, since it the only avaialbe classification that fully covers our study area and is based on the highest quality data available - building cadastre data from official sources.
+Since [@primus] is upcoming work we describe its methodology and results in detail in this and in the Algorithm Design and Theoretical Basis Description note.
 
 [@primus] extends the work of [@fleischmann2022methodological], which has been used in numerous subsequent studies and official planning documents [@calafiore2023inequalities ; @arribas2022spatial; @samardzhiev2022functional] .
 It uses a combination of buildings and streets to generate Enclosed Tessellation Cells (ETCs), which are spatial units that are centred around buildings, and encapsulate the surrouning space that is nearest to them, rather than other buildings.
@@ -94,7 +95,7 @@ For example, there is a whole missing neighbourhood in central Prague and, in ge
 
 ### Microsoft building footprints
 In this project, we use the Microsoft building footprints since they fully cover our study area - Poland, Czechia, Germany, Austria, Slovakia (i.e Central Europe).
-The dataset also has good worldwide coverage and the footprints are derived in a consistent way, which ensures scalability of our method to different countries.
+The dataset also has good worldwide coverage - they contain around 1.5 billion building polygons - and the footprints are derived in a consistent way, which ensures scalability of our method to different countries.
 It should be noted that our approach can also work for other consistently derived building polygons, Google Footprints for example, so long as all the data is generated from the same source.
 
 However, the data does not come without issues. 
