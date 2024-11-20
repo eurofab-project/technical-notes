@@ -1,8 +1,8 @@
 ---
 title: "Reference Data Selection"
-subtitle: "Add subtitle here"
-author: "Waldo Tobler"
-institute: "Charles University"
+subtitle: "Technical Note D3"
+author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
+institute: "Charles University; The Alan Turing Institute"
 format:
   pdf:
     toc: true
@@ -11,6 +11,7 @@ format:
   html:
     toc: true
     css: styles.css
+bibliography: ../references.bib
 ---
 
 # Executive summary
@@ -20,20 +21,123 @@ Summary goes here.
 
 # Moprhological data
 
-## Primus
+
+## Ground truth classification
+
+The main aim of this project is to create a predictive model that is capable of classifying urban fabric.
+To achieve this we need to use existing urban fabric classifications as ground truth data for model training.
+We have chosen the [@primus] classification to act as the ground truth, since it the only avaialbe classification that fully covers our study area and is based on the highest quality data available - building cadastre data from official sources.
+Since [@primus] is upcoming work we describe its methodology and results in detail in this and in the Algorithm Design and Theoretical Basis Description note.
+
+[@primus] extends the work of [@fleischmann2022methodological], which has been used in numerous subsequent studies and official planning documents [@calafiore2023inequalities ; @arribas2022spatial; @samardzhiev2022functional] .
+It uses a combination of buildings and streets to generate Enclosed Tessellation Cells (ETCs), which are spatial units that are centred around buildings, and encapsulate the surrouning space that is nearest to them, rather than other buildings.
+ETCs boundaries are also limited by streets or a preset buffer distance from the centre of the building, which acts as the centre of the ETC. 
+It is from this combination of buildings, streets and space, that the ETC can combine morphological characteristics of both streets, street intersections, buildings and blocks.
+The next step in @primus is to measure different characteristics (or chars) of the ETCs. 
+A literature review carried out by (Measuring urban form) suggests that there are around 74 unique ones that take into account the two dimensional nature of the data. 
+[@fleischmann2022methodological] use the full array of characters since they dont know a priori which will be the important variables. 
+[@primus] uses a subset of 54 and the detailed list of characters is presented in the Algorithm design technical note, since both our method and [@primus] share the same characters.
+The next stage in the [@primus] process is applying two clustering algorithms to generate a classification of ETCs into urban
+Similar to [@fleischmann2022methodological] the Primus clustering approach is split into two parts - defining morphotopes and generating a taxonomy of morphotopes based on their similarity.
+
+[@citation] defines morphotopes as the 'smallest urban localities obtaining distinctive character among their neighbours from their particular combination of characteristics of plan type, building type and land use'. <!--- which paper ?--> Primus follows this defining and operationalises a morphotope as a set of spatially contiguous ETCs with a minimum of 100 elements, where the internal distance calculated based on the morphological characters is on average lower within the set, than to other sets. The morphotopes for every region are calculated in isolation and in parallel. The definition of the subregions guarantess that all elements that are spatially contiguous, or have any spatial leakage effects, i.e. adjacency or being part of the same street segment, are processed together in the same region. Once the morphotopes are deliniated, the mean of the characters of their constituent ETCs are assigned them. Therefore, every morphotope has the same dimensionality as the ETCs that form it.
+
+The second step is the creation of a taxonomy of morphotypes for the whole of Central Europe. This is achieved through the application of non-spatially restrained ward clustering at two stages - one regional and one global. The resulting hierarchy can be cut at different levels depending on the application. For example at low values, there is some regional information still preserved in the hierarchy - morphotopes from one city are merged to identical morphotopes from the same city. Whereas at higher levels, different types of urban fabric, emerge across countries.
 
 
-## Satellite-derived building footprints
-Satellite derived building footprints are becoming more widely adopted due to advanced in satellite techonolgy and computer vision algorithms. They have sucessfully been used in applications for city boundary delineation, disegregating population and others. <!--here i can city my phd or the papers if they are out--> There are multiple sources of global building footprints available - Google building footprints, Microsoft building footprints, Overture maps that combines various other sources, as well as other proprietary data.
+The figure below shows a specific cutoff value, which seperates different types of houses; from heterogenous historical urbanised areas; from recent modern urban developments such as apartment blocks and commercial areas; from large industrial areas. 
 
-In this study, we use the Microsoft building footprints since they fully cover our study area - Central Europe. The dataset also has good worldwide coverage and the footprints are derived in a consistent way, which ensures scalability of our method to different countries. It should be noted that our approach can also work for other consistently derived building polygons, Google Footprints for example, so long as all the data is generated from the same source.
+![High-level urban fabrics](../figures/algo_design/prague_600.png){.nostretch fig-align="center" height="400"}
 
-However, the data does not come without issues. For example, in dense urban centres entire blocks can be delineated as individual buildings. Given that morphology calculations rely on precise local topological relations between neighbours, such as two buildings touching, this problem renders a whole number of possible measurements described in [@fleischmann2021measuring] meaningless. Furthermore, this issue affects even simpler calculations such as counting the number of buildings within a radius or topological neighbourhood. Other issues are that computer vision techniques sometimes miss entire buildings or misidentify building boundaries. Therefore, any approach that uses satellite-derived building footprints should be able to account for these three and potentially other problems.
+More detailed information about the primus methodology is available in the algorithm-design document, as we aim to follow it as closely as possible in this project.
 
-## Overture maps - street data
-The street network is a direct download from Overture maps, a processed subset of data from Openstreetmap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to ... . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
+## Building footprints
+ 
+Building footprints are one of the two core elements needed to generate morphometric classifications.
+Measurements of aspects of buildings provide the bulk of the information about the morphological character of a place.
+Many characters in the literature [@fleischmann2021measuring], for example the ratio of perimeter shared with other connected buildings, require very high quality building footprints to accurately reflect the reality of the underlying topology.
+There are numerorous available source of building footprints - official cadastre polygons; volunteer made OpenStreetMap data; Satellite-derived building footprints; or combinations of all of these such as Overture or EUBUCCO.
+Each of these data sources come with their own drawbacks and advantages.
 
-## Validation data
+### Available sources
+The highest quality available data is from official cadastre building footprints.
+These provide the ground truth information for official planning and adiminsitrative applications in many countries.
+However, the data is not always readily available and even when it is, it requires a lot of preprocessing.
+For example, there  is no readily available cadastre data to download for EU countries such as Hungary and Bulgaria.
+Even though Data on germany is available, it is split across 16 bundesregions, each of which has its own interface and data format.
+Furthermore, the data is not always comparative between countries reflective of the physical reality - for example in Czechia the official cadastre reflects shared administration in some modernist apartment blocks, rather than the physical structure of the buildings.
+
+Another source is OpenStreetMap map, which is free and open geographical database generated by volunteers.
+In many cases the cadastre data is processed and put into OpenStreetMap, alongside volunteer contibutions where official data is missing.
+The issues with open streetmap data are similar to cadastre data where the cadastre data is used as the basis and is even harder to process since the schema used for buildings is more generic.
+Furthermore, the quality is unequal - for example the data in Germany is very high quality, but in not in other countries like Italy or Bulgaria.
+
+Another available data source is satellite-derived building footprints, which are becoming more widely adopted due to advances in satellite techonolgy and computer vision algorithms. 
+They have sucessfully been used in applications for city boundary delineation, disegregating population and others [@samardzhiev2023characterising]. 
+There are multiple sources of global building footprints available - Google building footprints, Microsoft building footprints, ESRI community data, Overture maps, as well as other proprietary data.
+The advantage of satellite-derived building footprints data is that it is all derived in a consistent manner and covers large geographical areas.
+However, the quality is generally worse than other sources and the the geometric topology is typically broken.
+
+The newest available data, such as EUBUCCO or OvertureMaps combine differenttypes of other sources.
+Overture is based off of OpenStreetMap, but adds a hierarchical structure of sources on top of it.
+The buildings from Openstreetmap are considered the groundtruth and buildings from additional sources such as satellite data are added where there is no openstreetmap data.
+This means that in general it has the highest number of available buildings.
+However, it comes with the same issues that OpenStreetMap data has, and it even further exasperates the data heterogeniety issues - in different places different data sources with different charactersitics are merged.
+Thus, working with the data requires more preprocessing than other resources.
+
+Similarly, EUBUCCO is another data source that combines multiple datasets - official cadastre data and OpenStreetMap.
+Therefore it as the same advatanges and disadvantages of its core sources.
+Furthermore, it has missing data issues that stem from the specific fusion approach of these sources.
+For example, there is a whole missing neighbourhood in central Prague and, in general, it has less buildings than the official cadastre data for the Central European study area.
+
+![Missing data in central Prague](../figures/algo_design/bubenec.png){.nostretch fig-align="center" height="400"}
 
 
-# Satellite data
+### Microsoft building footprints
+In this project, we use the Microsoft building footprints since they fully cover our study area - Poland, Czechia, Germany, Austria, Slovakia (i.e Central Europe).
+The dataset also has good worldwide coverage - they contain around 1.5 billion building polygons - and the footprints are derived in a consistent way, which ensures scalability of our method to different countries.
+It should be noted that our approach can also work for other consistently derived building polygons, Google Footprints for example, so long as all the data is generated from the same source.
+
+However, the data does not come without issues. 
+For example, in dense urban centres entire blocks can be delineated as individual buildings.
+Given that morphology calculations rely on precise local topological relations between neighbours, such as two buildings touching, this problem renders a whole number of possible measurements described in [@fleischmann2021measuring] meaningless. 
+Furthermore, this issue affects even simpler calculations such as counting the number of buildings within a radius or topological neighbourhood. Other issues are that computer vision techniques sometimes miss entire buildings or misidentify building boundaries.
+Therefore, any approach that uses satellite-derived building footprints should be able to account for these three and potentially other problems.
+
+![Comparison between MS buildings and cadastre level buildings in central Prague](../figures/algo_design/building_comparison.png){.nostretch fig-align="center" height="400"}
+
+
+## Street data
+Street network data is the other major data source used in numerical morphometric analysis.
+It is used to identify spatial relationships, deliniate boundaries for other elements and calculate morphological features of the streets themselves, such as length or width.
+There are numerous sources for street network data, however the major one is OpenStreetMap and its derivate - OvertureMaps.
+
+### Overture transportation layer
+
+The street network used in this study is a direct download from Overture maps, a processed subset of data from OpenStreetMap with some additions.
+OpenStreetMap has global coverage and high quality data, especially for vechicular roads, on actual physical layouts of the roads, as well as additional information on street type.
+We use Overture directly due to the fact that its more accessible and easier to process, however the underlying geometry and information of the two data sources is identical.
+
+The types of street segments used in the analysis are limited to the ones listed in Table 1.
+
+| *Types of streets*  |
+|----------------|
+| living_street  |
+| motorway       |
+| motorway_link  |
+| pedestrian     |
+| primary        |
+| primary_link   |
+| residential    |
+| secondary      |
+| secondary_link |
+| tertiary       |
+| tertiary_link  |
+| trunk          |
+| trunk_link     |
+| unclassified   |
+
+Another type of segment that is filtered out are tunnels , since the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
+
+
+# AI data
