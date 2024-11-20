@@ -756,8 +756,10 @@ window.Quarto = {
 <section id="data-preprocessing-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-preprocessing-1">Data preprocessing</h3>
 <p>For our analysis, we employ two distinct datasets of image tiles at varying scales. These datasets enable us to evaluate both segmentation and classification tasks for urban fabric prediction. We choose a larger tile size for the segmentation task since most segmentation models work better with conventional image sizes (such as 224 x 224 pixels) and they are also a lot more efficient since the dataset is not as large. For classification, the tile size represents the scale of the analysis and for that reason we chose a smaller tile size of 56x56 pixels.</p>
-<pre><code>- **Segmentation Dataset**: Comprising 26,753 tiles, each 224 x 224 pixels (covering 2240 x 2240 meters). Of these, 21,402 tiles are allocated for training, and 5,351 for testing.
-- **Classification Dataset**: Comprising 403,722 tiles, each 56 x 56 pixels (covering 560 x 560 meters). The training set consists of 342,648 tiles, with the remaining 61,074 reserved for testing.</code></pre>
+<ul>
+<li><strong>Segmentation Dataset</strong>: Comprising 26,753 tiles, each 224 x 224 pixels (covering 2240 x 2240 meters). Of these, 21,402 tiles are allocated for training, and 5,351 for testing.</li>
+<li><strong>Classification Dataset</strong>: Comprising 403,722 tiles, each 56 x 56 pixels (covering 560 x 560 meters). The training set consists of 342,648 tiles, with the remaining 61,074 reserved for testing.</li>
+</ul>
 <p>To ensure consistency across both tasks, we exclusively use tiles that fully overlap with the spatial signature labels. This alignment facilitates robust pixel-level comparisons of classification and segmentation outcomes while maintaining compatibility with our urban fabric typology as shown below.</p>
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
@@ -766,13 +768,13 @@ window.Quarto = {
 </div>
 <section id="unbalanced-dataset" class="level4">
 <h4 class="anchored" data-anchor-id="unbalanced-dataset">Unbalanced dataset</h4>
-<p>The figure below illustrates the spatial signatures class distribution, highlighting the imbalance across spatial signature types:</p>
+<p>A significant challenge in our dataset is class imbalance, where certain urban fabric types are much more prevalent than others. This imbalance required careful consideration in model design and loss function selection, prompting us to explore approaches that could better handle uneven class distributions.</p>
+<p>The figure below visualizes the class distribution of spatial signatures, highlighting the imbalance across different urban fabric types. Notably, the countryside agriculture and wild countryside classes are more dominant compared to the more urban-centric classes.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../figures/algo_design/unbalanced.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
 </figure>
 </div>
-<p>A key challenge in our dataset is the class imbalance, where some urban fabric types are much more common than others. This imbalance required us to carefully consider how to design the model and choose the right loss function, prompting us to explore approaches that can handle uneven class distributions more effectively.</p>
 </section>
 <section id="traintest-split" class="level4">
 <h4 class="anchored" data-anchor-id="traintest-split">Train/test split</h4>
@@ -787,7 +789,7 @@ window.Quarto = {
 <p>To assess the performance of different AI models for urban fabric classification and segmentation, we designed three distinct experimental approaches. Each approach leverages different combinations of pre-trained models and fine-tuning strategies to evaluate their ability to accurately classify and segment urban fabric types. The following experiments were carried out to explore the effectiveness of both image embeddings and geospatial foundation models in addressing the challenges posed by urban fabric analysis:</p>
 <p>We conducted three main experiments as part of the AI model design to analyze urban fabric classification and segmentation.</p>
 <ul>
-<li><p>Approach A (<em>Embedding approach</em>): We start with a baseline experiment, where we generate image embeddings using the SatlasPretrain model <span class="citation" data-cites="bastani2023satlaspretrain">(<a href="#ref-bastani2023satlaspretrain" role="doc-biblioref">Bastani et al. 2023</a>)</span>. These embeddings are then fed into an XGBoost classifier to predict urban fabric classes.</p></li>
+<li><p>Approach A (<em>Embedding approach</em>): We start with a baseline experiment, where we generate image embeddings using the SatlasPretrain model. These embeddings are then fed into an XGBoost classifier to predict urban fabric classes.</p></li>
 <li><p>Approach B (<em>Segmentation approach</em>): Next, we fine-tune three different geospatial foundation models—SatlasPretrain, Clay, and IBM/NASA’s Prithvi model—specifically for segmentation tasks.</p></li>
 <li><p>Approach C (<em>Classification approach</em>): Finally, we take the best-performing geospatial foundation model from the segmentation experiments (Clay) and fine-tune it for the classification task.</p></li>
 </ul>
@@ -795,7 +797,7 @@ window.Quarto = {
 <section id="baseline-embedding-approach-approach-a" class="level4">
 <h4 class="anchored" data-anchor-id="baseline-embedding-approach-approach-a">Baseline embedding approach (Approach A)</h4>
 <p>In the first experiment, we implement a baseline approach using image embeddings created by a geospatial foundation model, followed by classification with an XGBoost model. This approach is computationally efficient and easy to implement, making it a good starting point for comparison. Once the embeddings are generated, they can be directly input into a machine learning (ML) model for classification.</p>
-<p>The tiles are processed by the SatlasPretrain model, a geospatial foundation model pretrained on more than 302 million labels from remote sensing and computer vision tasks. We chose this model because it was specifically trained on Sentinel-2 images, making it a good fit for our dataset.</p>
+<p>The tiles are processed by the SatlasPretrain model <span class="citation" data-cites="bastani2023satlaspretrain">(<a href="#ref-bastani2023satlaspretrain" role="doc-biblioref">Bastani et al. 2023</a>)</span>, a geospatial foundation model pretrained on more than 302 million labels from remote sensing and computer vision tasks. We chose this model because it was specifically trained on Sentinel-2 images, making it a good fit for our dataset.</p>
 <p>The model works in two steps:</p>
 <ul>
 <li>Foundation Model: We use a Vision Transformer (ViT) with a Feature Pyramid Network (FPN) and a pooling layer to generate image embeddings. These embeddings are lower-dimensional representations of the images.</li>
@@ -978,51 +980,52 @@ window.Quarto = {
 </thead>
 <tbody>
 <tr class="odd">
-<td>Classification (embeddings)</td>
+<td>A: Classification (embeddings)</td>
 <td>0.76 (0.66)</td>
 <td>0.22 (0.13)</td>
 <td>0.23</td>
 <td>0.63</td>
 </tr>
 <tr class="even">
-<td>Classification + H3 level 5</td>
+<td>A: Classification + H3 level 5</td>
 <td><strong>0.87</strong> (0.82)</td>
 <td><strong>0.42</strong> (0.35)</td>
 <td><strong>0.45</strong></td>
 <td><strong>0.79</strong></td>
 </tr>
 <tr class="odd">
-<td>Classification + H3 ordinal</td>
+<td>A: Classification + H3 ordinal</td>
 <td>0.80 (0.80)</td>
 <td>0.26 (0.26)</td>
 <td>0.26</td>
 <td>0.69</td>
 </tr>
 <tr class="even">
-<td>Classification (Clay)</td>
-<td>0.59 (0.68)</td>
-<td>0.09</td>
-<td>0.12</td>
-<td>0.38</td>
-</tr>
-<tr class="odd">
-<td>Segmentation (Clay)</td>
+<td>B: Segmentation (Clay)</td>
 <td>0.73</td>
 <td>0.31</td>
 <td>0.30</td>
 <td>0.58</td>
 </tr>
+<tr class="odd">
+<td>C: Classification (Clay)</td>
+<td>0.59 (0.68)</td>
+<td>0.09</td>
+<td>0.12</td>
+<td>0.38</td>
+</tr>
 </tbody>
 </table>
+<p>The results in brackets represent the tile-level accuracy, which is typically reported in classification tasks. However, to facilitate more meaningful comparisons across approaches, we use pixel-level accuracy for all experiments.</p>
 <p><strong>Key observations</strong></p>
 <ul>
 <li><p>The baseline classification approaches showed varied results:</p>
 <ul>
 <li>The basic embedding classification approach achieved a global accuracy of 76% (66% balanced), reflecting a strong initial performance.</li>
-<li>When incorporating H3 Level 5 spatial indexing, performance improved significantly, with a global accuracy of 87% (42% balanced), suggesting that regional context plays a critical role in improving classification accuracy.</li>
+<li>When incorporating regional trends, performance improved significantly, with a global accuracy of 87% (42% balanced), suggesting that regional context plays a critical role in improving classification accuracy.</li>
 <li>The H3 Level 5 ordinal classification approach also performed well, with an accuracy of 80% (26% balanced), but it lagged behind in balancing the performance across classes.</li>
 </ul></li>
-<li><p>The fine-tuned geospatial foundation model performed better than the classification models, achieving an accuracy of 0.73 compared to 0.56 for the classification model (Clay model).</p></li>
+<li><p>The fine-tuned geospatial foundation model performed better than the fine-tuned classification models, achieving an accuracy of 0.73 compared to 0.56 for the classification model (Clay model).</p></li>
 <li><p>Overall, the classification approach with regional information (H3 Level 5) yielded the best performance, achieving both high accuracy and a reasonable balance across classes. Additionally, this approach is computationally efficient: once the image embeddings are generated, the downstream classification process can be completed in just a few minutes.</p></li>
 </ul>
 </section>
