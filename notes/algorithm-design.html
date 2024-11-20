@@ -90,6 +90,35 @@ div.csl-indent {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 <link rel="stylesheet" href="styles.css">
@@ -121,8 +150,8 @@ div.csl-indent {
   <li><a href="#data-preprocessing" id="toc-data-preprocessing" class="nav-link" data-scroll-target="#data-preprocessing">Data preprocessing</a></li>
   <li><a href="#morphometric-characterisation" id="toc-morphometric-characterisation" class="nav-link" data-scroll-target="#morphometric-characterisation">Morphometric characterisation</a></li>
   <li><a href="#target-labels" id="toc-target-labels" class="nav-link" data-scroll-target="#target-labels">Target labels</a></li>
-  <li><a href="#traintestvalidation-split" id="toc-traintestvalidation-split" class="nav-link" data-scroll-target="#traintestvalidation-split">Train/test/validation split</a></li>
-  <li><a href="#training-and-validation" id="toc-training-and-validation" class="nav-link" data-scroll-target="#training-and-validation">Training and validation</a></li>
+  <li><a href="#prediction-modelling-and-traintest-split" id="toc-prediction-modelling-and-traintest-split" class="nav-link" data-scroll-target="#prediction-modelling-and-traintest-split">Prediction modelling and train/test split</a></li>
+  <li><a href="#training-and-evaluation" id="toc-training-and-evaluation" class="nav-link" data-scroll-target="#training-and-evaluation">Training and evaluation</a></li>
   <li><a href="#preliminary-results" id="toc-preliminary-results" class="nav-link" data-scroll-target="#preliminary-results">Preliminary results</a></li>
   </ul></li>
   <li><a href="#ai-modelling-using-satellite-imagery-1" id="toc-ai-modelling-using-satellite-imagery-1" class="nav-link" data-scroll-target="#ai-modelling-using-satellite-imagery-1">AI Modelling using Satellite Imagery</a>
@@ -189,7 +218,7 @@ div.csl-indent {
 <p>The spatial layout of the physical elements of cities - its urban fabric - affects most activities their residents undertake, from accessing services or jobs to their social and cultural lives. Analysing the interplay of urban form, land use, mobility and other dimensions of human activities provides insights into how cities evolve and what effective developmental policies should look like. Researchers in the field of urban morphology have spend years in identifying, classifying and analysing the variations in urban form across cities from all over the world. A core new development, powered by advancements in spatial data science, computer vision, and open data availability, are the methodologies created to computationally discern and analyse urban fabric <span class="citation" data-cites="fleischmann2022methodological">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span>. Taken together, these facts have opened up the possibility of a more systematic and comprehensive approach to the classification of urban morphological patterns, which in turn can drive our understanding of cities <span class="citation" data-cites="calafiore2023inequalities arribas2022spatial">(<a href="#ref-calafiore2023inequalities" role="doc-biblioref">Calafiore et al. 2023</a>; <a href="#ref-arribas2022spatial" role="doc-biblioref">Arribas-Bel and Fleischmann 2022</a>)</span>.</p>
 <p>One factor that limits the wider application of these methods is their dependency on high-quality data, that is generally not available for every city. For example, <span class="citation" data-cites="fleischmann2022methodological arribas2022spatial">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>; <a href="#ref-arribas2022spatial" role="doc-biblioref">Arribas-Bel and Fleischmann 2022</a>)</span> use building polygons from the respective municipal and national mapping agencies. However, such data is not generally available even for most high-income countries. And where available, it can come in various formats and the data itself is not necessarily homogenous, which makes its processing difficult. For example, official Czechia cadastral building polygons (https://services.cuzk.cz/) come as a GeoPackage, with no information about building age, height, type or use. In contrast, official German building polygons, come separately for every state , typically but not always as GML data from a WFS service, and sometimes have extra building information. However, the definition of building is different to Czechia and the polygon set may include parts of tunnels, overpasses or tram lines. These definitions are even sometimes different in the cases of cities within the same country - i.e.&nbsp;the data for Berlin and Hamburg is different from the data available for Bremen.</p>
 <p>EuroFab aims to address the data availability and processing issues, as well as broaden the applicability of urban morphometrics. It does this through the development of a predictive urban morphometric model which uses widely available building footprints to infer structure of urban form. The model input is calculated directly on satellite-derived building footprints, which gives it a global scope and thus eliminates the need the data fusion problems described above. Furthermore, it is trained on a detailed morphometric classification derived from official cadastre data in a large study area that covers multiple countries - Poland, Austria, Czechia, Germany and Slovakia, i.e.&nbsp;Central Europe. The heterogeneity of urban form and planning regimes present in the study area enables the model to distinguish a rich variety of urban patterns and improves it generalisability.</p>
-<p>The specific approach taken has four stages. In the first stage morphological elements and their characteristics are calculated using the widely available Microsoft building and Overture Maps Transportation data. These elements are the predictor variables that the model will use. To achieve this we develop a highly-scalable polygon and street data pipeline, capable of calculating an exhaustive list of morphometric characteristics. In the second stage, each element, calculated in the first stage, is assigned a target classification label based on spatial overlap with morphological elements from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span>. <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> is a classification of urban fabrics in Central Europe based on the highest-detail available cadastre data. Third, the data is then split into training and testing subsets based on spatial contiguity, in order to account for spatial leakage. Lastly, a series of non-linear models is trained to predict the morphological classification of individual elements, using a custom validation schema. This is required in order to emphasise the model’s ability to deal with previously unseen data and new urban fabric types in the evaluation. The best performing model is chosen as the final production model, and retrained on the whole dataset.</p>
+<p>The specific approach taken has four stages. In the first stage morphological elements and their characteristics are calculated using the widely available Microsoft building and Overture Maps Transportation data. These elements are the predictor variables that the model will use. To achieve this we develop a highly-scalable polygon and street data pipeline, capable of calculating an exhaustive list of morphometric characteristics. In the second stage, each element, calculated in the first stage, is assigned a target classification label based on spatial overlap with morphological elements from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span>. <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> is a classification of urban fabrics in Central Europe based on the highest-detail available cadastre data. Third, the data is then split into five training and testing subsets, so that every country and every combination of the other four countries are used as test and training data respectively. Lastly, a series of non-linear models are trained on each subeset to predict the morphological classification of individual elements, using a custom cross-validation scheme in order to account for spatial leakage. Our training and testing setup emphasises evaluating the model’s ability to deal with realistic scenarios and with previously unseen data and new urban fabric types. The best performing model is chosen as the final production model, and retrained on the whole dataset.</p>
 <!--Satellite derived building footprints intro-->
 <p>Satellite derived building footprints are becoming more widely adopted, however, the data does not come without issues. For example, in dense urban centres entire blocks can be delineated as individual buildings. Given that morphology calculations rely on precise local topological relations between neighbours, such as two buildings touching, this problem renders a whole number of possible measurements described in <span class="citation" data-cites="fleischmann2021measuring">(<a href="#ref-fleischmann2021measuring" role="doc-biblioref">Fleischmann, Romice, and Porta 2021</a>)</span> meaningless. Furthermore, this issue affects even simpler calculations such as counting the number of buildings within a radius or topological neighbourhood. Other issues are that computer vision techniques sometimes miss entire buildings or misidentify building boundaries. Therefore, any approach that uses satellite-derived building footprints should be able to account for these three and potentially other problems.</p>
 <p>Implementing these stages, and further realising the potential of the model for global application, requires the creation of novel, scalable data processing pipelines capable of analysing hundreds of millions of morphological elements - buildings, streets and their derivatives. Due to their scalability, these pipelines can further be reused for other work, outside of the immediate scope of this projects. To ensure maximum impact and high standards, all work for this project follows open science principles and is open-sourced on GitHub.</p>
@@ -205,16 +234,26 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="morphometric-classification-homogenisation-1">Morphometric Classification Homogenisation</h2>
 <section id="model-architecture" class="level3">
 <h3 class="anchored" data-anchor-id="model-architecture">Model architecture</h3>
-<p>The model architecture consists of the two main components: 1) derivation of predictive variables, and 2) development of the predictive model. Given the target of the prediction is morphological classification, we use morphometric measurements based on the sub-standard satellite-derived data as predictive variables, as they are conceptually related - the original target classification is a result of unsupervised learning on top of morphometric measurements based on cadastral data. The model’s main job is then to capture the shift of meaning of individual characters from the original, when measured on precise geometries, to the derived one, measured on imperfect representation of urban form. Given the model will eventually perform a prediction out of the sample, we further build in a logic identifying the types of urban form it has not seen previously and ingesting then manually in the original taxonomy, forming an iterative feedback loop. The whole system is illustrated in a Figure XXX (TODO).</p>
-<p>TODO: ADD A DIAGRAM OF THE WHOLE THING, INCLUDING THE FEEDBACK LOOP.</p>
-<p>The data preparation and model training consists of four stages. The first and second stages cover the morphometric characterisation, which acts as the model’s predictor variables, and the target variables generation. The third stage randomly splits the whole study area into model training and testing data taking into account spatial contiguity. The final stage is the model training and evaluation, based on a framework in which we empahsize the ability to flag unseen urban fabric types in five different scenarios. The full model training and evaluation framework will be implemented using scikit-learn pipelines.</p>
+<p>The model architecture consists of the two main components: 1) derivation of predictive variables, and 2) development of the predictive model. Given the target of the prediction is morphological classification, we use morphometric measurements based on the sub-standard satellite-derived data as predictive variables, as they are conceptually related - the original target classification is a result of unsupervised learning on top of morphometric measurements based on cadastral data. The model’s main job is then to capture the shift of meaning of individual characters from the original, when measured on precise geometries, to the derived one, measured on imperfect representation of urban form. Given the model will eventually perform a prediction out of the sample, we further build in a logic identifying the types of urban form it has not seen previously and ingesting then manually in the original taxonomy, forming an iterative feedback loop. The whole system is illustrated in Figure 1.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/workflow.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Project workflow</figcaption>
+</figure>
+</div>
+<p>The data preparation and model training consists of four stages. The first and second stages cover the morphometric characterisation, which acts as the model’s predictor variables, and the target variables generation. The third stage splits splits the whole study area into five subsets, so that every country and every combintion of the four other countries in the area, act as test and training data respectively. The final stage is the model training and evaluation, aiming to minimise spatial leakeage in the training and evaluation data, and testing the model’s performance on realistic scenarios. The full model training and evaluation framework will be implemented using scikit-learn pipelines.</p>
 </section>
 <section id="data-preprocessing" class="level3">
 <h3 class="anchored" data-anchor-id="data-preprocessing">Data preprocessing</h3>
 <section id="building-preprocessing" class="level4">
 <h4 class="anchored" data-anchor-id="building-preprocessing">Building preprocessing</h4>
 <p>All available Microsoft building footprints for the study area are used for the analysis. Typically, building polygons required for morphological studies have to be of very high quality. For example, building polygons overlapping by a thousandth of a millimetre break topological contiguity and therefore affect the calculation of morphological properties, such as the ratio of shared walls, or the number of adjacent buildings. Furthermore, even the highest quality available software suffers from numerical precision issues which exasperate the above problem. Another potential issue is the inclusion of artefacts we are not directly interested in such as sheds or market stalls. Most importantly, polygons shall represent individual buildings, not compounds of buildings that are adjacent. The footprints used for this study fall short of these standards. Therefore, our approach aims to accommodate less than ideal data and methods, first by processing the building data, and second, by adapting the morphological calculations to account for numerical issues.</p>
-<p>TODO: ADD A FIGURE SHOWING MS BUILDINGS NEXT TO CADASTRE TO PROVIDE A VISUAL CUE</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/building_comparison.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Comparison between MS buildings and cadastre level buildings in central Prague</figcaption>
+</figure>
+</div>
 <p>Before dealing with any morphological assessment, the polygons need to undergo basic topological preprocessing.</p>
 <p>The first step in the building data processing is to split up multi-polygons and make the geometries valid. The second step, is to simplify the polygons in order to accurately represent the corners of buildings and other shape related characteristics. Next, to filter out any buildings that have an area larger than 200,000 sq.m. This is done since some artefacts such as construction sites, mines or tunnels might be included in the data as buildings. The next step is to merge overlapping buildings that either: overlap for at least 10 percent of their areas, or one of them has less than 50 sq.m. in total area. This is done to merge buildings and building parts, since cadastre definitions of these two polygon types are inconsistent and sometimes buildings are assigned as building parts or vice versa. This step merges the buildings and its parts into one polygon. Finally, the preprocessing pipeline snaps nearby buildings together and fills gaps in the polygons that are less than 10 square cm. These two steps aim to address some common topological issues, such as missing slivers with almost zero areas between multiple or inside individual building polygons. Nevertheless, even after the preprocessing numerous topological issues remain and therefore we take this into account in subsequent analysis steps.</p>
 </section>
@@ -222,16 +261,26 @@ div.csl-indent {
 <h4 class="anchored" data-anchor-id="overture-streets">Overture Streets</h4>
 <p>The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to … . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.</p>
 <p>The second major stage of the street processing is the simplification of the entire street network for each subregion. The actual physical layout of the street is not important to the study - the number of lanes for example, or the exact structure of roundabouts. Rather, the focus is on the topological properties of the street network such as connections, as well as general physical characteristics such as lengths and widths. Therefore the overture street network is further processed by eliminating false nodes, combining lanes and simplifying roundabouts. <!--- TODO this needs more explanation--></p>
-<p>TODO: INCLUDE VISUAL REPRESENTATION OF INPUT AND SIMPLIFIED STREETS</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/street_processing.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Streets in central Prague</figcaption>
+</figure>
+</div>
 </section>
 </section>
 <section id="morphometric-characterisation" class="level3">
 <h3 class="anchored" data-anchor-id="morphometric-characterisation">Morphometric characterisation</h3>
-<p>The morphometric characterisation is directly derived from the method of <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> as closely as possible to ensure that we minimise the conceptual differences between the methodological backbone using the derivation of the target classification and the the data used within our model.</p>
+<p>The morphometric characterisation is directly derived from the method of <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> as closely as possible to ensure that we minimise the conceptual differences between the methodological backbone using the derivation of the target classification and the the data used within our model.</p>
 <section id="subregions-split" class="level4">
 <h4 class="anchored" data-anchor-id="subregions-split">Subregions split</h4>
 <p>Since the study area of interest is large and contains tens of millions of buildings, it is divided into subregions to carry out all computation. The separation is done based on distances between buildings - buildings are split into subregions such that the building from one region and its closest neighbour (another building) from another region are at least 400 meters apart. This custom separation, rather than official administrative divisions, ensures that all elements that may affect morphological calculations are in the same set (subregion) and not split across political boundaries. All processing and character calculations are done for each region independently and in parallel.</p>
-<p>TODO: ADD A FIGURE OF REGIONS</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/subregions.png" class="nostretch figure-img" height="400"></p>
+<figcaption>All subregions in the study area</figcaption>
+</figure>
+</div>
 </section>
 <section id="elements-and-units" class="level4">
 <h4 class="anchored" data-anchor-id="elements-and-units">Elements and units</h4>
@@ -239,55 +288,467 @@ div.csl-indent {
 <section id="nodes" class="level5">
 <h5 class="anchored" data-anchor-id="nodes">Nodes</h5>
 <p>The first type of derived element in the study are street nodes, which are defined as the intersection points between different streets. They are used to calculate characteristics of the street network that capture relationships between streets such as number of intersections, as well as relationships between neighbouring enclosures and ETCs.</p>
-<p>TODO: ADD A FIGURE OF NODES</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/nodes.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Nodes in central Prague</figcaption>
+</figure>
+</div>
 </section>
 <section id="enclosures" class="level5">
 <h5 class="anchored" data-anchor-id="enclosures">Enclosures</h5>
 <p>Enclosures capture the characteristics of plots of land that contain from none to (usually) multiple buildings. They are operationalised as land delineations, surrounded by streets and other physical barriers, which can vary in size depending on the geographic context. If an area is in the city centre, each enclosure would approximate a single block and multiple building units, however if it was in an industrial area it would potentially encompass a single, or very few large buildings. In this study, only the street network is used for barriers to minimise the data dependency. Furthermore, enclosures are used to delineate the boundaries of enclosed tessellation cells to the surrounding streets - i.e.&nbsp;representing physical barriers.</p>
 <p>In this study, enclosure delineation is further modified by introducing a variable, individual bandwidth for every building, as opposed to the global one used by <span class="citation" data-cites="fleischmann2022methodological">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span> or none using in generic enclosure delineation. This is done to limit the boundaries effects around the edges of cities and towns - i.e.&nbsp;cells on the edges of cities in <span class="citation" data-cites="fleischmann2022methodological">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span> are always large because there are no surrounding buildings and their cells resemble those of large buildings with lots of empty space around them. The limits used here are calculated through a Gabriel graph-based filtration of the subregion, which takes into account the surrounding neighbours structure around every ETC. For example, in row housing the buffer will be relatively small, in single family housing estates the buffer will be larger, and in industrial areas larger still; regardless of whether or not these buildings are in the middle of cities or around their edges. The detailed technical implementation is out of scope of this Technical Note.</p>
-<p>TODO: ADD A FIGURE OF ENCLOSURES</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/enclosures.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Enclosures in central Prague</figcaption>
+</figure>
+</div>
 </section>
 <section id="enclosed-tessellation-cells" class="level5">
 <h5 class="anchored" data-anchor-id="enclosed-tessellation-cells">Enclosed Tessellation Cells</h5>
 <p>Enclosed Tessellation Cells are the core unit used for the analysis and the one used to combine aspects of all of the other four elements. To operationalise it, the study follows the definition by <span class="citation" data-cites="fleischmann2022methodological">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span> - “the portion of space that results from growing a morphological tessellation within an enclosure delineated by a series of natural or built barriers identified from the literature on urban form, function and perception”, where the morphological tessellation is a delineation of the space based on Voronoi polygons centred around buildings. The boundaries of ETCs also represent the closest area of land to each building, than to any other building within an enclosure. Because of this feature, ETCs intersect with all other elements and are the unit that links together the characteristics of the four other elements. In some cases, if there are no buildings within the enclosure the whole enclosure is treated as an ‘empty’ tessellation cell.</p>
-<p>TODO: ADD A FIGURE OF ETC</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/tessellations.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Enclosed tessellation cells in central Prague</figcaption>
+</figure>
+</div>
 </section>
 <section id="morphometric-characters" class="level5">
 <h5 class="anchored" data-anchor-id="morphometric-characters">Morphometric Characters</h5>
-<p>Characteristics describing the interactions of these elements, and the elements themselves are calculated at three scales: small - covering only aspects of the element; medium - covering aspects of the element and neighbouring elements and large - covering neighbouring elements up to five topological neighbours. In total there are 63 (TODO: CHECK) morphometric characters calculated described in Table XXX, which come directly from the list of characters used to derive the target classification.</p>
-<p>TODO: INCLUDE A TABLE OF CHARACTERS</p>
+<p>Characteristics describing the interactions of these elements, and the elements themselves are calculated at three scales: small - covering only aspects of the element; medium - covering aspects of the element and neighbouring elements and large - covering neighbouring elements up to five topological neighbours. In total there are 52 morphometric characters calculated described in the list below, which come directly from the list of characters used to derive the target classification.</p>
+<ol type="1">
+<li><strong>Area of a building</strong> is denoted as</li>
+</ol>
+<ol class="example" type="1">
+<li><span class="math inline">\(a_{blg}\)</span></li>
+</ol>
+<p>and defined as an area covered by a building footprint in m<sup>2</sup> .</p>
+<ol start="2" type="1">
+<li><strong>Perimeter of a building</strong> is denoted as</li>
+</ol>
+<ol start="2" class="example" type="1">
+<li><span class="math inline">\(p_{blg}\)</span></li>
+</ol>
+<p>and defined as the sum of lengths of the building exterior walls in m.</p>
+<ol start="3" type="1">
+<li><strong>Courtyard area of a building</strong> is denoted as</li>
+</ol>
+<ol start="3" class="example" type="1">
+<li><span class="math inline">\(a_{blg_c}\)</span></li>
+</ol>
+<p>and defined as the sum of areas of interior holes in footprint polygons in m<sup>2</sup>.</p>
+<ol start="4" type="1">
+<li><strong>Circular compactness of a building</strong> is denoted as</li>
+</ol>
+<ol start="4" class="example" type="1">
+<li><span class="math inline">\(CCo_{blg} = \frac{a_{blg}}{a_{blgC}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{blgC}\)</span> is an area of minimal enclosing circle. It captures the relation of building footprint shape to its minimal enclosing circle, illustrating the similarity of shape and circle <span class="citation" data-cites="dibble2017">(<a href="#ref-dibble2017" role="doc-biblioref"><strong>dibble2017?</strong></a>)</span>.</p>
+<ol start="5" type="1">
+<li><strong>Corners of a building</strong> is denoted as</li>
+</ol>
+<ol start="5" class="example" type="1">
+<li><span class="math inline">\(Cor_{blg} = \sum_{i=1}^{n}{c_{blg}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(c_{blg}\)</span> is defined as a vertex of building exterior shape with an angle between adjacent line segments <span class="math inline">\(\leq\)</span> 170 degrees. It uses only external shape (<code>shapely.geometry.exterior</code>), courtyards are not included. Character is adapted from <span class="citation" data-cites="steiniger2008">(<a href="#ref-steiniger2008" role="doc-biblioref"><strong>steiniger2008?</strong></a>)</span> to exclude non-corner-like vertices.</p>
+<ol start="6" type="1">
+<li><strong>Squareness of a building</strong> is denoted as</li>
+</ol>
+<ol start="6" class="example" type="1">
+<li><span class="math inline">\(Squ_{blg} =  \frac{\sum_{i=1}^{n} D_{c_{blg_i}}}{n}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(D\)</span> is the deviation of angle of corner <span class="math inline">\(c_{blg_i}\)</span> from 90 degrees and <span class="math inline">\(n\)</span> is a number of corners.</p>
+<ol start="7" type="1">
+<li><strong>Equivalent rectangular index of a building</strong> is denoted as</li>
+</ol>
+<ol start="7" class="example" type="1">
+<li><span class="math inline">\(ERI_{blg} =  \sqrt{{a_{blg}} \over {a_{blgB}}} * {p_{blgB} \over p_{blg}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{blgB}\)</span> is an area of a minimal rotated bounding rectangle of a building (MBR) footprint and <span class="math inline">\(p_{blgB}\)</span> its perimeter of MBR. It is a measure of shape complexity identified by <span class="citation" data-cites="basaraner2017">(<a href="#ref-basaraner2017" role="doc-biblioref"><strong>basaraner2017?</strong></a>)</span> as the shape characters with the best performance.</p>
+<ol start="8" type="1">
+<li><strong>Elongation of a building</strong> is denoted as</li>
+</ol>
+<ol start="8" class="example" type="1">
+<li><span class="math inline">\(Elo_{blg} =  \frac{l_{blgB}}{w_{blgB}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(l_{blgB}\)</span> is length of MBR and <span class="math inline">\(w_{blgB}\)</span> is width of MBR. It captures the ratio of shorter to the longer dimension of MBR to indirectly capture the deviation of the shape from a square <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>.</p>
+<ol start="9" type="1">
+<li><strong>Centroid - corner distance deviation of a building</strong> is denoted as</li>
+</ol>
+<ol start="9" class="example" type="1">
+<li><span class="math inline">\(CCD_{blg} =  \sqrt{\frac{1}{n} \sum_{i=1}^{n}\left(ccd_{i}-\bar{ccd}\right)^{2}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(ccd_i\)</span> is a distance between centroid and corner <span class="math inline">\(i\)</span> and <span class="math inline">\(\bar{ccd}\)</span> is mean of all distances. It captures a variety of shape. As a corner is considered vertex with angle &lt; 170º to reflect potential circularity of object and topological imprecision of building polygon.</p>
+<ol start="10" type="1">
+<li><strong>Centroid - corner mean distance of a building</strong> is denoted as</li>
+</ol>
+<ol start="10" class="example" type="1">
+<li><span class="math inline">\(CCM_{blg} =\frac{1}{n}\left(\sum_{i=1}^{n} ccd_{i}\right)\)</span></li>
+</ol>
+<p>where <span class="math inline">\(ccd_i\)</span> is a distance between centroid and corner <span class="math inline">\(i\)</span>. It is a character measuring a dimension of the object dependent on its shape <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>.</p>
+<ol start="11" type="1">
+<li><strong>Longest axis length of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="11" class="example" type="1">
+<li><span class="math inline">\(LAL_{cell} = d_{cellC}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(d_{cellC}\)</span> is a diameter of the minimal circumscribed circle around the tessellation cell polygon. The axis itself does not have to be fully within the polygon. It could be seen as a proxy of plot depth for tessellation-based analysis.</p>
+<ol start="12" type="1">
+<li><strong>Area of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="12" class="example" type="1">
+<li><span class="math inline">\(a_{cell}\)</span></li>
+</ol>
+<p>and defined as an area covered by a tessellation cell footprint in m<sup>2</sup>.</p>
+<ol start="13" type="1">
+<li><strong>Circular compactness of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="13" class="example" type="1">
+<li><span class="math inline">\(CCo_{cell} = \frac{a_{cell}}{a_{cellC}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{cellC}\)</span> is an area of minimal enclosing circle. It captures the relation of tessellation cell footprint shape to its minimal enclosing circle, illustrating the similarity of shape and circle.</p>
+<ol start="14" type="1">
+<li><strong>Equivalent rectangular index of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="14" class="example" type="1">
+<li><span class="math inline">\(ERI_{cell} =  \sqrt{{a_{cell}} \over {a_{cellB}}} * {p_{cellB} \over p_{cell}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{cellB}\)</span> is an area of the minimal rotated bounding rectangle of a tessellation cell (MBR) footprint and <span class="math inline">\(p_{cellB}\)</span> its perimeter of MBR. It is a measure of shape complexity identified by <span class="citation" data-cites="basaraner2017">(<a href="#ref-basaraner2017" role="doc-biblioref"><strong>basaraner2017?</strong></a>)</span> as a shape character of the best performance.</p>
+<ol start="15" type="1">
+<li><strong>Coverage area ratio of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="15" class="example" type="1">
+<li><span class="math inline">\(CAR_{cell} = \frac{a_{blg}}{a_{cell}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{blg}\)</span> is an area of a building and <span class="math inline">\(a_{cell}\)</span> is an area of related tessellation cell <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>. Coverage area ratio (CAR) is one of the commonly used characters capturing <em>intensity</em> of development. However, the definitions vary based on the spatial unit.</p>
+<ol start="16" type="1">
+<li><strong>Floor area ratio of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="16" class="example" type="1">
+<li><span class="math inline">\(FAR_{cell} = \frac{fa_{blg}}{a_{cell}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(fa_{blg}\)</span> is a floor area of a building and <span class="math inline">\(a_{cell}\)</span> is an area of related tessellation cell. Floor area could be computed based on the number of levels or using an approximation based on building height.</p>
+<ol start="17" type="1">
+<li><strong>Length of a street segment</strong> is denoted as</li>
+</ol>
+<ol start="17" class="example" type="1">
+<li><span class="math inline">\(l_{edg}\)</span></li>
+</ol>
+<p>and defined as a length of a <code>LineString</code> geometry in metres <span class="citation" data-cites="dibble2017 gil2012">(<a href="#ref-dibble2017" role="doc-biblioref"><strong>dibble2017?</strong></a>; <a href="#ref-gil2012" role="doc-biblioref"><strong>gil2012?</strong></a>)</span>.</p>
+<ol start="18" type="1">
+<li><strong>Width of a street profile</strong> is denoted as</li>
+</ol>
+<ol start="18" class="example" type="1">
+<li><span class="math inline">\(w_{sp} = \frac{1}{n}\left(\sum_{i=1}^{n} w_{i}\right)\)</span></li>
+</ol>
+<p>where <span class="math inline">\(w_{i}\)</span> is width of a street section i. The algorithm generates street sections every 3 meters alongside the street segment, and measures mean value. In the case of the open-ended street, 50 metres is used as a perception-based proximity limit <span class="citation" data-cites="araldi2019">(<a href="#ref-araldi2019" role="doc-biblioref"><strong>araldi2019?</strong></a>)</span>.</p>
+<ol start="19" type="1">
+<li><strong>Openness of a street profile</strong> is denoted as</li>
+</ol>
+<ol start="19" class="example" type="1">
+<li><span class="math inline">\(Ope_{sp} = 1 - \frac{\sum hit}{2\sum sec}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(\sum hit\)</span> is a sum of section lines (left and right sides separately) intersecting buildings and <span class="math inline">\(\sum sec\)</span> total number of street sections. The algorithm generates street sections every 3 meters alongside the street segment.</p>
+<ol start="20" type="1">
+<li><strong>Width deviation of a street profile</strong> is denoted as</li>
+</ol>
+<ol start="20" class="example" type="1">
+<li><span class="math inline">\(wDev_{sp} = \sqrt{\frac{1}{n} \sum_{i=1}^{n}\left(w_{i}-w_{sp}\right)^{2}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(w_{i}\)</span> is width of a street section i and <span class="math inline">\(w_{sp}\)</span> is mean width. The algorithm generates street sections every 3 meters alongside the street segment.</p>
+<ol start="21" type="1">
+<li><strong>Linearity of a street segment</strong> is denoted as</li>
+</ol>
+<ol start="21" class="example" type="1">
+<li><span class="math inline">\(Lin_{edg} = \frac{l_{eucl}}{l_{edg}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(l_{eucl}\)</span> is Euclidean distance between endpoints of a street segment and <span class="math inline">\(l_{edg}\)</span> is a street segment length. It captures the deviation of a segment shape from a straight line. It is adapted from <span class="citation" data-cites="araldi2019">(<a href="#ref-araldi2019" role="doc-biblioref"><strong>araldi2019?</strong></a>)</span>.</p>
+<ol start="22" type="1">
+<li><strong>Area covered by a street segment</strong> is denoted as</li>
+</ol>
+<ol start="22" class="example" type="1">
+<li><span class="math inline">\(a_{edg} = \sum_{i=1}^{n} a_{cell_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{cell_i}\)</span> is an area of tessellation cell <span class="math inline">\(i\)</span> belonging to the street segment. It captures the area which is likely served by each segment.</p>
+<ol start="23" type="1">
+<li><strong>Buildings per meter of a street segment</strong> is denoted as</li>
+</ol>
+<ol start="23" class="example" type="1">
+<li><span class="math inline">\(BpM_{edg} = \frac{\sum blg}{l_{edg}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(\sum blg\)</span> is a number of buildings belonging to a street segment and <span class="math inline">\(l_{edg}\)</span> is a length of a street segment. It reflects the granularity of development along each segment.</p>
+<ol start="24" type="1">
+<li><strong>Area covered by a street node</strong> is denoted as</li>
+</ol>
+<ol start="24" class="example" type="1">
+<li><span class="math inline">\(a_{node} = \sum_{i=1}^{n} a_{cell_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{cell_i}\)</span> is an area of tessellation cell <span class="math inline">\(i\)</span> belonging to the street node. It captures the area which is likely served by each node.</p>
+<ol start="25" type="1">
+<li><strong>Shared walls ratio of adjacent buildings</strong> is denoted as</li>
+</ol>
+<ol start="25" class="example" type="1">
+<li><span class="math inline">\(SWR_{blg} = \frac{p_{blg_{shared}}}{p_{blg}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(p_{blg_{shared}}\)</span> is a length of a perimeter shared with adjacent buildings and <span class="math inline">\(p_{blg}\)</span> is a perimeter of a building. It captures the amount of wall space facing the open space <span class="citation" data-cites="hamaina2012a">(<a href="#ref-hamaina2012a" role="doc-biblioref"><strong>hamaina2012a?</strong></a>)</span>.</p>
+<ol start="26" type="1">
+<li><strong>‌Mean distance to neighbouring buildings</strong> is denoted as</li>
+</ol>
+<ol start="26" class="example" type="1">
+<li><span class="math inline">\(NDi_{blg} = \frac{1}{n} \sum_{i=1}^{n} d_{blg, blg_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(d_{blg, blg_i}\)</span> is a distance between building and building <span class="math inline">\(i\)</span> on a neighbouring tessellation cell. It is adapted from <span class="citation" data-cites="hijazi2016">(<a href="#ref-hijazi2016" role="doc-biblioref"><strong>hijazi2016?</strong></a>)</span>. It captures the average proximity to other buildings.</p>
+<ol start="27" type="1">
+<li><strong>Weighted neighbours of a tessellation cell</strong> is denoted as</li>
+</ol>
+<ol start="27" class="example" type="1">
+<li><span class="math inline">\(WNe_{cell} = \frac{\sum cell_n}{p_{cell}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(\sum cell_n\)</span> is a number of cell neighbours and <span class="math inline">\(p_{cell}\)</span> is a perimeter of a cell. It reflects granularity of morphological tessellation.</p>
+<ol start="28" type="1">
+<li><strong>Area covered by neighbouring cells</strong> is denoted as</li>
+</ol>
+<ol start="28" class="example" type="1">
+<li><span class="math inline">\(a_{cell_n} = \sum_{i=1}^{n} a_{cell_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{cell_i}\)</span> is area of tessellation cell <span class="math inline">\(i\)</span> within topological distance 1. It captures the scale of morphological tessellation.</p>
+<ol start="29" type="1">
+<li><strong>Reached cells by neighbouring segments</strong> is denoted as</li>
+</ol>
+<ol start="29" class="example" type="1">
+<li><span class="math inline">\(RC_{edg_n} = \sum_{i=1}^{n} cells_{edg_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(cells_{edg_i}\)</span> is number of tessellation cells on segment <span class="math inline">\(i\)</span> within topological distance 1. It captures accessible granularity.</p>
+<ol start="30" type="1">
+<li><strong>Reached area by neighbouring segments</strong> is denoted as</li>
+</ol>
+<ol start="30" class="example" type="1">
+<li><span class="math inline">\(a_{edg_n} = \sum_{i=1}^{n} a_{edg_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{edg_i}\)</span> is an area covered by a street segment <span class="math inline">\(i\)</span> within topological distance 1. It captures an accessible area.</p>
+<ol start="31" type="1">
+<li><strong>Degree of a street node</strong> is denoted as</li>
+</ol>
+<ol start="31" class="example" type="1">
+<li><span class="math inline">\(deg_{node_i} = \sum_{j} edg_{i j}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(edg_{i j}\)</span> is an edge of a street network between node <span class="math inline">\(i\)</span> and node <span class="math inline">\(j\)</span>. It reflects the basic degree centrality.</p>
+<ol start="32" type="1">
+<li><strong>Mean distance to neighbouring nodes from a street node</strong> is denoted as</li>
+</ol>
+<ol start="32" class="example" type="1">
+<li><span class="math inline">\(MDi_{node} = \frac{1}{n} \sum_{i=1}^{n} d_{node, node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(d_{node, node_i}\)</span> is a distance between node and node <span class="math inline">\(i\)</span> within topological distance 1. It captures the average proximity to other nodes.</p>
+<ol start="33" type="1">
+<li><strong>Reached cells by neighbouring nodes</strong> is denoted as</li>
+</ol>
+<ol start="33" class="example" type="1">
+<li><span class="math inline">\(RC_{node_n} = \sum_{i=1}^{n} cells_{node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(cells_{node_i}\)</span> is number of tessellation cells on node <span class="math inline">\(i\)</span> within topological distance 1. It captures accessible granularity.</p>
+<ol start="34" type="1">
+<li><strong>Reached area by neighbouring nodes</strong> is denoted as</li>
+</ol>
+<ol start="34" class="example" type="1">
+<li><span class="math inline">\(a_{node_n} = \sum_{i=1}^{n} a_{node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{node_i}\)</span> is an area covered by a street node <span class="math inline">\(i\)</span> within topological distance 1. It captures an accessible area.</p>
+<ol start="35" type="1">
+<li><strong>Number of courtyards of adjacent buildings</strong> is denoted as</li>
+</ol>
+<ol start="35" class="example" type="1">
+<li><span class="math inline">\(NCo_{blg_{adj}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(NCo_{blg_{adj}}\)</span> is a number of interior rings of a polygon composed of footprints of adjacent buildings <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>.</p>
+<ol start="36" type="1">
+<li><strong>Perimeter wall length of adjacent buildings</strong> is denoted as</li>
+</ol>
+<ol start="36" class="example" type="1">
+<li><span class="math inline">\(p_{blg_{adj}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(p_{blg_{adj}}\)</span> is a length of an exterior ring of a polygon composed of footprints of adjacent buildings.</p>
+<ol start="37" type="1">
+<li><strong>Mean inter-building distance between neighbouring buildings</strong> is denoted as</li>
+</ol>
+<ol start="37" class="example" type="1">
+<li><span class="math inline">\(IBD_{blg} = \frac{1}{n} \sum_{i=1}^{n} d_{blg, blg_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(d_{blg, blg_i}\)</span> is a distance between building and building <span class="math inline">\(i\)</span> on a tessellation cell within topological distance 3. It is adapted from <span class="citation" data-cites="caruso2017">(<a href="#ref-caruso2017" role="doc-biblioref"><strong>caruso2017?</strong></a>)</span>. It captures the average proximity between buildings.</p>
+<ol start="38" type="1">
+<li><strong>‌Building adjacency of neighbouring buildings</strong> is denoted as</li>
+</ol>
+<ol start="38" class="example" type="1">
+<li><span class="math inline">\(BuA_{blg} = \frac{\sum blg_{adj}}{\sum blg}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(\sum blg_{adj}\)</span> is a number of joined built-up structures within topological distance three and <span class="math inline">\(\sum blg\)</span> is a number of buildings within topological distance 3. It is adapted from <span class="citation" data-cites="vanderhaegen2017">(<a href="#ref-vanderhaegen2017" role="doc-biblioref"><strong>vanderhaegen2017?</strong></a>)</span>.</p>
+<ol start="39" type="1">
+<li><strong>Weighted reached blocks of neighbouring tessellation cells</strong> is denoted as</li>
+</ol>
+<ol start="39" class="example" type="1">
+<li><span class="math inline">\(WRB_{cell} = \frac{\sum blk}{\sum_{i=1}^{n} a_{cell_i}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(\sum blk\)</span> is a number of blocks within topological distance three and <span class="math inline">\(a_{cell_i}\)</span> is an area of tessellation cell <span class="math inline">\(i\)</span> within topological distance three.</p>
+<ol start="40" type="1">
+<li><strong>Local meshedness of a street network</strong> is denoted as</li>
+</ol>
+<ol start="40" class="example" type="1">
+<li><span class="math inline">\(Mes_{node}= \frac{e-v+1}{2 v-5}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(e\)</span> is a number of edges in a subgraph, and <span class="math inline">\(v\)</span> is the number of nodes in a subgraph <span class="citation" data-cites="feliciotti2018">(<a href="#ref-feliciotti2018" role="doc-biblioref"><strong>feliciotti2018?</strong></a>)</span>. A subgraph is defined as a network within topological distance five around a node.</p>
+<ol start="41" type="1">
+<li><strong>Mean segment length of a street network</strong> is denoted as</li>
+</ol>
+<ol start="41" class="example" type="1">
+<li><span class="math inline">\(MSL_{edg} = \frac{1}{n} \sum_{i=1}^{n} l_{edg_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(l_{edg_i}\)</span> is a length of a street segment <span class="math inline">\(i\)</span> within a topological distance 3 around a segment.</p>
+<ol start="42" type="1">
+<li><strong>Cul-de-sac length of a street network</strong> is denoted as</li>
+</ol>
+<ol start="42" class="example" type="1">
+<li><span class="math inline">\(CDL_{node} = \sum_{i=1}^{n} l_{edg_i}, \text { if }edg_i \text { is cul-de-sac}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(l_{edg_i}\)</span> is a length of a street segment <span class="math inline">\(i\)</span> within a topological distance 3 around a node.</p>
+<ol start="43" type="1">
+<li><strong>Reached cells by street network segments</strong> is denoted as</li>
+</ol>
+<ol start="43" class="example" type="1">
+<li><span class="math inline">\(RC_{edg} = \sum_{i=1}^{n} cells_{edg_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(cells_{edg_i}\)</span> is number of tessellation cells on segment <span class="math inline">\(i\)</span> within topological distance 3. It captures accessible granularity.</p>
+<ol start="44" type="1">
+<li><strong>Node density of a street network</strong> is denoted as</li>
+</ol>
+<ol start="44" class="example" type="1">
+<li><span class="math inline">\(D_{node} = \frac{\sum node}{\sum_{i=1}^{n} l_{edg_i}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(\sum node\)</span> is a number of nodes within a subgraph and <span class="math inline">\(l_{edg_i}\)</span> is a length of a segment <span class="math inline">\(i\)</span> within a subgraph. A subgraph is defined as a network within topological distance five around a node.</p>
+<ol start="45" type="1">
+<li><strong>Reached cells by street network nodes</strong> is denoted as</li>
+</ol>
+<ol start="45" class="example" type="1">
+<li><span class="math inline">\(RC_{node_{net}} = \sum_{i=1}^{n} cells_{node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(cells_{node_i}\)</span> is number of tessellation cells on node <span class="math inline">\(i\)</span> within topological distance 3. It captures accessible granularity.</p>
+<ol start="46" type="1">
+<li><strong>Reached area by street network nodes</strong> is denoted as</li>
+</ol>
+<ol start="46" class="example" type="1">
+<li><span class="math inline">\(a_{node_{net}} = \sum_{i=1}^{n} a_{node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(a_{node_i}\)</span> is an area covered by a street node <span class="math inline">\(i\)</span> within topological distance 3. It captures an accessible area.</p>
+<ol start="47" type="1">
+<li><strong>Proportion of cul-de-sacs within a street network</strong> is denoted as</li>
+</ol>
+<ol start="47" class="example" type="1">
+<li><span class="math inline">\(pCD_{node} = \frac{\sum_{i=1}^{n} node_i, \text { if }deg_{node_i} = 1}{\sum_{i=1}^{n} node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref"><strong>boeing2017a?</strong></a>)</span>.</p>
+<ol start="48" type="1">
+<li><strong>Proportion of 3-way intersections within a street network</strong> is denoted as</li>
+</ol>
+<ol start="48" class="example" type="1">
+<li><span class="math inline">\(p3W_{node} = \frac{\sum_{i=1}^{n} node_i, \text { if }deg_{node_i} = 3}{\sum_{i=1}^{n} node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref"><strong>boeing2017a?</strong></a>)</span>.</p>
+<ol start="49" type="1">
+<li><strong>Proportion of 4-way intersections within a street network</strong> is denoted as</li>
+</ol>
+<ol start="49" class="example" type="1">
+<li><span class="math inline">\(p4W_{node} = \frac{\sum_{i=1}^{n} node_i, \text { if }deg_{node_i} = 4}{\sum_{i=1}^{n} node_i}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref"><strong>boeing2017a?</strong></a>)</span>.</p>
+<ol start="50" type="1">
+<li><strong>Weighted node density of a street network</strong> is denoted as</li>
+</ol>
+<ol start="50" class="example" type="1">
+<li><span class="math inline">\(wD_{node} = \frac{\sum_{i=1}^{n} deg_{node_i} - 1}{\sum_{i=1}^{n} l_{edg_i}}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(deg_{node_i}\)</span> is a degree of a node <span class="math inline">\(i\)</span> within a subgraph and <span class="math inline">\(l_{edg_i}\)</span> is a length of a segment <span class="math inline">\(i\)</span> within a subgraph. A subgraph is defined as a network within topological distance five around a node.</p>
+<ol start="51" type="1">
+<li><strong>Local closeness centrality of a street network</strong> is denoted as</li>
+</ol>
+<ol start="51" class="example" type="1">
+<li><span class="math inline">\(lCC_{node} = \frac{n - 1}{\sum_{v=1}^{n-1} d(v, u)}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(d(v, u)\)</span> is the shortest-path distance between <span class="math inline">\(v\)</span> and <span class="math inline">\(u\)</span>, and <span class="math inline">\(n\)</span> is the number of nodes within a subgraph. A subgraph is defined as a network within topological distance five around a node.</p>
+<ol start="52" type="1">
+<li><strong>Square clustering of a street network</strong> is denoted as</li>
+</ol>
+<ol start="52" class="example" type="1">
+<li><span class="math inline">\(sCl_{node} = \frac{\sum_{u=1}^{k_{v}} \sum_{w=u+1}^{k_{v}} q_{v}(u, w)}{\sum_{u=1}^{k_{v}} \sum_{w=u+1}^{k_{v}}\left[a_{v}(u, w)+q_{v}(u, w)\right]}\)</span></li>
+</ol>
+<p>where <span class="math inline">\(q_v(u,w)\)</span> are the number of common neighbours of <span class="math inline">\(u\)</span> and <span class="math inline">\(w\)</span> other than <span class="math inline">\(v\)</span> (ie squares), and <span class="math inline">\(a_v(u,w) = (k_u - (1+q_v(u,w)+\theta_{uv}))(k_w - (1+q_v(u,w)+\theta_{uw}))\)</span>, where <span class="math inline">\(\theta_{uw} = 1\)</span> if <span class="math inline">\(u\)</span> and <span class="math inline">\(w\)</span> are connected and 0 otherwise <span class="citation" data-cites="PhysRevE.72.056127">(<a href="#ref-PhysRevE.72.056127" role="doc-biblioref"><strong>PhysRevE.72.056127?</strong></a>)</span>.</p>
 </section>
 </section>
 </section>
 <section id="target-labels" class="level3">
 <h3 class="anchored" data-anchor-id="target-labels">Target labels</h3>
-<p>For the second stage, we assign a target classification label to every ETC derived using the satellite-derived polygons. This is done based on spatial intersection between EuroFab and <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> ETCs. In cases where there are multiple detailed tessellation cells that fall within the range of a single EuroFab ETC, the label is decided based on majority.</p>
-<p>Since the final output of <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> is a hierarchy, rather than a flat clustering there are several options how to pick the specific target labels. Generally, clusters lower in the hierarchy represent classifications of urban fabrics at more granular scales. For example, depending on the hierarchy cutoff point historical urban areas can be one cluster, or can be separated into two - medieval and industrial-era urban fabrics.</p>
-<p>The specific selection of cutoff points will follow <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span>. The first set of urban fabrics we will aim to predict, broadly differentiates - different types of houses; from heterogenous historical urbanised areas; from recent modern urban developments - apartment blocks and industrial areas. The second set breaks down each of the first sets into multiple subsets. It goes into more detail and splits the houses into more classes, based on features such as size and proximity to cities; it also splits the historical areas based on origin - medieval, industrial-era and others; and splits the modern urban developments into subclasses such as modernist apartment blocks, industrial areas, offices and others. By analysing the model performance across two different hierarchical levels, we will understand what is the highest resolution detail the model can predict, given the shortcomings of the data and which factors affect predictions.</p>
-<p>TODO: FIGURE OF CLASSIFICATION IN AT LEAST TWO HIGH-LEVEL CUTS</p>
+<p>For the second stage, we assign a target classification label to every ETC derived using the satellite-derived polygons. This is done based on spatial intersection between EuroFab and <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> ETCs. In cases where there are multiple detailed tessellation cells that fall within the range of a single EuroFab ETC, the label is decided based on majority.</p>
+<p>Since the final output of <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> is a hierarchy, rather than a flat clustering there are several options how to pick the specific target labels. Generally, clusters lower in the hierarchy represent classifications of urban fabrics at more granular scales. For example, depending on the hierarchy cutoff point historical urban areas can be one cluster, or can be separated into two - medieval and industrial-era urban fabrics.</p>
+<p>The specific selection of cutoff points will follow <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span>. The first set of urban fabrics we will aim to predict, broadly differentiates - different types of houses; from heterogenous historical urbanised areas; from recent modern urban developments such as apartment blocks and commercial areas; from large industrial areas.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/prague_600.png" class="nostretch figure-img" height="400"></p>
+<figcaption>High-level urban fabrics</figcaption>
+</figure>
+</div>
+<p>The second set breaks down each of the first sets into multiple subsets. It goes into more detail and splits the houses into more classes, based on features such as size and proximity to cities; it also splits the historical areas based on origin - medieval, industrial-era and others; the modern urban developments into subclasses such as different types of modernist apartment blocks, commercial areas, offices and others; and the several industrial area types. By analysing the model performance across two different hierarchical levels, we will understand what is the highest resolution detail the model can predict, given the shortcomings of the data and which factors affect predictions.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/prague_400.png" class="nostretch figure-img" height="400"></p>
+<figcaption>More detailed urban fabrics</figcaption>
+</figure>
+</div>
+<!--evaluation setup TODO:align with image-->
 </section>
-<section id="traintestvalidation-split" class="level3">
-<h3 class="anchored" data-anchor-id="traintestvalidation-split">Train/test/validation split</h3>
-<p>After assigning the target labels, we create a schema that will dictate how to split the data into a training and testing subsets for the classification models. Random subsetting does not work for this study, since we need to account for spatial dependency and the related data leakage between train and test data. The spatial leakage comes from both the nature of the data - spatial contiguity is one of the core aspects of morphological elements - but also from the way characters are calculated based on various nearest topological neighbours.</p>
-<p>To account for this, we aggregate nearby ETCs into higher granularity spatial units - level 5 H3 cells - and randomly split the these units into 80% train and 20% test data, based on contiguity. This ensures that the majority of the test set ETCs and their neighbours are not present in the training data and no morphological characters related to them affect the training set. We use level 5 H3 cells, which represent a delineation of the globe into hexagons with approximately 250 sq. km. area, rather than enclosures or ETC contiguity, to ensure that contiguous subsets of test data cover areas of heterogenous elements and present the model with a realistic validation scenario. This process is done once for the whole study area, before training any models.</p>
-<p>TODO: FIGURE OF TRAIN/TEST SPLIT BASED ON H3 ON A SINGLE CITY. IDEALLY MAPPED TO ETCS</p>
-</section>
-<section id="training-and-validation" class="level3">
-<h3 class="anchored" data-anchor-id="training-and-validation">Training and validation</h3>
+<section id="prediction-modelling-and-traintest-split" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-modelling-and-traintest-split">Prediction modelling and train/test split</h3>
 <!--why classification and tree based methods-->
-<p>The main aim of the modelling task is to generate a classification of morphological elements of similar quality to <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> given the data quality limitations, albeit flat, not hierarchical. To achieve this we create an evaluation framework for the selection of non-linear tree-based models like a random forest classifier or an XGBoost model. We use the satellite-derived ETCs and their characteristics as input data and the clusters from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> as target labels for a classification task. The choice of tree-based learning models is due to their readily available implementations, high scalability and ability to quickly offer interpretation insights. Furthermore, they handle well high dimensional data, non-linear interactions and require minimal hyper-parameter tuning. The flexibility of the models and the specific training/testing framework setup will allow us to not just produce a predictive model but also to identify potential areas for improvement in the original data preprocessing.</p>
+<p>The main aim of the modelling task is to generate a classification of morphological elements of similar quality to <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> given the data quality limitations, albeit flat, not hierarchical. To achieve this we create an evaluation framework for the selection of non-linear tree-based models like a random forest classifier or an XGBoost model. We use the satellite-derived ETCs and their characteristics as input data and the clusters from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> as target labels for a classification task. The choice of tree-based learning models is due to their readily available implementations, high scalability and ability to quickly offer interpretation insights. Furthermore, they handle well high dimensional data, non-linear interactions and require minimal hyper-parameter tuning. The flexibility of the models and the specific training/testing framework setup will allow us to not just produce a predictive model but also to identify potential areas for improvement in the original data preprocessing.</p>
 <!--out of sample importance-->
 <p>Since we want the final production model to be general and applicable to large areas i.e.&nbsp;whole continents, it needs to be able to handle previously unseen urban fabric types. For example, an urban morphology type that is present in the test data, or in another study area, might not be present in the training data and in that case the model should flag its predicted label as uncertain. This is another area where tree models have an advantage, since they are ensemble methods and this can help reduces their tendency to overfit. They also readily provide a confidence score for each prediction which can be used to flag unseen data. Furthermore, we take extra care to evaluate the final production models performance in realistic scenarios and the relationship between its accuracy on test data and whole countries that are not part of the model training or test data.</p>
 <!--evaluation setup-->
-<p>To achieve this we train five iterations of each model on different subsets of the study area - so that that every country and every combination of countries is used as final hold-out validation data a and train/test pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its train/test pipeline, whereas Slovakia will be used as the hold-out data , in order to see the relationship between the final test score from the train/test pipeline and the models realistic performance on a whole unseen country’s urban fabric. The data from the four countries in each train/test pipeline will be separated into training and test sets based on the spatial strategy described previously. The model training and evaluation will follow standard best practices - model coefficients and hyper parameter tuning, such as the decision threshold will be optimised based on the training subset, and the test subset will be used to give a final model accuracy score. Specifically, the models will use balanced accuracy as the optimisation metric in order to account for imbalances in the distribution of urban fabric classes. Our framework further extends the best practices with an additional layer of testing using the hold-out country for each train/test pipeline. All of the data in the hold-out country is used to score the model’s performance and the spatial train/test split will be ignored for that particular iteration.</p>
-<p>TODO: DIAGRAM SHOWING THE EVAL SETUP</p>
-<p>This acts as an extra check against overfitting and ultimately enable us to see how the final production model will perform in realistic scenarios - applying it to whole countries which are not used for the training or testing at all. This comes with at least two advantages over simply reporting a test score on a random sample. First, it is a test of model performance on a dataset that does not have any spatial leakage with the training or testing data. Second, it ensures that we evaluate model performance on unseen urban fabric types from other countries. We can afford to do this in part due to the large size of the data we are working with. In every permutation there will be a rich variety of urban fabrics and tens of millions of ETCs used in the training part of each train/test pipeline.</p>
-<p>The final production model is trained on the whole dataset, using the same hyper parameter grid search configuration and training/test spatial split. The extra validation steps we carry out with the hold-out countries will be used to used in three ways. First, to contextualise the final models’ accuracy on the test data; second, to indicate how the model will perform on other countries; and third to see how it handles urban fabric types not seen in the training or test data in a realistic scenario.</p>
+<p>To achieve this we split the study area into five subsets and train five independent iterations of each model. This is done so that that every country and every combination of countries is used as final hold-out test data a and training/validation pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its training/validation pipeline, whereas Slovakia will be used as the hold-out data.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/eval_split.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Model evaluation and training setup</figcaption>
+</figure>
+</div>
+<p>This strategy acts as an extra check against overfitting and ultimately enable us to see how the final production model will perform in realistic scenarios - applying it to whole countries which are not used for the training or testing at all. This comes with at least two advantages over simply reporting a test score on a random sample. First, it is a test of model performance on a dataset that does not have any spatial leakage with the training or testing data. Second, it ensures that we evaluate model performance on unseen urban fabric types from other countries. We can afford to do this in part due to the large size of the data we are working with. In every permutation there will be a rich variety of urban fabrics and tens of millions of ETCs used in the model training.</p>
+</section>
+<section id="training-and-evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="training-and-evaluation">Training and evaluation</h3>
+<p>Lastly, after splitting the study area into five subsets, we create a schema that will dictate how to split the training data of each subset for the classification task. We use five-fold cross validation for hyper parameter tuning, based on spatial contiguity. Random subsetting does not work for this study, since we need to account for spatial dependency and the related data leakage between train and evaluation data. The spatial leakage comes from both the nature of the data - spatial contiguity is one of the core aspects of morphological elements - but also from the way characters are calculated based on various nearest topological neighbours.</p>
+<p>To account for this, we aggregate nearby ETCs into higher granularity spatial units - level 7 H3 cells - and randomly split these units into five groups, to carry out the cross-validation training. This ensures that the majority of the ETCs and their neighbours in one set are not present in the other sets, and therefore spatial leakage is minimised. We use level 7 H3 cells, which represent a delineation of the globe into hexagons with an area of approximately 5 sq. km. , rather than enclosures or ETC contiguity, to ensure that contiguous subsets of test data cover areas of heterogenous elements and present the model with a realistic validation scenario.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/train_test_prague.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Example iteration in a five-fold cross validation split. Only one group is highligted in blue, with its ETCs plotted in green, which will be used as a hold-out data for accuracy evaluation and hyper parameter tuning.</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../figures/algo_design/train_test_prague_zoom2.png" class="nostretch figure-img" height="400"></p>
+<figcaption>Example hexagon in the validation split</figcaption>
+</figure>
+</div>
+<p>The model training and evaluation will follow standard best practices - model coefficients and hyper parameter tuning, such as the decision threshold will be optimised based on the training subset, and all of the data in the hold-out country will be used to give a final model accuracy score. Specifically, the models will use balanced accuracy as the optimisation metric in order to account for imbalances in the distribution of urban fabric classes. The extra validation steps we carry out with the hold-out countries will be used to used in three ways. First, to contextualise the final models’ accuracy on the test data; second, to indicate how the model will perform on other countries; and third to see how it handles urban fabric types not seen in the training in a realistic scenario.</p>
+<p>The final production model is trained on the whole dataset, using the same hyper parameter grid search configuration and training/test spatial split.</p>
 </section>
 <section id="preliminary-results" class="level3">
 <h3 class="anchored" data-anchor-id="preliminary-results">Preliminary results</h3>
-<p>There are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions TODO: EXPLAIN WHY. The number of downloaded, unprocessed streets is similar to those in <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref"><strong>primus?</strong></a>)</span> - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries. These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 - the missing or wrongly merged building polygons. In turn these affect the third discussed issue - the interpretation of the values of the calculated morphological characters. Many characters from the original classification also completely lose their meaning. For example, the number of adjacent buildings in the EuroFab dataset is much smaller and therefore all characters based on adjacency have a much more limited utility. This also affects, to a relatively smaller, but nevertheless important extent, characters that rely on inter-building distances and counts.</p>
-<p>These results further point towards the need for a non-linear classification model, cable of accounting for these data discrepancies.</p>
+<p>We have implemented a preliminary pipeline that carries out full data preprocessing - generating morphological elements and characters, assigning target labels and some exploratory modelling. The core functionality for all of this was made available within open-source packages - momepy, libpysal, sgeop.</p>
+<p>Based on the preliminary results, there are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions. The number of downloaded, unprocessed streets is similar to those in <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries.</p>
+<p>These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 . There are significanlty less subregions in the study area, since there are around 30 million less buildings, which are either missing or wrongly merged into a single polygon. In turn these issues affect the interpretation of the values of the calculated morphological characters. Some characters from the original classification even completely lose their meaning. For example, the number of adjacent buildings in the EuroFab dataset is much smaller and therefore all characters based on adjacency have a much more limited utility. This also affects, to a relatively smaller, but nevertheless important extent, characters that rely on inter-building distances and counts.</p>
+<!--preliminary modelling-->
+<p>As a first modelling step we tried a random forest (RF) classifier on a subset of the data. The goal was to keep the final model as simple, scalable and interpretable as possible and evaluate the project workflow as a whole, rather than the specific model’s performance. We trained and tested the same simple RF model on the same data, split in different ways - one was based on stratified spatial k-fold train/test splits (our proposed setup) and another based on random train/test splits. The latter model with random sampling had an accuracy of 0.95 versus an accuracy of 0.68 for the former model with spatial stratification. The difference in accuracy highlights the extent of spatial leakage of information. Furthermore, the relatively high accuracy score of the simple model hints towards the viability of predicting urban fabric types.</p>
+<p>In total, the results point towards two things. First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastal data. And second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.</p>
 </section>
 </section>
 <section id="ai-modelling-using-satellite-imagery-1" class="level2">
@@ -598,6 +1059,9 @@ Fleischmann, Martin, Alessandra Feliciotti, Ombretta Romice, and Sergio Porta. 2
 </div>
 <div id="ref-fleischmann2021measuring" class="csl-entry" role="listitem">
 Fleischmann, Martin, Ombretta Romice, and Sergio Porta. 2021. <span>“Measuring Urban Form: Overcoming Terminological Inconsistencies for a Quantitative and Comprehensive Morphologic Analysis of Cities.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em> 48 (8): 2133–50.
+</div>
+<div id="ref-primus" class="csl-entry" role="listitem">
+Fleischmann, Martin, and Krasen Samardzhiev. Forthcoming. <span>“Numerical Taxonomy of Urban Fabric in Central Europe,”</span> Forthcoming.
 </div>
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
