@@ -141,3 +141,18 @@ Another type of segment that is filtered out are tunnels , since the analysis st
 
 
 # AI data
+
+### Satellite imagery
+
+We use satellite images as input into the AI model to predict urban fabric. The satellite image data is sourced from the GHS-composite-S2 R2020A dataset [@corbane2020global]. This dataset is a global, cloud-free composite derived from Sentinel-2 L1C data, covering the period from January 2017 to December 2018. The composite images have a resolution of 10 meters per pixel and include three visible bands (red, green, and blue), which are well-suited for urban analysis.
+
+Sentinel-2 data is particularly suitable for this application for several reasons:
+    * Coverage: It provides consistent, openly available data for the entire Earth, making it ideal for projects requiring cross-regional comparisons.
+    * Temporal flexibility: The composite includes data from multiple time points, enabling us to analyze urban patterns over time.
+    * Resolution: At 10 meters per pixel, it offers the highest resolution among openly available datasets, sufficient to distinguish urban features at the neighborhood scale.
+    * Model compatibility: Many machine learning models in geospatial AI are pre-trained on Sentinel-2 data, ensuring compatibility with existing methods and facilitating transfer learning.
+
+
+### Urban fabric classes
+
+The urban fabric predictions from our AI model are based on labels from the Spatial Signatures Framework [@arribas2022spatial; @fleischmann2022geographical]. This framework provides a typology of British urban environments, characterized by both form (physical structure) and function (usage). It captures the complexity of urban areas, offering insights into how different spaces look and operate. While our primary interest is in urban fabric classification focused on form — an approach we expect may be simpler since form is visible in imagery — this classification scheme is still under development. Therefore, we currently use the more comprehensive Spatial Signatures Framework as a proxy, as it aligns with the goals of urban characterization in our project.

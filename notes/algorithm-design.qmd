@@ -45,7 +45,12 @@ Implementing these stages, and further realising the potential of the model for 
 
 ## AI Modelling using Satellite Imagery
 
-A brief theoretical background.
+Advancements in satellite imagery and artificial intelligence (AI) have significantly enhanced our ability to analyze complex geospatial datasets. Satellite imagery provides detailed information at varying spatial and temporal scales, enabling applications that range from analyzing individual buildings to studying entire continents. By extracting visual and spectral data, satellite images offer insights into ground conditions such as land cover and land use classification [@esch2010how; @ma2019deep; @ibrahim2020understanding; @huang2018urban]. AI algorithms transform these data into actionable insights by automating the analysis of vast amounts of pixel-level information. However, many conventional AI models are designed for specific tasks and require significant fine-tuning for new applications.
+
+The emergence of foundation models in geospatial AI (GeoAI) marks a transformative shift. Unlike traditional task-specific models, foundation models are pre-trained on large, diverse datasets and can be adapted to multiple tasks with minimal additional training [@rolf2021generalizable]. This adaptability is particularly useful in remote sensing, where data are often complex, integrating multi-spectral and multi-temporal information [@lu2024ai].
+
+Foundation models have recently demonstrated superior performance, especially in scenarios with limited labeled data. Transformer-based architectures, pre-trained on extensive multispectral datasets, have become central to GeoAI research. Notable examples include Prithvi [@jakubik2023foundation] and SatlasPretrain [@bastani2023satlaspretrain], which were trained on terabytes of imagery and millions of labeled instances. These models have achieved state-of-the-art results in tasks such as image classification and multi-temporal image segmentation, illustrating their ability to address diverse and complex Earth observation challenges.
+
 
 # Algorithm Design
 
@@ -506,8 +511,6 @@ First, they further show need for a non-linear classification model, cable of ac
 And second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.
 
 ## AI Modelling using Satellite Imagery
-
-Most of the stuff from `technical_part_turing.qmd` except the data description.
 
 ### Data preprocessing
 
