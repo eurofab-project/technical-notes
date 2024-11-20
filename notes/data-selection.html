@@ -121,7 +121,11 @@ div.csl-indent {
   <li><a href="#overture-transportation-layer" id="toc-overture-transportation-layer" class="nav-link" data-scroll-target="#overture-transportation-layer">Overture transportation layer</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#ai-data" id="toc-ai-data" class="nav-link" data-scroll-target="#ai-data">AI data</a></li>
+  <li><a href="#ai-data" id="toc-ai-data" class="nav-link" data-scroll-target="#ai-data">AI data</a>
+  <ul class="collapse">
+  <li><a href="#satellite-imagery" id="toc-satellite-imagery" class="nav-link" data-scroll-target="#satellite-imagery">Satellite imagery</a></li>
+  <li><a href="#urban-fabric-classes" id="toc-urban-fabric-classes" class="nav-link" data-scroll-target="#urban-fabric-classes">Urban fabric classes</a></li>
+  </ul></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="data-selection.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
     </div>
@@ -274,18 +278,30 @@ div.csl-indent {
 </section>
 </section>
 <section id="ai-data" class="level1">
-
+<h1>AI data</h1>
+<section id="satellite-imagery" class="level3">
+<h3 class="anchored" data-anchor-id="satellite-imagery">Satellite imagery</h3>
+<p>We use satellite images as input into the AI model to predict urban fabric. The satellite image data is sourced from the GHS-composite-S2 R2020A dataset <span class="citation" data-cites="corbane2020global">(<a href="#ref-corbane2020global" role="doc-biblioref"><strong>corbane2020global?</strong></a>)</span>. This dataset is a global, cloud-free composite derived from Sentinel-2 L1C data, covering the period from January 2017 to December 2018. The composite images have a resolution of 10 meters per pixel and include three visible bands (red, green, and blue), which are well-suited for urban analysis.</p>
+<p>Sentinel-2 data is particularly suitable for this application for several reasons: * Coverage: It provides consistent, openly available data for the entire Earth, making it ideal for projects requiring cross-regional comparisons. * Temporal flexibility: The composite includes data from multiple time points, enabling us to analyze urban patterns over time. * Resolution: At 10 meters per pixel, it offers the highest resolution among openly available datasets, sufficient to distinguish urban features at the neighborhood scale. * Model compatibility: Many machine learning models in geospatial AI are pre-trained on Sentinel-2 data, ensuring compatibility with existing methods and facilitating transfer learning.</p>
+</section>
+<section id="urban-fabric-classes" class="level3">
+<h3 class="anchored" data-anchor-id="urban-fabric-classes">Urban fabric classes</h3>
+<p>The urban fabric predictions from our AI model are based on labels from the Spatial Signatures Framework <span class="citation" data-cites="arribas2022spatial fleischmann2022geographical">(<a href="#ref-arribas2022spatial" role="doc-biblioref">Arribas-Bel and Fleischmann 2022</a>; <a href="#ref-fleischmann2022geographical" role="doc-biblioref">Fleischmann and Arribas-Bel 2022</a>)</span>. This framework provides a typology of British urban environments, characterized by both form (physical structure) and function (usage). It captures the complexity of urban areas, offering insights into how different spaces look and operate. While our primary interest is in urban fabric classification focused on form — an approach we expect may be simpler since form is visible in imagery — this classification scheme is still under development. Therefore, we currently use the more comprehensive Spatial Signatures Framework as a proxy, as it aligns with the goals of urban characterization in our project.</p>
 
 
 
 </section>
+</section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">AI data</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-arribas2022spatial" class="csl-entry" role="listitem">
 Arribas-Bel, Daniel, and Martin Fleischmann. 2022. <span>“Spatial Signatures-Understanding (Urban) Spaces Through Form and Function.”</span> <em>Habitat International</em> 128: 102641.
 </div>
 <div id="ref-calafiore2023inequalities" class="csl-entry" role="listitem">
 Calafiore, Alessia, Krasen Samardzhiev, Francisco Rowe, Martin Fleischmann, and Daniel Arribas-Bel. 2023. <span>“Inequalities in Experiencing Urban Functions. An Exploration of Human Digital (Geo-) Footprints.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em>, 23998083231208507.
+</div>
+<div id="ref-fleischmann2022geographical" class="csl-entry" role="listitem">
+Fleischmann, Martin, and Daniel Arribas-Bel. 2022. <span>“Geographical Characterisation of British Urban Form and Function Using the Spatial Signatures Framework.”</span> <em>Scientific Data</em> 9 (1): 546.
 </div>
 <div id="ref-fleischmann2022methodological" class="csl-entry" role="listitem">
 Fleischmann, Martin, Alessandra Feliciotti, Ombretta Romice, and Sergio Porta. 2022. <span>“Methodological Foundation of a Numerical Taxonomy of Urban Form.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em> 49 (4): 1283–99.
