@@ -151,12 +151,7 @@ Another type of segment that is filtered out are tunnels , since the analysis st
 
 We use satellite images as input into the AI model to predict urban fabric. The satellite image data is sourced from the GHS-composite-S2 R2020A dataset [@corbane2020global]. This dataset is a global, cloud-free composite derived from Sentinel-2 L1C data, covering the period from January 2017 to December 2018. The composite images have a resolution of 10 meters per pixel and include three visible bands (red, green, and blue), which are well-suited for urban analysis.
 
-Sentinel-2 data is particularly suitable for this application for several reasons:
-    - Coverage: It provides consistent, openly available data for the entire Earth, making it ideal for projects requiring cross-regional comparisons.
-    - Temporal flexibility: The composite includes data from multiple time points, enabling us to analyze urban patterns over time.
-    - Resolution: At 10 meters per pixel, it offers the highest resolution among openly available datasets, sufficient to distinguish urban features at the neighborhood scale.
-    - Model compatibility: Many machine learning models in geospatial AI are pre-trained on Sentinel-2 data, ensuring compatibility with existing methods and facilitating transfer learning.
-
+Sentinel-2 data is particularly suitable for this application due to its consistent and openly available global coverage, which is ideal for projects requiring cross-regional comparisons. Its temporal flexibility, enabled by composites from multiple time points, allows for the analysis of urban patterns over time. With a resolution of 10 meters per pixel, Sentinel-2 provides the highest level of detail among openly available datasets, making it sufficient to distinguish urban features at the neighborhood scale. Additionally, its compatibility with many geospatial AI models pre-trained on Sentinel-2 data supports the use of existing methods and facilitates transfer learning.
 
 ## Urban fabric classes
 
