@@ -11,36 +11,50 @@ format:
   html:
     toc: true
     css: styles.css
+bibliography: ../references.bib
+
 ---
 
 # Executive summary
-The EUROFAB project emphasizes close collaboration with the end-users of the final project outputs. We are in ongoing contact with various stakeholders and taking their feeback into account when carryout the technical work. This document describes the stakeholder engagement carried out to date, with the purpose of consolidating their requirements and idea for the maximum adoption and impact of our work. The work on the stakeholder requirements is currently ongoing and we needed to adapt to their (stakeholders’) activity schedule which is quite tight, since we want to involve not just representatives from the networks/associations themselves, but also their constituency.
 
+The EuroFab project emphasises close collaboration with the end-users of the final project outputs. We are in recurring contact with various stakeholders and taking their feedback into account when carryout the technical work. This document describes the stakeholder engagement carried out to date, with the purpose of consolidating their requirements and idea for the maximum adoption and impact of our work. The work on the stakeholder requirements is currently ongoing as we needed to adapt to their (stakeholders’) activity schedule which is quite tight, since we want to involve not just representatives from the networks/associations themselves, but also their constituency.
 
 # Stakeholder requirements specification
 
 ## Stakeholder engagement
 The project team has participated in and co-organised 2 events with the objective to identify and consolidate the stakeholders involved in the mapping exercise.
 
-During the URBan Insights from Space workshop hosted by ESA on 16th – 18th September 2024, the project concept has been presented during a key note presentation. The team also prepared a poster presentation to share a more detailed description of the project activities.
+### URBIS 24
+
+During the **URBan Insights from Space workshop** hosted by ESA on 16th – 18th September 2024, the project concept has been presented during a key note presentation. The team also prepared a poster presentation to share a more detailed description of the project activities.
 
 The team engaged with 2 key stakeholders: EU Covenant of Mayors for Climate and Energy (EU-CoM) and UIV Urban Innovation Vienna GmbH. UIV Urban Innovation Vienna GmbH is the climate and innovation agency of the City of Vienna and a company of Wien Holding. They work in close cooperation with all municipalities and local authorities in Austria. A meeting has been planned before the end of the year to discuss in detail how they will engage, i.e. getting feedback on preliminary outputs of EuroFab and how they can possibly engage other municipalities in Austria, beyond Vienna. The EU Covenant of Mayors for Climate and Energy is a voluntary initiative supported by the European Commission bringing together thousands of local governments that want to secure a better future for their citizens. The Covenant of Mayors was launched in 2008 in Europe, while the Global Covenant of Mayors was launched in 2015. EU-CoM expressed interest in participating in the stakeholder requirements mapping, leveraging on-going work of the network and possibly circulating a short survey to its members. We initiated the joint work at the 12th World Urban Forum (WUF) that took place in Cairo, from 4th to 8th November 2024.
 
-The project team participated to the 12th World Urban Forum (WUF), organised by UN Habitat. The WUF was established in 2001 by the United Nations to examine rapid urbanisation and its impacts. The 12th WUF gathered 25,000 representatives from national, regional and local governments, academics, business organisations, community leaders, urban planners and civil society. The team organised a networking event titled “Monitoring urban fabric for data-driven planning and decision-making”, with the objective to engage in a joint discussion with both producers and users of data for the monitoring of urban fabric. Alongside the project team, speakers of the panel included: Thomas Kemper, leader of the GHSL project at the Joint Research Centre of the European Commission, and Bard Rama, International Component Coordinator at the EU Covenant of Mayors for Climate and Energy.
+### World Urban Forum
+
+The project team participated to the **12th World Urban Forum** (WUF), organised by UN Habitat. The WUF was established in 2001 by the United Nations to examine rapid urbanisation and its impacts. The 12th WUF gathered 25,000 representatives from national, regional and local governments, academics, business organisations, community leaders, urban planners and civil society. The team organised a networking event titled “Monitoring urban fabric for data-driven planning and decision-making”, with the objective to engage in a joint discussion with both producers and users of data for the monitoring of urban fabric. Alongside the project team, speakers of the panel included: Thomas Kemper, leader of the GHSL project at the Joint Research Centre of the European Commission, and Bard Rama, International Component Coordinator at the EU Covenant of Mayors for Climate and Energy.
 
 The discussion helped to highlight key issues to be addressed in order to enhance the usability of new data products. Amongst other, more technical considerations about file specifications and data accessibility, the issue of trust was flagged as a prominent one. In order to address it, the discussion highlighted also the need to use shared terminology and concepts.
 
 Another key reflection was related to the need to take into account unexpressed needs and requirements of the prospective data users: how to map needs that are not yet emerging from the current experience?
 
-The participants also welcomed favorably the possibility to use the data layers to produce alternative scenarios for different policy applications and urban or strategic planning. 
+The participants also welcomed favorably the possibility to use the data layers to produce alternative scenarios for different policy applications and urban or strategic planning.
 
 Overall, the discussion provided useful inputs to fine-tune the survey that is under preparation and planned to be distributed to at least one city network (EU-CoM).
 
 Amongst the audience participants, worth mentioning the Institute of Urban and Regional Development of Poland, which expressed the interest in engaging the project activities and offering the possibility the mobilise their constituency.
 
 ## Future stakeholder engagement
-There are 2 further in-person events to happen in Prague, once there is more progress on WP300. 
 
-One workshop will be held with the Prague Institute of Planning and Development, with a focus on validating the usefullness of the WP300 outputs.
+There are 2 further in-person events to happen in Prague, scheduled for Q1 of 2025. The schedule had to be adjusted as both parts expressed their interest in being more involved in the collaboration once there are tangible preliminary data products they could further help shaping to their needs.
 
-Another workshop will be held with 4ct, a private company company within urban planning and institutional development sphere, with a similar focus.
+One workshop will be held with the Prague Institute of Planning and Development, with a focus on validating the usefulness of the WP300 outputs for their application in policy and planning. It is worth noting, that the work published in @fleischmann2022methodological has been incorporated into Prague's planning documentation within the 'Územně analytické podklady' (Territorial analytical documents) since 2020, making IPR the unique stakeholder with a long-term experience with morphological classification of the sort used within the EuroFab.
+
+Another workshop will be held with the 4ct, a private company within urban planning and institutional development sphere, focusing more on the application of the project outputs within private consulting for both public and private clients. It is assumed that the requirements will partially differ from those of IPR and other public entities.
+
+## Stakeholder requirements
+
+This technical note is planned to be expanded in due course to include resulting detailed requirements of identified end users concerning the
+proposed solution.
+
+# References {.unnumbered}
