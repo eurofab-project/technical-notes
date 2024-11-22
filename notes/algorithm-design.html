@@ -208,7 +208,6 @@ window.Quarto = {
 </section>
 <section id="theoretical-basis" class="level1">
 <h1>Theoretical basis</h1>
-<p>Kind of lit review I suppose? Probably could be adapted stuff we have in the proposal.</p>
 <p>This report describes in detail the data, the data preprocessing, as well as model selection, training and validation schemes. The background section positions the research in the literature and identifies the drawbacks of current approaches, this study aims to address. It also provides some background on the study area - Central Europe. The data section describes the input, output and target data for the model. The methodology section focuses on the model selection, training and validation approaches.</p>
 <section id="morphometric-classification-homogenisation" class="level2">
 <h2 class="anchored" data-anchor-id="morphometric-classification-homogenisation">Morphometric Classification Homogenisation</h2>
@@ -259,7 +258,7 @@ window.Quarto = {
 <section id="overture-streets" class="level4">
 <h4 class="anchored" data-anchor-id="overture-streets">Overture Streets</h4>
 <p>The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to … . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.</p>
-<p>The second major stage of the street processing is the simplification of the entire street network for each subregion. The actual physical layout of the street is not important to the study - the number of lanes for example, or the exact structure of roundabouts. Rather, the focus is on the topological properties of the street network such as connections, as well as general physical characteristics such as lengths and widths. Therefore the overture street network is further processed by eliminating false nodes, combining lanes and simplifying roundabouts. <!--- TODO this needs more explanation--></p>
+<p>The second major stage of the street processing is the simplification of the entire street network for each subregion. The network coming from Overture Maps, similarly to nearly any other common source, focuses on representation of street network for transportation purposes. That means it tends to include multiple geometries for wide boulevards where each captures a single carriageway, complex representation of junctions or even the smallest artefacts of transportation-based focus. However, such a network is not directly usable for morphological analysis as it does not capture morphological perception of street network which is usually captured via street centrelines, omitting transportation detail. For this reason, we apply the simplification method based on the detection of the problematic parts of the network <span class="citation" data-cites="fleischmann2024Shapebased">(<a href="#ref-fleischmann2024Shapebased" role="doc-biblioref">Fleischmann and Vybornova 2024</a>)</span> by <span class="citation" data-cites="sgeop">Fleischmann, Vybornova, and Gaboardi (<a href="#ref-sgeop" role="doc-biblioref">Forthcoming</a>)</span>. This ensures automatised algorithmic cleaning of street networks resulting in a morphological representation derived from the transportation one. <!--- TODO this needs more explanation--></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../figures/algo_design/street_processing.png" class="nostretch figure-img" height="400"></p>
@@ -345,14 +344,14 @@ window.Quarto = {
 <ol start="4" class="example" type="1">
 <li><span class="math inline">\(CCo_{blg} = \frac{a_{blg}}{a_{blgC}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(a_{blgC}\)</span> is an area of minimal enclosing circle. It captures the relation of building footprint shape to its minimal enclosing circle, illustrating the similarity of shape and circle <span class="citation" data-cites="dibble2017">(<a href="#ref-dibble2017" role="doc-biblioref"><strong>dibble2017?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(a_{blgC}\)</span> is an area of minimal enclosing circle. It captures the relation of building footprint shape to its minimal enclosing circle, illustrating the similarity of shape and circle <span class="citation" data-cites="dibble2015">(<a href="#ref-dibble2015" role="doc-biblioref">Dibble et al. 2015</a>)</span>.</p>
 <ol start="5" type="1">
 <li><strong>Corners of a building</strong> is denoted as</li>
 </ol>
 <ol start="5" class="example" type="1">
 <li><span class="math inline">\(Cor_{blg} = \sum_{i=1}^{n}{c_{blg}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(c_{blg}\)</span> is defined as a vertex of building exterior shape with an angle between adjacent line segments <span class="math inline">\(\leq\)</span> 170 degrees. It uses only external shape (<code>shapely.geometry.exterior</code>), courtyards are not included. Character is adapted from <span class="citation" data-cites="steiniger2008">(<a href="#ref-steiniger2008" role="doc-biblioref"><strong>steiniger2008?</strong></a>)</span> to exclude non-corner-like vertices.</p>
+<p>where <span class="math inline">\(c_{blg}\)</span> is defined as a vertex of building exterior shape with an angle between adjacent line segments <span class="math inline">\(\leq\)</span> 170 degrees. It uses only external shape (<code>shapely.geometry.exterior</code>), courtyards are not included. Character is adapted from <span class="citation" data-cites="steiniger2008">(<a href="#ref-steiniger2008" role="doc-biblioref">Steiniger et al. 2008</a>)</span> to exclude non-corner-like vertices.</p>
 <ol start="6" type="1">
 <li><strong>Squareness of a building</strong> is denoted as</li>
 </ol>
@@ -366,14 +365,14 @@ window.Quarto = {
 <ol start="7" class="example" type="1">
 <li><span class="math inline">\(ERI_{blg} =  \sqrt{{a_{blg}} \over {a_{blgB}}} * {p_{blgB} \over p_{blg}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(a_{blgB}\)</span> is an area of a minimal rotated bounding rectangle of a building (MBR) footprint and <span class="math inline">\(p_{blgB}\)</span> its perimeter of MBR. It is a measure of shape complexity identified by <span class="citation" data-cites="basaraner2017">(<a href="#ref-basaraner2017" role="doc-biblioref"><strong>basaraner2017?</strong></a>)</span> as the shape characters with the best performance.</p>
+<p>where <span class="math inline">\(a_{blgB}\)</span> is an area of a minimal rotated bounding rectangle of a building (MBR) footprint and <span class="math inline">\(p_{blgB}\)</span> its perimeter of MBR. It is a measure of shape complexity identified by <span class="citation" data-cites="basaraner2017">Basaraner and Cetinkaya (<a href="#ref-basaraner2017" role="doc-biblioref">2017</a>)</span> as the shape characters with the best performance.</p>
 <ol start="8" type="1">
 <li><strong>Elongation of a building</strong> is denoted as</li>
 </ol>
 <ol start="8" class="example" type="1">
 <li><span class="math inline">\(Elo_{blg} =  \frac{l_{blgB}}{w_{blgB}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(l_{blgB}\)</span> is length of MBR and <span class="math inline">\(w_{blgB}\)</span> is width of MBR. It captures the ratio of shorter to the longer dimension of MBR to indirectly capture the deviation of the shape from a square <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(l_{blgB}\)</span> is length of MBR and <span class="math inline">\(w_{blgB}\)</span> is width of MBR. It captures the ratio of shorter to the longer dimension of MBR to indirectly capture the deviation of the shape from a square <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref">Schirmer and Axhausen 2015</a>)</span>.</p>
 <ol start="9" type="1">
 <li><strong>Centroid - corner distance deviation of a building</strong> is denoted as</li>
 </ol>
@@ -387,7 +386,7 @@ window.Quarto = {
 <ol start="10" class="example" type="1">
 <li><span class="math inline">\(CCM_{blg} =\frac{1}{n}\left(\sum_{i=1}^{n} ccd_{i}\right)\)</span></li>
 </ol>
-<p>where <span class="math inline">\(ccd_i\)</span> is a distance between centroid and corner <span class="math inline">\(i\)</span>. It is a character measuring a dimension of the object dependent on its shape <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(ccd_i\)</span> is a distance between centroid and corner <span class="math inline">\(i\)</span>. It is a character measuring a dimension of the object dependent on its shape <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref">Schirmer and Axhausen 2015</a>)</span>.</p>
 <ol start="11" type="1">
 <li><strong>Longest axis length of a tessellation cell</strong> is denoted as</li>
 </ol>
@@ -415,14 +414,14 @@ window.Quarto = {
 <ol start="14" class="example" type="1">
 <li><span class="math inline">\(ERI_{cell} =  \sqrt{{a_{cell}} \over {a_{cellB}}} * {p_{cellB} \over p_{cell}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(a_{cellB}\)</span> is an area of the minimal rotated bounding rectangle of a tessellation cell (MBR) footprint and <span class="math inline">\(p_{cellB}\)</span> its perimeter of MBR. It is a measure of shape complexity identified by <span class="citation" data-cites="basaraner2017">(<a href="#ref-basaraner2017" role="doc-biblioref"><strong>basaraner2017?</strong></a>)</span> as a shape character of the best performance.</p>
+<p>where <span class="math inline">\(a_{cellB}\)</span> is an area of the minimal rotated bounding rectangle of a tessellation cell (MBR) footprint and <span class="math inline">\(p_{cellB}\)</span> its perimeter of MBR. It is a measure of shape complexity identified by <span class="citation" data-cites="basaraner2017">Basaraner and Cetinkaya (<a href="#ref-basaraner2017" role="doc-biblioref">2017</a>)</span> as a shape character of the best performance.</p>
 <ol start="15" type="1">
 <li><strong>Coverage area ratio of a tessellation cell</strong> is denoted as</li>
 </ol>
 <ol start="15" class="example" type="1">
 <li><span class="math inline">\(CAR_{cell} = \frac{a_{blg}}{a_{cell}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(a_{blg}\)</span> is an area of a building and <span class="math inline">\(a_{cell}\)</span> is an area of related tessellation cell <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>. Coverage area ratio (CAR) is one of the commonly used characters capturing <em>intensity</em> of development. However, the definitions vary based on the spatial unit.</p>
+<p>where <span class="math inline">\(a_{blg}\)</span> is an area of a building and <span class="math inline">\(a_{cell}\)</span> is an area of related tessellation cell <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref">Schirmer and Axhausen 2015</a>)</span>. Coverage area ratio (CAR) is one of the commonly used characters capturing <em>intensity</em> of development. However, the definitions vary based on the spatial unit.</p>
 <ol start="16" type="1">
 <li><strong>Floor area ratio of a tessellation cell</strong> is denoted as</li>
 </ol>
@@ -436,14 +435,14 @@ window.Quarto = {
 <ol start="17" class="example" type="1">
 <li><span class="math inline">\(l_{edg}\)</span></li>
 </ol>
-<p>and defined as a length of a <code>LineString</code> geometry in metres <span class="citation" data-cites="dibble2017 gil2012">(<a href="#ref-dibble2017" role="doc-biblioref"><strong>dibble2017?</strong></a>; <a href="#ref-gil2012" role="doc-biblioref"><strong>gil2012?</strong></a>)</span>.</p>
+<p>and defined as a length of a <code>LineString</code> geometry in metres <span class="citation" data-cites="dibble2015 gil2012">(<a href="#ref-dibble2015" role="doc-biblioref">Dibble et al. 2015</a>; <a href="#ref-gil2012" role="doc-biblioref">Gil et al. 2012</a>)</span>.</p>
 <ol start="18" type="1">
 <li><strong>Width of a street profile</strong> is denoted as</li>
 </ol>
 <ol start="18" class="example" type="1">
 <li><span class="math inline">\(w_{sp} = \frac{1}{n}\left(\sum_{i=1}^{n} w_{i}\right)\)</span></li>
 </ol>
-<p>where <span class="math inline">\(w_{i}\)</span> is width of a street section i. The algorithm generates street sections every 3 meters alongside the street segment, and measures mean value. In the case of the open-ended street, 50 metres is used as a perception-based proximity limit <span class="citation" data-cites="araldi2019">(<a href="#ref-araldi2019" role="doc-biblioref"><strong>araldi2019?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(w_{i}\)</span> is width of a street section i. The algorithm generates street sections every 3 meters alongside the street segment, and measures mean value. In the case of the open-ended street, 50 metres is used as a perception-based proximity limit <span class="citation" data-cites="araldi2019">(<a href="#ref-araldi2019" role="doc-biblioref">Araldi and Fusco 2019</a>)</span>.</p>
 <ol start="19" type="1">
 <li><strong>Openness of a street profile</strong> is denoted as</li>
 </ol>
@@ -464,7 +463,7 @@ window.Quarto = {
 <ol start="21" class="example" type="1">
 <li><span class="math inline">\(Lin_{edg} = \frac{l_{eucl}}{l_{edg}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(l_{eucl}\)</span> is Euclidean distance between endpoints of a street segment and <span class="math inline">\(l_{edg}\)</span> is a street segment length. It captures the deviation of a segment shape from a straight line. It is adapted from <span class="citation" data-cites="araldi2019">(<a href="#ref-araldi2019" role="doc-biblioref"><strong>araldi2019?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(l_{eucl}\)</span> is Euclidean distance between endpoints of a street segment and <span class="math inline">\(l_{edg}\)</span> is a street segment length. It captures the deviation of a segment shape from a straight line. It is adapted from <span class="citation" data-cites="araldi2019">Araldi and Fusco (<a href="#ref-araldi2019" role="doc-biblioref">2019</a>)</span>.</p>
 <ol start="22" type="1">
 <li><strong>Area covered by a street segment</strong> is denoted as</li>
 </ol>
@@ -492,14 +491,14 @@ window.Quarto = {
 <ol start="25" class="example" type="1">
 <li><span class="math inline">\(SWR_{blg} = \frac{p_{blg_{shared}}}{p_{blg}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(p_{blg_{shared}}\)</span> is a length of a perimeter shared with adjacent buildings and <span class="math inline">\(p_{blg}\)</span> is a perimeter of a building. It captures the amount of wall space facing the open space <span class="citation" data-cites="hamaina2012a">(<a href="#ref-hamaina2012a" role="doc-biblioref"><strong>hamaina2012a?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(p_{blg_{shared}}\)</span> is a length of a perimeter shared with adjacent buildings and <span class="math inline">\(p_{blg}\)</span> is a perimeter of a building. It captures the amount of wall space facing the open space <span class="citation" data-cites="hamaina2012a">(<a href="#ref-hamaina2012a" role="doc-biblioref">Hamaina, Leduc, and Moreau 2012</a>)</span>.</p>
 <ol start="26" type="1">
 <li><strong>‌Mean distance to neighbouring buildings</strong> is denoted as</li>
 </ol>
 <ol start="26" class="example" type="1">
 <li><span class="math inline">\(NDi_{blg} = \frac{1}{n} \sum_{i=1}^{n} d_{blg, blg_i}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(d_{blg, blg_i}\)</span> is a distance between building and building <span class="math inline">\(i\)</span> on a neighbouring tessellation cell. It is adapted from <span class="citation" data-cites="hijazi2016">(<a href="#ref-hijazi2016" role="doc-biblioref"><strong>hijazi2016?</strong></a>)</span>. It captures the average proximity to other buildings.</p>
+<p>where <span class="math inline">\(d_{blg, blg_i}\)</span> is a distance between building and building <span class="math inline">\(i\)</span> on a neighbouring tessellation cell. It is adapted from <span class="citation" data-cites="hijazi2016">Hijazi et al. (<a href="#ref-hijazi2016" role="doc-biblioref">2016</a>)</span>. It captures the average proximity to other buildings.</p>
 <ol start="27" type="1">
 <li><strong>Weighted neighbours of a tessellation cell</strong> is denoted as</li>
 </ol>
@@ -562,7 +561,7 @@ window.Quarto = {
 <ol start="35" class="example" type="1">
 <li><span class="math inline">\(NCo_{blg_{adj}}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(NCo_{blg_{adj}}\)</span> is a number of interior rings of a polygon composed of footprints of adjacent buildings <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref"><strong>schirmer2015?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(NCo_{blg_{adj}}\)</span> is a number of interior rings of a polygon composed of footprints of adjacent buildings <span class="citation" data-cites="schirmer2015">(<a href="#ref-schirmer2015" role="doc-biblioref">Schirmer and Axhausen 2015</a>)</span>.</p>
 <ol start="36" type="1">
 <li><strong>Perimeter wall length of adjacent buildings</strong> is denoted as</li>
 </ol>
@@ -576,14 +575,14 @@ window.Quarto = {
 <ol start="37" class="example" type="1">
 <li><span class="math inline">\(IBD_{blg} = \frac{1}{n} \sum_{i=1}^{n} d_{blg, blg_i}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(d_{blg, blg_i}\)</span> is a distance between building and building <span class="math inline">\(i\)</span> on a tessellation cell within topological distance 3. It is adapted from <span class="citation" data-cites="caruso2017">(<a href="#ref-caruso2017" role="doc-biblioref"><strong>caruso2017?</strong></a>)</span>. It captures the average proximity between buildings.</p>
+<p>where <span class="math inline">\(d_{blg, blg_i}\)</span> is a distance between building and building <span class="math inline">\(i\)</span> on a tessellation cell within topological distance 3. It is adapted from <span class="citation" data-cites="caruso2017">Caruso, Hilal, and Thomas (<a href="#ref-caruso2017" role="doc-biblioref">2017</a>)</span>. It captures the average proximity between buildings.</p>
 <ol start="38" type="1">
 <li><strong>‌Building adjacency of neighbouring buildings</strong> is denoted as</li>
 </ol>
 <ol start="38" class="example" type="1">
 <li><span class="math inline">\(BuA_{blg} = \frac{\sum blg_{adj}}{\sum blg}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(\sum blg_{adj}\)</span> is a number of joined built-up structures within topological distance three and <span class="math inline">\(\sum blg\)</span> is a number of buildings within topological distance 3. It is adapted from <span class="citation" data-cites="vanderhaegen2017">(<a href="#ref-vanderhaegen2017" role="doc-biblioref"><strong>vanderhaegen2017?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(\sum blg_{adj}\)</span> is a number of joined built-up structures within topological distance three and <span class="math inline">\(\sum blg\)</span> is a number of buildings within topological distance 3. It is adapted from <span class="citation" data-cites="vanderhaegen2017">Vanderhaegen and Canters (<a href="#ref-vanderhaegen2017" role="doc-biblioref">2017</a>)</span>.</p>
 <ol start="39" type="1">
 <li><strong>Weighted reached blocks of neighbouring tessellation cells</strong> is denoted as</li>
 </ol>
@@ -597,7 +596,7 @@ window.Quarto = {
 <ol start="40" class="example" type="1">
 <li><span class="math inline">\(Mes_{node}= \frac{e-v+1}{2 v-5}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(e\)</span> is a number of edges in a subgraph, and <span class="math inline">\(v\)</span> is the number of nodes in a subgraph <span class="citation" data-cites="feliciotti2018">(<a href="#ref-feliciotti2018" role="doc-biblioref"><strong>feliciotti2018?</strong></a>)</span>. A subgraph is defined as a network within topological distance five around a node.</p>
+<p>where <span class="math inline">\(e\)</span> is a number of edges in a subgraph, and <span class="math inline">\(v\)</span> is the number of nodes in a subgraph <span class="citation" data-cites="feliciotti2018">(<a href="#ref-feliciotti2018" role="doc-biblioref">Feliciotti 2018</a>)</span>. A subgraph is defined as a network within topological distance five around a node.</p>
 <ol start="41" type="1">
 <li><strong>Mean segment length of a street network</strong> is denoted as</li>
 </ol>
@@ -646,21 +645,21 @@ window.Quarto = {
 <ol start="47" class="example" type="1">
 <li><span class="math inline">\(pCD_{node} = \frac{\sum_{i=1}^{n} node_i, \text { if }deg_{node_i} = 1}{\sum_{i=1}^{n} node_i}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref"><strong>boeing2017a?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref">Boeing 2017</a>)</span>.</p>
 <ol start="48" type="1">
 <li><strong>Proportion of 3-way intersections within a street network</strong> is denoted as</li>
 </ol>
 <ol start="48" class="example" type="1">
 <li><span class="math inline">\(p3W_{node} = \frac{\sum_{i=1}^{n} node_i, \text { if }deg_{node_i} = 3}{\sum_{i=1}^{n} node_i}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref"><strong>boeing2017a?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref">Boeing 2017</a>)</span>.</p>
 <ol start="49" type="1">
 <li><strong>Proportion of 4-way intersections within a street network</strong> is denoted as</li>
 </ol>
 <ol start="49" class="example" type="1">
 <li><span class="math inline">\(p4W_{node} = \frac{\sum_{i=1}^{n} node_i, \text { if }deg_{node_i} = 4}{\sum_{i=1}^{n} node_i}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref"><strong>boeing2017a?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(node_i\)</span> is a node whiting topological distance five around a node. Adapted from <span class="citation" data-cites="boeing2017a">(<a href="#ref-boeing2017a" role="doc-biblioref">Boeing 2017</a>)</span>.</p>
 <ol start="50" type="1">
 <li><strong>Weighted node density of a street network</strong> is denoted as</li>
 </ol>
@@ -681,7 +680,7 @@ window.Quarto = {
 <ol start="52" class="example" type="1">
 <li><span class="math inline">\(sCl_{node} = \frac{\sum_{u=1}^{k_{v}} \sum_{w=u+1}^{k_{v}} q_{v}(u, w)}{\sum_{u=1}^{k_{v}} \sum_{w=u+1}^{k_{v}}\left[a_{v}(u, w)+q_{v}(u, w)\right]}\)</span></li>
 </ol>
-<p>where <span class="math inline">\(q_v(u,w)\)</span> are the number of common neighbours of <span class="math inline">\(u\)</span> and <span class="math inline">\(w\)</span> other than <span class="math inline">\(v\)</span> (ie squares), and <span class="math inline">\(a_v(u,w) = (k_u - (1+q_v(u,w)+\theta_{uv}))(k_w - (1+q_v(u,w)+\theta_{uw}))\)</span>, where <span class="math inline">\(\theta_{uw} = 1\)</span> if <span class="math inline">\(u\)</span> and <span class="math inline">\(w\)</span> are connected and 0 otherwise <span class="citation" data-cites="PhysRevE.72.056127">(<a href="#ref-PhysRevE.72.056127" role="doc-biblioref"><strong>PhysRevE.72.056127?</strong></a>)</span>.</p>
+<p>where <span class="math inline">\(q_v(u,w)\)</span> are the number of common neighbours of <span class="math inline">\(u\)</span> and <span class="math inline">\(w\)</span> other than <span class="math inline">\(v\)</span> (ie squares), and <span class="math inline">\(a_v(u,w) = (k_u - (1+q_v(u,w)+\theta_{uv}))(k_w - (1+q_v(u,w)+\theta_{uw}))\)</span>, where <span class="math inline">\(\theta_{uw} = 1\)</span> if <span class="math inline">\(u\)</span> and <span class="math inline">\(w\)</span> are connected and 0 otherwise <span class="citation" data-cites="PhysRevE.72.056127">(<a href="#ref-PhysRevE.72.056127" role="doc-biblioref">Lind, González, and Herrmann 2005</a>)</span>.</p>
 </section>
 </section>
 </section>
@@ -693,14 +692,14 @@ window.Quarto = {
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../figures/algo_design/prague_600.png" class="nostretch figure-img" height="400"></p>
-<figcaption>High-level urban fabrics</figcaption>
+<figcaption>High-level urban fabrics in Prague</figcaption>
 </figure>
 </div>
 <p>The second set breaks down each of the first sets into multiple subsets. It goes into more detail and splits the houses into more classes, based on features such as size and proximity to cities; it also splits the historical areas based on origin - medieval, industrial-era and others; the modern urban developments into subclasses such as different types of modernist apartment blocks, commercial areas, offices and others; and the several industrial area types. By analysing the model performance across two different hierarchical levels, we will understand what is the highest resolution detail the model can predict, given the shortcomings of the data and which factors affect predictions.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../figures/algo_design/prague_400.png" class="nostretch figure-img" height="400"></p>
-<figcaption>More detailed urban fabrics</figcaption>
+<figcaption>More detailed urban fabrics in Prague</figcaption>
 </figure>
 </div>
 <!--evaluation setup TODO:align with image-->
@@ -708,11 +707,11 @@ window.Quarto = {
 <section id="prediction-modelling-and-traintest-split" class="level3">
 <h3 class="anchored" data-anchor-id="prediction-modelling-and-traintest-split">Prediction modelling and train/test split</h3>
 <!--why classification and tree based methods-->
-<p>The main aim of the modelling task is to generate a classification of morphological elements of similar quality to <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> given the data quality limitations, albeit flat, not hierarchical. To achieve this we create an evaluation framework for the selection of non-linear tree-based models like a random forest classifier or an XGBoost model. We use the satellite-derived ETCs and their characteristics as input data and the clusters from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> as target labels for a classification task. The choice of tree-based learning models is due to their readily available implementations, high scalability and ability to quickly offer interpretation insights. Furthermore, they handle well high dimensional data, non-linear interactions and require minimal hyper-parameter tuning. The flexibility of the models and the specific training/testing framework setup will allow us to not just produce a predictive model but also to identify potential areas for improvement in the original data preprocessing.</p>
+<p>The main aim of the modelling task is to generate a classification of morphological elements of similar quality to <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> given the data quality limitations, albeit flat, not hierarchical. To achieve this we create an evaluation framework for the selection of non-linear tree-based models like a random forest classifier or an XGBoost model. We use the satellite-derived buildings, their ETCs and their characteristics as input data and the clusters from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> as target labels for a classification task. The choice of tree-based learning models is due to their readily available implementations, high scalability and ability to quickly offer interpretation insights. Furthermore, they handle well high dimensional data, non-linear interactions and require minimal hyper-parameter tuning. The flexibility of the models and the specific training/testing framework setup will allow us to not just produce a predictive model but also to identify potential areas for improvement in the original data preprocessing.</p>
 <!--out of sample importance-->
 <p>Since we want the final production model to be general and applicable to large areas i.e.&nbsp;whole continents, it needs to be able to handle previously unseen urban fabric types. For example, an urban morphology type that is present in the test data, or in another study area, might not be present in the training data and in that case the model should flag its predicted label as uncertain. This is another area where tree models have an advantage, since they are ensemble methods and this can help reduces their tendency to overfit. They also readily provide a confidence score for each prediction which can be used to flag unseen data. Furthermore, we take extra care to evaluate the final production models performance in realistic scenarios and the relationship between its accuracy on test data and whole countries that are not part of the model training or test data.</p>
 <!--evaluation setup-->
-<p>To achieve this we split the study area into five subsets and train five independent iterations of each model. This is done so that that every country and every combination of countries is used as final hold-out test data a and training/validation pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its training/validation pipeline, whereas Slovakia will be used as the hold-out data.</p>
+<p>To achieve this we split the study area into five subsets and train five independent iterations of each model. This is done so that that every country and every combination of countries is used as final hold-out test data and training/validation pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its training/validation pipeline, whereas Slovakia will be used as the hold-out data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../figures/algo_design/eval_split.png" class="nostretch figure-img" height="400"></p>
@@ -742,17 +741,17 @@ window.Quarto = {
 </section>
 <section id="preliminary-results" class="level3">
 <h3 class="anchored" data-anchor-id="preliminary-results">Preliminary results</h3>
-<p>We have implemented a preliminary pipeline that carries out full data preprocessing - generating morphological elements and characters, assigning target labels and some exploratory modelling. The core functionality for all of this was made available within open-source packages - momepy, libpysal, sgeop.</p>
+<p>We have implemented a preliminary pipeline that carries out full data preprocessing - generating morphological elements and characters, assigning target labels and some exploratory modelling. The core functionality for all of this was made available within open-source packages - <code>momepy</code>, <code>libpysal</code>, <code>sgeop</code> (the name of which may eventually change).</p>
 <p>Based on the preliminary results, there are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions. The number of downloaded, unprocessed streets is similar to those in <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries.</p>
-<p>These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 . There are significanlty less subregions in the study area, since there are around 30 million less buildings, which are either missing or wrongly merged into a single polygon. In turn these issues affect the interpretation of the values of the calculated morphological characters. Some characters from the original classification even completely lose their meaning. For example, the number of adjacent buildings in the EuroFab dataset is much smaller and therefore all characters based on adjacency have a much more limited utility. This also affects, to a relatively smaller, but nevertheless important extent, characters that rely on inter-building distances and counts.</p>
+<p>These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 . There are significantly less subregions in the study area primarily due to the effect of the threshold of 10k buildings required for a region. As the adjacent buildings tend to be merged, the algorithm needs to cover larger area before reaching the threshold, resulting in the lower number of regions. However, as the region split is purely procedural step allowing efficient processing of data, this is not an issue of any sort.</p>
 <!--preliminary modelling-->
-<p>As a first modelling step we tried a random forest (RF) classifier on a subset of the data. The goal was to keep the final model as simple, scalable and interpretable as possible and evaluate the project workflow as a whole, rather than the specific model’s performance. We trained and tested the same simple RF model on the same data, split in different ways - one was based on stratified spatial k-fold train/test splits (our proposed setup) and another based on random train/test splits. The latter model with random sampling had an accuracy of 0.95 versus an accuracy of 0.68 for the former model with spatial stratification. The difference in accuracy highlights the extent of spatial leakage of information. Furthermore, the relatively high accuracy score of the simple model hints towards the viability of predicting urban fabric types.</p>
-<p>In total, the results point towards two things. First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastal data. And second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.</p>
+<p>As a first modelling step we tried a random forest (RF) classifier on a subset of the data covering the region surrounding Prague. The goal was to evaluate the project workflow and the feasibility of the proposed model architecture, rather than the specific model’s performance. We trained and tested the same simple RF model on the data within the same region, split in different ways - one was based on stratified spatial k-fold train/test splits (our proposed setup) and another based on random train/test splits. The latter model with random sampling had an accuracy of 0.95 versus an accuracy of 0.68 for the former model with spatial stratification. The difference in accuracy highlights the extent of spatial leakage of information and the need for the proposed spatially explicit train/test/validation split of the data. Otherwise, the performance of the production model would be significantly lower than what the training data suggest. In any case, the relatively high accuracy score of the models hint towards the viability of predicting urban fabric types.</p>
+<p>In total, the results point towards two things. First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastral data. Second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.</p>
 </section>
 </section>
 <section id="ai-modelling-using-satellite-imagery-1" class="level2">
 <h2 class="anchored" data-anchor-id="ai-modelling-using-satellite-imagery-1">AI Modelling using Satellite Imagery</h2>
-<p>In satellite image analysis, classification and segmentation address spatial labeling at different levels of granularity, with classification assigning a single label to an image tile or cell, while segmentation provides pixel-level detail. In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalizes each tile’s dominant land cover type without requiring exact pixel alignment. However, we explore both approaches: classification for a tile-based analysis and segmentation for finer, boundary-specific mapping. This dual approach enables us to evaluate how each method performs given the scale and nature of the dataset.</p>
+<p>In satellite image analysis, classification and segmentation address spatial labelling at different levels of granularity, with classification assigning a single label to an image tile or cell, while segmentation provides pixel-level detail. In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalises each tile’s dominant land cover type without requiring exact pixel alignment. However, we explore both approaches: classification for a tile-based analysis and segmentation for finer, boundary-specific mapping. This dual approach enables us to evaluate how each method performs given the scale and nature of the dataset.</p>
 <section id="data-preprocessing-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-preprocessing-1">Data preprocessing</h3>
 <p>For our analysis, we employ two distinct datasets of image tiles at varying scales. These datasets enable us to evaluate both segmentation and classification tasks for urban fabric prediction. We choose a larger tile size for the segmentation task since most segmentation models work better with conventional image sizes (such as 224 x 224 pixels) and they are also a lot more efficient since the dataset is not as large. For classification, the tile size represents the scale of the analysis and for that reason we chose a smaller tile size of 56x56 pixels.</p>
@@ -1047,17 +1046,35 @@ window.Quarto = {
 
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-araldi2019" class="csl-entry" role="listitem">
+Araldi, Alessandro, and Giovanni Fusco. 2019. <span>“From the Street to the Metropolitan Region: <span>Pedestrian</span> Perspective in Urban Fabric Analysis:”</span> <em>Environment and Planning B: Urban Analytics and City Science</em> 46 (7): 1243–63. <a href="https://doi.org/10.1177/2399808319832612">https://doi.org/10.1177/2399808319832612</a>.
+</div>
 <div id="ref-arribas2022spatial" class="csl-entry" role="listitem">
 Arribas-Bel, Daniel, and Martin Fleischmann. 2022. <span>“Spatial Signatures-Understanding (Urban) Spaces Through Form and Function.”</span> <em>Habitat International</em> 128: 102641.
+</div>
+<div id="ref-basaraner2017" class="csl-entry" role="listitem">
+Basaraner, Melih, and Sinan Cetinkaya. 2017. <span>“Performance of Shape Indices and Classification Schemes for Characterising Perceptual Shape Complexity of Building Footprints in <span>GIS</span>.”</span> <em>International Journal of Geographical Information Science</em> 31 (10): 1952–77. <a href="https://doi.org/10.1080/13658816.2017.1346257">https://doi.org/10.1080/13658816.2017.1346257</a>.
 </div>
 <div id="ref-bastani2023satlaspretrain" class="csl-entry" role="listitem">
 Bastani, Favyen, Piper Wolters, Ritwik Gupta, Joe Ferdinando, and Aniruddha Kembhavi. 2023. <span>“<span>SatlasPretrain</span>: <span>A</span> <span>Large</span>-<span>Scale</span> <span>Dataset</span> for <span>Remote</span> <span>Sensing</span> <span>Image</span> <span>Understanding</span>.”</span> arXiv. <a href="http://arxiv.org/abs/2211.15660">http://arxiv.org/abs/2211.15660</a>.
 </div>
+<div id="ref-boeing2017a" class="csl-entry" role="listitem">
+Boeing, Geoff. 2017. <span>“<span>OSMnx</span>: <span>New</span> Methods for Acquiring, Constructing, Analyzing, and Visualizing Complex Street Networks.”</span> <em>Computers, Environment and Urban Systems</em> 65 (September): 126–39. <a href="https://doi.org/gbvjxq">https://doi.org/gbvjxq</a>.
+</div>
 <div id="ref-calafiore2023inequalities" class="csl-entry" role="listitem">
 Calafiore, Alessia, Krasen Samardzhiev, Francisco Rowe, Martin Fleischmann, and Daniel Arribas-Bel. 2023. <span>“Inequalities in Experiencing Urban Functions. An Exploration of Human Digital (Geo-) Footprints.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em>, 23998083231208507.
 </div>
+<div id="ref-caruso2017" class="csl-entry" role="listitem">
+Caruso, Geoffrey, Mohamed Hilal, and Isabelle Thomas. 2017. <span>“Measuring Urban Forms from Inter-Building Distances: <span>Combining MST</span> Graphs with a <span>Local Index</span> of <span>Spatial Association</span>.”</span> <em>Landscape and Urban Planning</em> 163 (July): 80–89. <a href="https://doi.org/10.1016/j.landurbplan.2017.03.003">https://doi.org/10.1016/j.landurbplan.2017.03.003</a>.
+</div>
+<div id="ref-dibble2015" class="csl-entry" role="listitem">
+Dibble, Jacob, Alexios Prelorendjos, Ombretta Romice, Mattia Zanella, Emanuele Strano, Mark Pagel, and Sergio Porta. 2015. <span>“Urban <span>Morphometrics</span>: <span>Towards</span> a <span>Science</span> of <span>Urban Evolution</span>.”</span> <em>arXiv.org</em> physics.soc-ph (June).
+</div>
 <div id="ref-esch2010how" class="csl-entry" role="listitem">
 Esch, Thomas, Hannes Taubenböck, Wieke Heldens, Michael Thiel, Michael Wurm, and Stefan Dech. 2010. <span>“How Can Earth Observation Support the Sustainable Development of Urban Environments?”</span> <em>Urban Remote Sensing</em>.
+</div>
+<div id="ref-feliciotti2018" class="csl-entry" role="listitem">
+Feliciotti, Alessandra. 2018. <span>“<span>RESILIENCE AND URBAN DESIGN</span>: <span>A SYSTEMS APPROACH TO THE STUDY OF RESILIENCE IN URBAN FORM</span>.”</span> PhD thesis, <span>Glasgow</span>: University of Strathclyde.
 </div>
 <div id="ref-fleischmann2022methodological" class="csl-entry" role="listitem">
 Fleischmann, Martin, Alessandra Feliciotti, Ombretta Romice, and Sergio Porta. 2022. <span>“Methodological Foundation of a Numerical Taxonomy of Urban Form.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em> 49 (4): 1283–99.
@@ -1068,6 +1085,21 @@ Fleischmann, Martin, Ombretta Romice, and Sergio Porta. 2021. <span>“Measuring
 <div id="ref-primus" class="csl-entry" role="listitem">
 Fleischmann, Martin, and Krasen Samardzhiev. Forthcoming. <span>“Numerical Taxonomy of Urban Fabric in Central Europe,”</span> Forthcoming.
 </div>
+<div id="ref-fleischmann2024Shapebased" class="csl-entry" role="listitem">
+Fleischmann, Martin, and Anastassia Vybornova. 2024. <span>“A Shape-Based Heuristic for the Detection of Urban Block Artifacts in Street Networks.”</span> <em>Journal of Spatial Information Science</em> 28 (June): 75–102. <a href="https://doi.org/10.5311/JOSIS.2024.28.319">https://doi.org/10.5311/JOSIS.2024.28.319</a>.
+</div>
+<div id="ref-sgeop" class="csl-entry" role="listitem">
+Fleischmann, Martin, Anastassia Vybornova, and James Gaboardi. Forthcoming. <span>“Continuity-Preserving Simplification of Street Networks,”</span> Forthcoming.
+</div>
+<div id="ref-gil2012" class="csl-entry" role="listitem">
+Gil, Jorge, Nuno Montenegro, J N Beirão, and J P Duarte. 2012. <span>“On the <span>Discovery</span> of <span>Urban Typologies</span>: <span>Data Mining</span> the <span>Multi</span>-Dimensional <span>Character</span> of <span>Neighbourhoods</span>.”</span> <em>Urban Morphology</em> 16 (1): 27–40.
+</div>
+<div id="ref-hamaina2012a" class="csl-entry" role="listitem">
+Hamaina, Rachid, Thomas Leduc, and Guillaume Moreau. 2012. <span>“Towards <span>Urban Fabrics Characterization Based</span> on <span>Buildings Footprints</span>.”</span> In <em>Bridging the <span>Geographic Information Sciences</span></em>, 2:327–46. <span>Berlin, Heidelberg</span>: <span>Springer, Berlin, Heidelberg</span>. <a href="https://doi.org/10.1007/978-3-642-29063-3_18">https://doi.org/10.1007/978-3-642-29063-3_18</a>.
+</div>
+<div id="ref-hijazi2016" class="csl-entry" role="listitem">
+Hijazi, Ihab, Xin Li, Reinhard Koenig, G Schmit, R El Meouche, Zhihan Lv, and M Abunemeh. 2016. <span>“Measuring the Homogeneity of Urban Fabric Using <span>2D</span> Geometry Data.”</span> <em>Environment and Planning B: Planning and Design</em>, January, 1–25. <a href="https://doi.org/10.1177/0265813516659070">https://doi.org/10.1177/0265813516659070</a>.
+</div>
 <div id="ref-huang2018urban" class="csl-entry" role="listitem">
 Huang, Bo, Bei Zhao, and Yimeng Song. 2018. <span>“Urban Land-Use Mapping Using a Deep Convolutional Neural Network with High Spatial Resolution Multispectral Remote Sensing Imagery.”</span> <em>Remote Sensing of Environment</em> 214 (September): 73–86. <a href="https://doi.org/10.1016/j.rse.2018.04.050">https://doi.org/10.1016/j.rse.2018.04.050</a>.
 </div>
@@ -1077,6 +1109,9 @@ Ibrahim, Mohamed R., James Haworth, and Tao Cheng. 2020. <span>“Understanding 
 <div id="ref-jakubik2023foundation" class="csl-entry" role="listitem">
 Jakubik, Johannes, Sujit Roy, C. E. Phillips, Paolo Fraccaro, Denys Godwin, Bianca Zadrozny, Daniela Szwarcman, et al. 2023. <span>“Foundation <span>Models</span> for <span>Generalist</span> <span>Geospatial</span> <span>Artificial</span> <span>Intelligence</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2310.18660">https://doi.org/10.48550/arXiv.2310.18660</a>.
 </div>
+<div id="ref-PhysRevE.72.056127" class="csl-entry" role="listitem">
+Lind, Pedro G., Marta C. González, and Hans J. Herrmann. 2005. <span>“Cycles and Clustering in Bipartite Networks.”</span> <em>Physical Review E</em> 72 (5): 056127. <a href="https://doi.org/c6m9xd">https://doi.org/c6m9xd</a>.
+</div>
 <div id="ref-lu2024ai" class="csl-entry" role="listitem">
 Lu, Siqi, Junlin Guo, James R. Zimmer-Dauphinee, Jordan M. Nieusma, Xiao Wang, Parker VanValkenburgh, Steven A. Wernke, and Yuankai Huo. 2024. <span>“<span>AI</span> <span>Foundation</span> <span>Models</span> in <span>Remote</span> <span>Sensing</span>: <span>A</span> <span>Survey</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2408.03464">https://doi.org/10.48550/arXiv.2408.03464</a>.
 </div>
@@ -1085,6 +1120,15 @@ Ma, Lei, Yu Liu, Xueliang Zhang, Yuanxin Ye, Gaofei Yin, and Brian Alan Johnson.
 </div>
 <div id="ref-rolf2021generalizable" class="csl-entry" role="listitem">
 Rolf, Esther, Jonathan Proctor, Tamma Carleton, Ian Bolliger, Vaishaal Shankar, Miyabi Ishihara, Benjamin Recht, and Solomon Hsiang. 2021. <span>“A Generalizable and Accessible Approach to Machine Learning with Global Satellite Imagery.”</span> <em>Nature Communications</em> 12 (1). <a href="https://doi.org/10.1038/s41467-021-24638-z">https://doi.org/10.1038/s41467-021-24638-z</a>.
+</div>
+<div id="ref-schirmer2015" class="csl-entry" role="listitem">
+Schirmer, Patrick Michael, and Kay W Axhausen. 2015. <span>“A Multiscale Classification of Urban Morphology.”</span> <em>Journal of Transport and Land Use</em> 9 (1): 101–30. <a href="https://doi.org/10.5198/jtlu.2015.667">https://doi.org/10.5198/jtlu.2015.667</a>.
+</div>
+<div id="ref-steiniger2008" class="csl-entry" role="listitem">
+Steiniger, Stefan, Tilman Lange, Dirk Burghardt, and Robert Weibel. 2008. <span>“An <span>Approach</span> for the <span>Classification</span> of <span>Urban Building Structures Based</span> on <span>Discriminant Analysis Techniques</span>.”</span> <em>Transactions in GIS</em> 12 (1): 31–59. <a href="https://doi.org/10.1111/j.1467-9671.2008.01085.x">https://doi.org/10.1111/j.1467-9671.2008.01085.x</a>.
+</div>
+<div id="ref-vanderhaegen2017" class="csl-entry" role="listitem">
+Vanderhaegen, Sven, and Frank Canters. 2017. <span>“Mapping Urban Form and Function at City Block Level Using Spatial Metrics.”</span> <em>Landscape and Urban Planning</em> 167 (November): 399–409. <a href="https://doi.org/10.1016/j.landurbplan.2017.05.023">https://doi.org/10.1016/j.landurbplan.2017.05.023</a>.
 </div>
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
