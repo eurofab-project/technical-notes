@@ -23,8 +23,6 @@ Summary goes here.
 
 # Theoretical basis
 
-Kind of lit review I suppose? Probably could be adapted stuff we have in the proposal.
-
 This report describes in detail the data, the data preprocessing, as well as model selection, training and validation schemes. The background section positions the research in the literature and identifies the drawbacks of current approaches, this study aims to address. It also provides some background on the study area - Central Europe. The data section describes the input, output and target data for the model. The methodology section focuses on the model selection, training and validation approaches.
 
 ## Morphometric Classification Homogenisation
@@ -80,7 +78,7 @@ The first step in the building data processing is to split up multi-polygons and
 
 The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to ... . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
 
-The second major stage of the street processing is the simplification of the entire street network for each subregion. The actual physical layout of the street is not important to the study - the number of lanes for example, or the exact structure of roundabouts. Rather, the focus is on the topological properties of the street network such as connections, as well as general physical characteristics such as lengths and widths. Therefore the overture street network is further processed by eliminating false nodes, combining lanes and simplifying roundabouts.
+The second major stage of the street processing is the simplification of the entire street network for each subregion. The network coming from Overture Maps, similarly to nearly any other common source, focuses on representation of street network for transportation purposes. That means it tends to include multiple geometries for wide boulevards where each captures a single carriageway, complex representation of junctions or even the smallest artefacts of transportation-based focus. However, such a network is not directly usable for morphological analysis as it does not capture morphological perception of street network which is usually captured via street centrelines, omitting transportation detail. For this reason, we apply the simplification method based on the detection of the problematic parts of the network [@fleischmann2024Shapebased] by @sgeop. This ensures automatised algorithmic cleaning of street networks resulting in a morphological representation derived from the transportation one. 
 <!--- TODO this needs more explanation-->
 
 ![Streets in central Prague](../figures/algo_design/street_processing.png){.nostretch fig-align="center" height="400"}
@@ -145,7 +143,7 @@ and defined as the sum of areas of interior holes in footprint polygons in m^2^.
 
 (@eq_ssbCCo)  $CCo_{blg} = \frac{a_{blg}}{a_{blgC}}$
 
-where $a_{blgC}$ is an area of minimal enclosing circle. It captures the relation of building footprint shape to its minimal enclosing circle, illustrating the similarity of shape and circle [@dibble2017].
+where $a_{blgC}$ is an area of minimal enclosing circle. It captures the relation of building footprint shape to its minimal enclosing circle, illustrating the similarity of shape and circle [@dibble2015].
 
 5. **Corners of a building** is denoted as
 
@@ -223,7 +221,7 @@ where $fa_{blg}$ is a floor area of a building and $a_{cell}$ is an area of rela
 
 (@eq_sdsLen) $l_{edg}$
 
-and defined as a length of a `LineString` geometry in metres [@dibble2017; @gil2012].
+and defined as a length of a `LineString` geometry in metres [@dibble2015; @gil2012].
 
 18. **Width of a street profile** is denoted as
 
@@ -444,26 +442,26 @@ For the second stage, we assign a target classification label to every ETC deriv
 
 Since the final output of [@primus] is a hierarchy, rather than a flat clustering there are several options how to pick the specific target labels. Generally, clusters lower in the hierarchy represent classifications of urban fabrics at more granular scales. For example, depending on the hierarchy cutoff point historical urban areas can be one cluster, or can be separated into two - medieval and industrial-era urban fabrics.
 
-The specific selection of cutoff points will follow [@primus]. The first set of urban fabrics we will aim to predict, broadly differentiates - different types of houses; from heterogenous historical urbanised areas; from recent modern urban developments such as apartment blocks and commercial areas; from large industrial areas. 
+The specific selection of cutoff points will follow [@primus]. The first set of urban fabrics we will aim to predict, broadly differentiates - different types of houses; from heterogenous historical urbanised areas; from recent modern urban developments such as apartment blocks and commercial areas; from large industrial areas.
 
-![High-level urban fabrics](../figures/algo_design/prague_600.png){.nostretch fig-align="center" height="400"}
+![High-level urban fabrics in Prague](../figures/algo_design/prague_600.png){.nostretch fig-align="center" height="400"}
 
 The second set breaks down each of the first sets into multiple subsets. It goes into more detail and splits the houses into more classes, based on features such as size and proximity to cities; it also splits the historical areas based on origin - medieval, industrial-era and others; the modern urban developments into subclasses such as different types of modernist apartment blocks, commercial areas, offices and others; and the several industrial area types. By analysing the model performance across two different hierarchical levels, we will understand what is the highest resolution detail the model can predict, given the shortcomings of the data and which factors affect predictions.
 
-![More detailed urban fabrics](../figures/algo_design/prague_400.png){.nostretch fig-align="center" height="400"}
+![More detailed urban fabrics in Prague](../figures/algo_design/prague_400.png){.nostretch fig-align="center" height="400"}
 
 <!--evaluation setup TODO:align with image-->
 
 ### Prediction modelling and train/test split
 
 <!--why classification and tree based methods-->
-The main aim of the modelling task is to generate a classification of morphological elements of similar quality to [@primus] given the data quality limitations, albeit flat, not hierarchical. To achieve this we create an evaluation framework for the selection of non-linear tree-based models like a random forest classifier or an XGBoost model. We use the satellite-derived ETCs and their characteristics as input data and the clusters from [@primus] as target labels for a classification task. The choice of tree-based learning models is due to their readily available implementations, high scalability and ability to quickly offer interpretation insights. Furthermore, they handle well high dimensional data, non-linear interactions and require minimal hyper-parameter tuning. The flexibility of the models and the specific training/testing framework setup will allow us to not just produce a predictive model but also to identify potential areas for improvement in the original data preprocessing.
+The main aim of the modelling task is to generate a classification of morphological elements of similar quality to [@primus] given the data quality limitations, albeit flat, not hierarchical. To achieve this we create an evaluation framework for the selection of non-linear tree-based models like a random forest classifier or an XGBoost model. We use the satellite-derived buildings, their ETCs and their characteristics as input data and the clusters from [@primus] as target labels for a classification task. The choice of tree-based learning models is due to their readily available implementations, high scalability and ability to quickly offer interpretation insights. Furthermore, they handle well high dimensional data, non-linear interactions and require minimal hyper-parameter tuning. The flexibility of the models and the specific training/testing framework setup will allow us to not just produce a predictive model but also to identify potential areas for improvement in the original data preprocessing.
 
 <!--out of sample importance-->
 Since we want the final production model to be general and applicable to large areas i.e. whole continents, it needs to be able to handle previously unseen urban fabric types. For example, an urban morphology type that is present in the test data, or in another study area, might not be present in the training data and in that case the model should flag its predicted label as uncertain. This is another area where tree models have an advantage, since they are ensemble methods and this can help reduces their tendency to overfit. They also readily provide a confidence score for each prediction which can be used to flag unseen data. Furthermore, we take extra care to evaluate the final production models performance in realistic scenarios and the relationship between its accuracy on test data and whole countries that are not part of the model training or test data.
 
 <!--evaluation setup-->
-To achieve this we split the study area into five subsets and train five independent iterations of each model. This is done so that that every country and every combination of countries is used as final hold-out test data a and training/validation pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its training/validation pipeline, whereas Slovakia will be used as the hold-out data.
+To achieve this we split the study area into five subsets and train five independent iterations of each model. This is done so that that every country and every combination of countries is used as final hold-out test data and training/validation pipeline respectively. For example, one iteration will use Germany, Poland, Czechia and Austria as part of its training/validation pipeline, whereas Slovakia will be used as the hold-out data.
 
 ![Model evaluation and training setup](../figures/algo_design/eval_split.png){.nostretch fig-align="center" height="400"}
 
@@ -472,7 +470,7 @@ This strategy acts as an extra check against overfitting and ultimately enable u
 
 ### Training and evaluation
 
-Lastly, after splitting the study area into five subsets, we create a schema that will dictate how to split the training data of each subset for the classification task. 
+Lastly, after splitting the study area into five subsets, we create a schema that will dictate how to split the training data of each subset for the classification task.
 We use five-fold cross validation for hyper parameter tuning, based on spatial contiguity. Random subsetting does not work for this study, since we need to account for spatial dependency and the related data leakage between train and evaluation data. The spatial leakage comes from both the nature of the data - spatial contiguity is one of the core aspects of morphological elements - but also from the way characters are calculated based on various nearest topological neighbours.
 
 To account for this, we aggregate nearby ETCs into higher granularity spatial units - level 7 H3 cells - and randomly split these units into five groups, to carry out the cross-validation training. This ensures that the majority of the ETCs and their neighbours in one set are not present in the other sets, and therefore spatial leakage is minimised. We use level 7 H3 cells, which represent a delineation of the globe into hexagons with an area of approximately 5 sq. km. , rather than enclosures or ETC contiguity, to ensure that contiguous subsets of test data cover areas of heterogenous elements and present the model with a realistic validation scenario.
@@ -483,36 +481,34 @@ To account for this, we aggregate nearby ETCs into higher granularity spatial un
 ![Example hexagon in the validation split](../figures/algo_design/train_test_prague_zoom2.png){.nostretch fig-align="center" height="400"}
 
 
- The model training and evaluation will follow standard best practices - model coefficients and hyper parameter tuning, such as the decision threshold will be optimised based on the training subset, and all of the data in the hold-out country will be used to give a final model accuracy score. Specifically, the models will use balanced accuracy as the optimisation metric in order to account for imbalances in the distribution of urban fabric classes. The extra validation steps we carry out with the hold-out countries will be used to used in three ways. First, to contextualise the final models' accuracy on the test data; second, to indicate how the model will perform on other countries; and third to see how it handles urban fabric types not seen in the training in a realistic scenario.
-
+The model training and evaluation will follow standard best practices - model coefficients and hyper parameter tuning, such as the decision threshold will be optimised based on the training subset, and all of the data in the hold-out country will be used to give a final model accuracy score. Specifically, the models will use balanced accuracy as the optimisation metric in order to account for imbalances in the distribution of urban fabric classes. The extra validation steps we carry out with the hold-out countries will be used to used in three ways. First, to contextualise the final models' accuracy on the test data; second, to indicate how the model will perform on other countries; and third to see how it handles urban fabric types not seen in the training in a realistic scenario.
 
 The final production model is trained on the whole dataset, using the same hyper parameter grid search configuration and training/test spatial split.
 
 ### Preliminary results
 
 We have implemented a preliminary pipeline that carries out full data preprocessing - generating morphological elements and characters, assigning target labels and some exploratory modelling.
-The core functionality for all of this was made available within open-source packages - momepy, libpysal, sgeop.
+The core functionality for all of this was made available within open-source packages - `momepy`, `libpysal`, `sgeop` (the name of which may eventually change).
 
-Based on the preliminary results, there are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions. The number of downloaded, unprocessed streets is similar to those in [@primus] - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries. 
+Based on the preliminary results, there are 56,845,150 Microsoft building footprints for our study area, which are split into 474 subregions. This is significantly less than the available cadastre data, which has around 88 million buildings and are separated into 828 regions. The number of downloaded, unprocessed streets is similar to those in [@primus] - 23,332,865 - since they cover the same study area and come from the same source - Overture Maps, which is a processed subset of OpenStreepMap. However, the number of tessellation cells is the same as the buildings and therefore less than the cadastre data-based classification. Furthermore, the street simplification algorithm is affected by the available buildings, and therefore in turn also affects the tessellation cell boundaries.
 
-These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 . There are significanlty less subregions in the study area, since there are around 30 million less buildings, which are either missing or wrongly merged into a single polygon. In turn these issues affect the interpretation of the values of the calculated morphological characters. Some characters from the original classification even completely lose their meaning. For example, the number of adjacent buildings in the EuroFab dataset is much smaller and therefore all characters based on adjacency have a much more limited utility. This also affects, to a relatively smaller, but nevertheless important extent, characters that rely on inter-building distances and counts.
+These results highlight the effect of the satellite derived building footprints that have been discussed in the Technical Note D3 . There are significantly less subregions in the study area primarily due to the effect of the threshold of 10k buildings required for a region. As the adjacent buildings tend to be merged, the algorithm needs to cover larger area before reaching the threshold, resulting in the lower number of regions. However, as the region split is purely procedural step allowing efficient processing of data, this is not an issue of any sort.
 
 <!--preliminary modelling-->
-As a first modelling step we tried a random forest (RF) classifier on a subset of the data.
-The goal was to keep the final model as simple, scalable and interpretable as possible and evaluate the project workflow as a whole, rather than the specific model's performance.
-We trained and tested the same simple RF model on the same data, split in different ways - one was based on stratified  spatial k-fold train/test splits (our proposed setup) and another based on random train/test splits.
+As a first modelling step we tried a random forest (RF) classifier on a subset of the data covering the region surrounding Prague.
+The goal was to evaluate the project workflow and the feasibility of the proposed model architecture, rather than the specific model's performance.
+We trained and tested the same simple RF model on the data within the same region, split in different ways - one was based on stratified  spatial k-fold train/test splits (our proposed setup) and another based on random train/test splits.
 The latter model with random sampling had an accuracy of 0.95 versus an accuracy of 0.68 for the former model with spatial stratification.
-The difference in accuracy highlights the extent of spatial leakage of information.
-Furthermore, the relatively high accuracy score of the simple model hints towards the viability of predicting urban fabric types.
-
+The difference in accuracy highlights the extent of spatial leakage of information and the need for the proposed spatially explicit train/test/validation split of the data. Otherwise, the performance of the production model would be significantly lower than what the training data suggest.
+In any case, the relatively high accuracy score of the models hint towards the viability of predicting urban fabric types.
 
 In total, the results point towards two things.
-First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastal data.
-And second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.
+First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastral data.
+Second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.
 
 ## AI Modelling using Satellite Imagery
 
-In satellite image analysis, classification and segmentation address spatial labeling at different levels of granularity, with classification assigning a single label to an image tile or cell, while segmentation provides pixel-level detail. In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalizes each tile’s dominant land cover type without requiring exact pixel alignment. However, we explore both approaches: classification for a tile-based analysis and segmentation for finer, boundary-specific mapping. This dual approach enables us to evaluate how each method performs given the scale and nature of the dataset.
+In satellite image analysis, classification and segmentation address spatial labelling at different levels of granularity, with classification assigning a single label to an image tile or cell, while segmentation provides pixel-level detail. In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalises each tile’s dominant land cover type without requiring exact pixel alignment. However, we explore both approaches: classification for a tile-based analysis and segmentation for finer, boundary-specific mapping. This dual approach enables us to evaluate how each method performs given the scale and nature of the dataset.
 
 ### Data preprocessing
 
@@ -597,7 +593,7 @@ In addition to the basic classification task, we also explored an ordinal regres
 }
 `
 
-Using this ordinal mapping, the model achieved a Mean Absolute Error (MAE) and Mean Squared Error (MSE) of 0.28, with an R² score of 0.62. The Sankey diagram below shows the main misclassifications, which typically occur between similar urban fabric types. 
+Using this ordinal mapping, the model achieved a Mean Absolute Error (MAE) and Mean Squared Error (MSE) of 0.28, with an R² score of 0.62. The Sankey diagram below shows the main misclassifications, which typically occur between similar urban fabric types.
 
 ![](../figures/algo_design/sankey.png){.nostretch fig-align="center" height="420"}
 
@@ -615,10 +611,10 @@ To further improve model performance, we added spatial context by including regi
 In this section, we explore segmentation using a fine-tuned geospatial foundation model. We trained three state-of-the-art models on 224x224x3 image tiles to classify urban fabric types at a pixel level. Each model was fine-tuned for 10 epochs, and we evaluated their performance using key metrics. The models we tested vary in architecture and dataset size, as summarized below:
 
 
-| Model   | Architecture | Dataset Size | Image Sources | 
+| Model   | Architecture | Dataset Size | Image Sources |
 |---------|-------------|--------------|---------------|
-| Satlas [^1] | SwinT       | 302M labels  | Sentinel-2    | 
-| Clay   [^2] | MAE/ViT     | 70M labels   | Multiple+    | 
+| Satlas [^1] | SwinT       | 302M labels  | Sentinel-2    |
+| Clay   [^2] | MAE/ViT     | 70M labels   | Multiple+    |
 | Prithvi [^3] | MAE/ViT     | 250 PB      | Sentinel-2/Landsat |
 
 +Multiple sources include Sentinel-2, Landsat, NAIP, and LINZ
@@ -629,7 +625,7 @@ In this section, we explore segmentation using a fine-tuned geospatial foundatio
 
 These models differ mainly in their backbone architecture and the datasets they were pretrained on, which impacts their ability to capture different spatial and spectral features from the input images.
 
-The following visualisations show the varying model configurations for the three different approaches tested for the segmentation task. The main difference is the varying backbone. 
+The following visualisations show the varying model configurations for the three different approaches tested for the segmentation task. The main difference is the varying backbone.
 
 #### Model 1: Satlas
 ![](../figures/algo_design/satlas_model.png){.nostretch fig-align="center" width="600"}
