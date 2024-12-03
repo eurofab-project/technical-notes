@@ -742,4 +742,26 @@ We also evaluated random sampling and H3 resolution 3 regional sampling to asses
 ||Would need to be repeated across k-folds for possibly ‘fairer’ evaluation.|
 
 
+#### Model choice based on objective
+Goal:
+- If the goal is to predict locally, then random sampling might align better with your objectives, as it focuses on learning detailed local variations.
+- If the goal is to predict regionally or globally, regional splitting is more suitable because it ensures the model learns broader generalization patterns.
+
+-->
+Deployment on all data in the end; pipeline will look the same in the end (sampling only for reporting)
+
+
+
+**Random sampling**
+F1: 0.53
+Macro Acccuracy: 0.46
+
+**H3 sampling**
+Overall Metrics (5 Iterations; random sample across 26 H3 (resolution 3) hexagons):
+Mean Weighted Accuracy: 0.1322699686180385 ± 0.008069863476316507
+Mean F1 Score: 0.14183112233599557 ± 0.011817087187426181
+
+
+
+
 # References {.unnumbered}
