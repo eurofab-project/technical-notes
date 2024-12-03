@@ -713,4 +713,33 @@ To showcase the practical application of the model, we used it to make predictio
 
 ![](../figures/algo_design/results_eurofab.png){.nostretch fig-align="center" height="420"}
 
+### 25x25 grid classification pipeline
+
+Following the initial analysis, which demonstrated that the embeddings-based approach yielded the most favorable results, we extended the classification pipeline to include testing with a finer grid resolution. Through team discussions, we determined that a grid size of 25x25 pixels (corresponding to 250x250 meters on the ground) is particularly well-suited for downstream planning applications. This smaller grid size not only aligns better with practical use cases but also led to improvements in key performance metrics such as the overall weighted F1 score and macro accuracy. However, the overall accuracy is a bit lower, which is for our application not as important.
+
+
+| **Tile size**   | **Model**                                      | **Global Accuracy** | **MACRO Accuracy** | **F1 Score (balanced)** |
+|------------------|-----------------------------------------------|----------------------|---------------------|-------------------------|
+| **56x56x3**      | Classification (embeddings)                  | 0.76 (0.66)         | 0.22 (0.13)         | 0.23                   |
+| **56x56x3**      | Classification (embeddings) + H3 level 5 (cat) | **0.87 (0.82)**     | **0.42 (0.35)**     | **0.45**               |
+| **56x56x3**      | Classification (embeddings) + H3 level 5 (lat/lon) | **0.87 (0.81)** | 0.39 (0.31)         | 0.42                   |
+| **56x56x3**      | Classification (embeddings) + H3 level 5 ordinal | 0.80 (0.80)       | 0.26 (0.26)         | 0.26                   |
+| **25x25x3**      | Classification (embeddings)                  | 0.73                | 0.31                | 0.30                   |
+| **25x25x3**      | Classification (embeddings) + H3 level 5 (lat/lon) | **0.81**           | 0.46                | **0.53**                   |
+| **25x25x3**      | Classification (embeddings) + lat/lon        | 0.89                | 0.71                | 0.78                   |
+| **25x25x3**      | Lat/lon                                      | 0.91            | 0.78         | 0.83            |
+
+
+
+### Sampling experiments
+We also evaluated random sampling and H3 resolution 3 regional sampling to assess their impact on spatial generalization and F1-score performance. While random sampling ensures diversity and captures localized patterns, it risks spatial leakage, potentially inflating performance metrics. In contrast, H3-based regional sampling reduces spatial leakage and offers a more realistic evaluation of generalization but can suffer from unfair penalization due to the heterogeneity of regions.
+
+|Random | H3 split (resolution 3) |
+| -------- | -------- | 
+| Ensures that the training and testing datasets include diverse samples from all regions, including smaller, localized patterns that might not appear in every larger region.| Could lead to under-sampling or over-representation of certain spatial signature types if these types are not evenly distributed across regions.|
+| Increased risk of spatial leakage: test samples may be geographically close to training samples, leading to overestimated performance because the model effectively sees similar data in training and testing.| Minimizes spatial leakage by ensuring that test regions are distinct from training regions. This gives a more realistic estimate of how the model will generalize to new, unseen regions.|
+ Random sampling (diversity) benefits the training process but risks overestimating performance due to leakage.|Regional splitting (independence) gives a clearer picture of spatial generalization but could penalize the model unfairly if regions are too internally heterogeneous.|
+||Would need to be repeated across k-folds for possibly ‘fairer’ evaluation.|
+
+
 # References {.unnumbered}
