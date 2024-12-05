@@ -758,8 +758,8 @@ Macro Acccuracy: 0.46
 
 **H3 sampling**
 Overall Metrics (5 Iterations; random sample across 26 H3 (resolution 3) hexagons):
-Mean F1 score: 0.14
-Mean macro accuracy: 0.13
+Median F1 score: 0.14
+Median macro accuracy: 0.13
 
 
 
