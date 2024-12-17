@@ -510,6 +510,19 @@ In total, the results point towards two things.
 First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastral data.
 Second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.
 
+### Limitations & Potential problems
+
+One limitation of the approach is its reliance on primarily European data for training and evaluation.
+Therefore, the model may struggle to provide meaningful classifications in other contexts.
+There is no equivalent in the training data for the vast urban sprawl patterns present in the United States, for example.
+Nevertheless, there are urban fabric types present in the model which are ubiqutous in a lot of non-european contexts, such as communist planned areas in Asia, historical city centres, single housing areas and others.
+
+A potential problem is class disbalance when training the model and afterwas when calculating its accuracy.
+If such an issue is present in the country split experiments, we aim to address it by undersampling the target classes.
+We can afford to undersample, rather than oversample, since our data covers a large geograpical area and each class has tens of thousands of instances at the very least.
+
+
+
 ## AI Modelling using Satellite Imagery
 
 In satellite image analysis, classification and segmentation address spatial labelling at different levels of granularity, with classification assigning a single label to an image tile or cell, while segmentation provides pixel-level detail. In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalises each tile’s dominant land cover type without requiring exact pixel alignment. However, we explore both approaches: classification for a tile-based analysis and segmentation for finer, boundary-specific mapping. This dual approach enables us to evaluate how each method performs given the scale and nature of the dataset.
