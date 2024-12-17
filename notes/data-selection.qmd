@@ -55,6 +55,25 @@ The figure below shows a specific cutoff value, which separates different types 
 
 More detailed information about the methodology is available in the Technical Note D2, as we aim to follow it as closely as possible in this project.
 
+### Limitations
+
+Even though all the data comes from official cadastre sources there is regional heterogeneity.
+
+One limitation of the classification's underlying data is that building unit boundaries are not recorded in a consistent manner.
+For example, a modernist housing block is sometimes represented as a single polygon, other times as multiple adjacent polygons, each of which representing a physical entrance to the unified building.
+This discrepency adverse affects the calculation of some morphotopes related to adjacency, shape and size.
+In many cases this means that modernist housing estates are split based on these polygon boundaries deliniations.
+In other cases, some modernist housing estates are treated by the algorithm as industrial areas, due to the sheer size of its units and the layout of the street network.
+To account for this, two preprocessing steps are carryed out in the classification.
+First, auxilary data is used in Czechia to combine all adjacent units into single, unified polygons for consistency.
+Second, an extra variable - indicating elongation and a low area to perimeter ratio is added to the hierarchy calculations.
+The motivation behind this variable is that non-industrial buildings are typically thin and elongated, layed out in complex patterns to maximuse sunlight exposure.
+No extra information was used to calculate this indicator, only the morphometric characteristcs already available.
+
+Another limitation is that the definition of buildings is different in different regions in Central Europe.
+Hamburg and Berlin include train and tram lines, parking lots and parts of motorways as buildings in their official cadastre data.
+To limit the adverse effects of these additions, we drop any buildings that intersect overture streets in these two regions.
+
 ## Building footprints
 
 Building footprints are one of the two core elements needed to generate morphometric classifications.
@@ -144,6 +163,14 @@ The types of street segments used in the analysis are limited to the ones listed
 
 Another type of segment that is filtered out are tunnels , since the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
 
+
+## Limitations
+
+There are two limitations, related to the alignment of the satellite-derived and cadastral building footprints - one temporal and one spatial.
+First, most cadastral data comes from a single year, whereas the satellite-derived building footprints come from images from multiple years.
+Second, the cadastral data has a larger spatial coverage and therefore there are areas with cadastral data, which as missing in the satellite-derived data.
+The second issue has a limited impact on the model training, since areas present in the cadastral data but not in satellite-derived polygons are ignored due to the spatial inner join.
+Nevertheless, both of these problems affect model evaluation and are promising areas of future research.
 
 # AI data
 
