@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -55,10 +55,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-a5f7c7d3e14c0249f40a958cfc36173a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -110,7 +110,10 @@ div.csl-indent {
   <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive summary</a></li>
   <li><a href="#morphological-data" id="toc-morphological-data" class="nav-link" data-scroll-target="#morphological-data">Morphological data</a>
   <ul class="collapse">
-  <li><a href="#ground-truth-classification" id="toc-ground-truth-classification" class="nav-link" data-scroll-target="#ground-truth-classification">Ground truth classification</a></li>
+  <li><a href="#ground-truth-classification" id="toc-ground-truth-classification" class="nav-link" data-scroll-target="#ground-truth-classification">Ground truth classification</a>
+  <ul class="collapse">
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  </ul></li>
   <li><a href="#building-footprints" id="toc-building-footprints" class="nav-link" data-scroll-target="#building-footprints">Building footprints</a>
   <ul class="collapse">
   <li><a href="#available-sources" id="toc-available-sources" class="nav-link" data-scroll-target="#available-sources">Available sources</a></li>
@@ -120,6 +123,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#overture-transportation-layer" id="toc-overture-transportation-layer" class="nav-link" data-scroll-target="#overture-transportation-layer">Overture transportation layer</a></li>
   </ul></li>
+  <li><a href="#limitations-1" id="toc-limitations-1" class="nav-link" data-scroll-target="#limitations-1">Limitations</a></li>
   </ul></li>
   <li><a href="#ai-data" id="toc-ai-data" class="nav-link" data-scroll-target="#ai-data">AI data</a>
   <ul class="collapse">
@@ -189,6 +193,12 @@ div.csl-indent {
 </figure>
 </div>
 <p>More detailed information about the methodology is available in the Technical Note D2, as we aim to follow it as closely as possible in this project.</p>
+<section id="limitations" class="level3">
+<h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
+<p>Even though all the data comes from official cadastre sources there is regional heterogeneity.</p>
+<p>One limitation of the classification’s underlying data is that building unit boundaries are not recorded in a consistent manner. For example, a modernist housing block is sometimes represented as a single polygon, other times as multiple adjacent polygons, each of which representing a physical entrance to the unified building. This discrepency adverse affects the calculation of some morphotopes related to adjacency, shape and size. In many cases this means that modernist housing estates are split based on these polygon boundaries deliniations. In other cases, some modernist housing estates are treated by the algorithm as industrial areas, due to the sheer size of its units and the layout of the street network. To account for this, two preprocessing steps are carryed out in the classification. First, auxilary data is used in Czechia to combine all adjacent units into single, unified polygons for consistency. Second, an extra variable - indicating elongation and a low area to perimeter ratio is added to the hierarchy calculations. The motivation behind this variable is that non-industrial buildings are typically thin and elongated, layed out in complex patterns to maximuse sunlight exposure. No extra information was used to calculate this indicator, only the morphometric characteristcs already available.</p>
+<p>Another limitation is that the definition of buildings is different in different regions in Central Europe. Hamburg and Berlin include train and tram lines, parking lots and parts of motorways as buildings in their official cadastre data. To limit the adverse effects of these additions, we drop any buildings that intersect overture streets in these two regions.</p>
+</section>
 </section>
 <section id="building-footprints" class="level2">
 <h2 class="anchored" data-anchor-id="building-footprints">Building footprints</h2>
@@ -279,6 +289,10 @@ div.csl-indent {
 </table>
 <p>Another type of segment that is filtered out are tunnels , since the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.</p>
 </section>
+</section>
+<section id="limitations-1" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-1">Limitations</h2>
+<p>There are two limitations, related to the alignment of the satellite-derived and cadastral building footprints - one temporal and one spatial. First, most cadastral data comes from a single year, whereas the satellite-derived building footprints come from images from multiple years. Second, the cadastral data has a larger spatial coverage and therefore there are areas with cadastral data, which as missing in the satellite-derived data. The second issue has a limited impact on the model training, since areas present in the cadastral data but not in satellite-derived polygons are ignored due to the spatial inner join. Nevertheless, both of these problems affect model evaluation and are promising areas of future research.</p>
 </section>
 </section>
 <section id="ai-data" class="level1">
@@ -417,8 +431,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -529,7 +541,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

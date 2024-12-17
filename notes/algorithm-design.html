@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -55,10 +55,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-a5f7c7d3e14c0249f40a958cfc36173a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -153,6 +153,7 @@ window.Quarto = {
   <li><a href="#prediction-modelling-and-traintest-split" id="toc-prediction-modelling-and-traintest-split" class="nav-link" data-scroll-target="#prediction-modelling-and-traintest-split">Prediction modelling and train/test split</a></li>
   <li><a href="#training-and-evaluation" id="toc-training-and-evaluation" class="nav-link" data-scroll-target="#training-and-evaluation">Training and evaluation</a></li>
   <li><a href="#preliminary-results" id="toc-preliminary-results" class="nav-link" data-scroll-target="#preliminary-results">Preliminary results</a></li>
+  <li><a href="#limitations-potential-problems" id="toc-limitations-potential-problems" class="nav-link" data-scroll-target="#limitations-potential-problems">Limitations &amp; Potential problems</a></li>
   </ul></li>
   <li><a href="#ai-modelling-using-satellite-imagery-1" id="toc-ai-modelling-using-satellite-imagery-1" class="nav-link" data-scroll-target="#ai-modelling-using-satellite-imagery-1">AI Modelling using Satellite Imagery</a>
   <ul class="collapse">
@@ -751,6 +752,11 @@ window.Quarto = {
 <p>As a first modelling step we tried a random forest (RF) classifier on a subset of the data covering the region surrounding Prague. The goal was to evaluate the project workflow and the feasibility of the proposed model architecture, rather than the specific model’s performance. We trained and tested the same simple RF model on the data within the same region, split in different ways - one was based on stratified spatial k-fold train/test splits (our proposed setup) and another based on random train/test splits. The latter model with random sampling had an accuracy of 0.95 versus an accuracy of 0.68 for the former model with spatial stratification. The difference in accuracy highlights the extent of spatial leakage of information and the need for the proposed spatially explicit train/test/validation split of the data. Otherwise, the performance of the production model would be significantly lower than what the training data suggest. In any case, the relatively high accuracy score of the models hint towards the viability of predicting urban fabric types.</p>
 <p>In total, the results point towards two things. First, they further show need for a non-linear classification model, cable of accounting for the discrepancies between satellite-derived building footprint and cadastral data. Second, the utility of our designed framework to account for spatial leakage and evaluate model performance in more realistic scenarios.</p>
 </section>
+<section id="limitations-potential-problems" class="level3">
+<h3 class="anchored" data-anchor-id="limitations-potential-problems">Limitations &amp; Potential problems</h3>
+<p>One limitation of the approach is its reliance on primarily European data for training and evaluation. Therefore, the model may struggle to provide meaningful classifications in other contexts. There is no equivalent in the training data for the vast urban sprawl patterns present in the United States, for example. Nevertheless, there are urban fabric types present in the model which are ubiqutous in a lot of non-european contexts, such as communist planned areas in Asia, historical city centres, single housing areas and others.</p>
+<p>A potential problem is class disbalance when training the model and afterwas when calculating its accuracy. If such an issue is present in the country split experiments, we aim to address it by undersampling the target classes. We can afford to undersample, rather than oversample, since our data covers a large geograpical area and each class has tens of thousands of instances at the very least.</p>
+</section>
 </section>
 <section id="ai-modelling-using-satellite-imagery-1" class="level2">
 <h2 class="anchored" data-anchor-id="ai-modelling-using-satellite-imagery-1">AI Modelling using Satellite Imagery</h2>
@@ -1065,7 +1071,7 @@ Basaraner, Melih, and Sinan Cetinkaya. 2017. <span>“Performance of Shape Indic
 Bastani, Favyen, Piper Wolters, Ritwik Gupta, Joe Ferdinando, and Aniruddha Kembhavi. 2023. <span>“<span>SatlasPretrain</span>: <span>A</span> <span>Large</span>-<span>Scale</span> <span>Dataset</span> for <span>Remote</span> <span>Sensing</span> <span>Image</span> <span>Understanding</span>.”</span> arXiv. <a href="http://arxiv.org/abs/2211.15660">http://arxiv.org/abs/2211.15660</a>.
 </div>
 <div id="ref-boeing2017a" class="csl-entry" role="listitem">
-Boeing, Geoff. 2017. <span>“<span>OSMnx</span>: <span>New</span> Methods for Acquiring, Constructing, Analyzing, and Visualizing Complex Street Networks.”</span> <em>Computers, Environment and Urban Systems</em> 65 (September): 126–39. <a href="https://doi.org/gbvjxq">https://doi.org/gbvjxq</a>.
+Boeing, Geoff. 2017. <span>“<span>OSMnx</span>: <span>New</span> Methods for Acquiring, Constructing, Analyzing, and Visualizing Complex Street Networks.”</span> <em>Computers, Environment and Urban Systems</em> 65 (September): 126–39. <a href="https://doi.org/10/gbvjxq">https://doi.org/10/gbvjxq</a>.
 </div>
 <div id="ref-calafiore2023inequalities" class="csl-entry" role="listitem">
 Calafiore, Alessia, Krasen Samardzhiev, Francisco Rowe, Martin Fleischmann, and Daniel Arribas-Bel. 2023. <span>“Inequalities in Experiencing Urban Functions. An Exploration of Human Digital (Geo-) Footprints.”</span> <em>Environment and Planning B: Urban Analytics and City Science</em>, 23998083231208507.
@@ -1116,7 +1122,7 @@ Ibrahim, Mohamed R., James Haworth, and Tao Cheng. 2020. <span>“Understanding 
 Jakubik, Johannes, Sujit Roy, C. E. Phillips, Paolo Fraccaro, Denys Godwin, Bianca Zadrozny, Daniela Szwarcman, et al. 2023. <span>“Foundation <span>Models</span> for <span>Generalist</span> <span>Geospatial</span> <span>Artificial</span> <span>Intelligence</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2310.18660">https://doi.org/10.48550/arXiv.2310.18660</a>.
 </div>
 <div id="ref-PhysRevE.72.056127" class="csl-entry" role="listitem">
-Lind, Pedro G., Marta C. González, and Hans J. Herrmann. 2005. <span>“Cycles and Clustering in Bipartite Networks.”</span> <em>Physical Review E</em> 72 (5): 056127. <a href="https://doi.org/c6m9xd">https://doi.org/c6m9xd</a>.
+Lind, Pedro G., Marta C. González, and Hans J. Herrmann. 2005. <span>“Cycles and Clustering in Bipartite Networks.”</span> <em>Physical Review E</em> 72 (5): 056127. <a href="https://doi.org/10/c6m9xd">https://doi.org/10/c6m9xd</a>.
 </div>
 <div id="ref-lu2024ai" class="csl-entry" role="listitem">
 Lu, Siqi, Junlin Guo, James R. Zimmer-Dauphinee, Jordan M. Nieusma, Xiao Wang, Parker VanValkenburgh, Steven A. Wernke, and Yuankai Huo. 2024. <span>“<span>AI</span> <span>Foundation</span> <span>Models</span> in <span>Remote</span> <span>Sensing</span>: <span>A</span> <span>Survey</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2408.03464">https://doi.org/10.48550/arXiv.2408.03464</a>.
@@ -1226,8 +1232,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1338,7 +1342,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
