@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.39">
+<meta name="generator" content="quarto-1.6.40">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -55,10 +55,10 @@ div.csl-indent {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a5f7c7d3e14c0249f40a958cfc36173a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-f25f27ff4b7ba7102a05c66407501d67.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -161,6 +161,8 @@ window.Quarto = {
   <li><a href="#model-architectures" id="toc-model-architectures" class="nav-link" data-scroll-target="#model-architectures">Model architectures</a></li>
   <li><a href="#evaluation-metrics" id="toc-evaluation-metrics" class="nav-link" data-scroll-target="#evaluation-metrics">Evaluation Metrics</a></li>
   <li><a href="#preliminary-results-1" id="toc-preliminary-results-1" class="nav-link" data-scroll-target="#preliminary-results-1">Preliminary results</a></li>
+  <li><a href="#x25-grid-classification-pipeline" id="toc-x25-grid-classification-pipeline" class="nav-link" data-scroll-target="#x25-grid-classification-pipeline">25x25 grid classification pipeline</a></li>
+  <li><a href="#sampling-experiments" id="toc-sampling-experiments" class="nav-link" data-scroll-target="#sampling-experiments">Sampling experiments</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -1045,6 +1047,325 @@ window.Quarto = {
 <p><img src="../figures/algo_design/results_eurofab.png" class="nostretch quarto-figure quarto-figure-center figure-img" height="420"></p>
 </figure>
 </div>
+</section>
+</section>
+<section id="x25-grid-classification-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="x25-grid-classification-pipeline">25x25 grid classification pipeline</h3>
+<p>Following the initial analysis, which demonstrated that the embeddings-based approach yielded the most favorable results, we extended the classification pipeline to include testing with a finer grid resolution. Through team discussions, we determined that a grid size of 25x25 pixels (corresponding to 250x250 meters on the ground) is particularly well-suited for downstream planning applications. This smaller grid size not only aligns better with practical use cases but also led to improvements in key performance metrics such as the overall weighted F1 score and macro accuracy. However, the overall accuracy is a bit lower, which is for our application not as important.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 35%">
+<col style="width: 16%">
+<col style="width: 15%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Tile size</strong></th>
+<th><strong>Model</strong></th>
+<th><strong>Global Accuracy</strong></th>
+<th><strong>MACRO Accuracy</strong></th>
+<th><strong>F1 Score (balanced)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>56x56x3</strong></td>
+<td>Classification (embeddings)</td>
+<td>0.76 (0.66)</td>
+<td>0.22 (0.13)</td>
+<td>0.23</td>
+</tr>
+<tr class="even">
+<td><strong>56x56x3</strong></td>
+<td>Classification (embeddings) + H3 level 5 (cat)</td>
+<td><strong>0.87 (0.82)</strong></td>
+<td><strong>0.42 (0.35)</strong></td>
+<td><strong>0.45</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>56x56x3</strong></td>
+<td>Classification (embeddings) + H3 level 5 (lat/lon)</td>
+<td><strong>0.87 (0.81)</strong></td>
+<td>0.39 (0.31)</td>
+<td>0.42</td>
+</tr>
+<tr class="even">
+<td><strong>56x56x3</strong></td>
+<td>Classification (embeddings) + H3 level 5 ordinal</td>
+<td>0.80 (0.80)</td>
+<td>0.26 (0.26)</td>
+<td>0.26</td>
+</tr>
+<tr class="odd">
+<td><strong>25x25x3</strong></td>
+<td>Classification (embeddings)</td>
+<td>0.73</td>
+<td>0.31</td>
+<td>0.30</td>
+</tr>
+<tr class="even">
+<td><strong>25x25x3</strong></td>
+<td>Classification (embeddings) + H3 level 5 (lat/lon)</td>
+<td><strong>0.81</strong></td>
+<td>0.46</td>
+<td><strong>0.53</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>25x25x3</strong></td>
+<td>Classification (embeddings) + lat/lon</td>
+<td>0.89</td>
+<td>0.71</td>
+<td>0.78</td>
+</tr>
+<tr class="even">
+<td><strong>25x25x3</strong></td>
+<td>Lat/lon</td>
+<td>0.91</td>
+<td>0.78</td>
+<td>0.83</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sampling-experiments" class="level3">
+<h3 class="anchored" data-anchor-id="sampling-experiments">Sampling experiments</h3>
+<p>We also evaluated random sampling and H3 resolution 3 regional sampling to assess their impact on spatial generalization and F1-score performance. While random sampling ensures diversity and captures localized patterns, it risks spatial leakage, potentially inflating performance metrics. In contrast, H3-based regional sampling reduces spatial leakage and offers a more realistic evaluation of generalization but can suffer from unfair penalization due to the heterogeneity of regions.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Random</th>
+<th>H3 split (resolution 3)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ensures that the training and testing datasets include diverse samples from all regions, including smaller, localized patterns that might not appear in every larger region.</td>
+<td>Could lead to under-sampling or over-representation of certain spatial signature types if these types are not evenly distributed across regions.</td>
+</tr>
+<tr class="even">
+<td>Increased risk of spatial leakage: test samples may be geographically close to training samples, leading to overestimated performance because the model effectively sees similar data in training and testing.</td>
+<td>Minimizes spatial leakage by ensuring that test regions are distinct from training regions. This gives a more realistic estimate of how the model will generalize to new, unseen regions.</td>
+</tr>
+<tr class="odd">
+<td>Random sampling (diversity) benefits the training process but risks overestimating performance due to leakage.</td>
+<td>Regional splitting (independence) gives a clearer picture of spatial generalization but could penalize the model unfairly if regions are too internally heterogeneous.</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Would need to be repeated across k-folds for possibly ‘fairer’ evaluation.</td>
+</tr>
+</tbody>
+</table>
+<section id="model-choice-based-on-objective" class="level4">
+<h4 class="anchored" data-anchor-id="model-choice-based-on-objective">Model choice based on objective</h4>
+<p>Goal: - If the goal is to predict locally, then random sampling might align better with your objectives, as it focuses on learning detailed local variations. - If the goal is to predict regionally or globally, regional splitting is more suitable because it ensures the model learns broader generalization patterns.</p>
+<p>–&gt; Deployment on all data in the end; pipeline will look the same in the end (sampling only for reporting)</p>
+</section>
+<section id="sampling-results" class="level4">
+<h4 class="anchored" data-anchor-id="sampling-results">Sampling results</h4>
+<p>H3 regional sampling showed slightly lower performance, hinting to some spatial leakage through random sampling.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 5%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Approach</strong></th>
+<th><strong>Res.</strong></th>
+<th><strong>Sampling</strong></th>
+<th><strong>Clas/seg</strong></th>
+<th><strong>Regional info</strong></th>
+<th><strong>Global Acc</strong></th>
+<th><strong>Macro Acc</strong></th>
+<th><strong>F1(macro)</strong></th>
+<th><strong>IoU</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A (embeddings)</td>
+<td>56x56</td>
+<td>random</td>
+<td>classification</td>
+<td></td>
+<td>0.76 (0.66)</td>
+<td>0.22 (0.13)</td>
+<td>0.23</td>
+<td>0.63</td>
+</tr>
+<tr class="even">
+<td>A (embeddings)</td>
+<td>56x56</td>
+<td>random</td>
+<td>classification</td>
+<td>H3 res 5 (cat)</td>
+<td><strong>0.87 (0.82)</strong></td>
+<td><strong>0.42 (0.35)</strong></td>
+<td><strong>0.45</strong></td>
+<td><strong>0.79</strong></td>
+</tr>
+<tr class="odd">
+<td>A (embeddings)</td>
+<td>56x56</td>
+<td>random</td>
+<td>classification</td>
+<td>H3 res 5 (lat/lon)</td>
+<td><strong>0.87 (0.81)</strong></td>
+<td>0.39 (0.31)</td>
+<td>0.42</td>
+<td>0.78</td>
+</tr>
+<tr class="even">
+<td>A (embeddings)</td>
+<td>56x56</td>
+<td>random</td>
+<td>regression (ordinal)</td>
+<td>H3 res 5 (lat/lon)</td>
+<td>0.80 (0.80)</td>
+<td>0.26 (0.26)</td>
+<td>0.26</td>
+<td>0.69</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>A (embeddings)</td>
+<td>25x25</td>
+<td>random</td>
+<td>classification</td>
+<td></td>
+<td>(0.73)</td>
+<td>(0.31)</td>
+<td>(0.3)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>A (embeddings)</td>
+<td>25x25</td>
+<td>random</td>
+<td>classification</td>
+<td></td>
+<td><strong>(0.81)</strong></td>
+<td><strong>(0.46)</strong></td>
+<td><strong>(0.53)</strong></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>A (embeddings)</td>
+<td>25x25</td>
+<td>random</td>
+<td>classification</td>
+<td>lat/lon</td>
+<td>(0.89)</td>
+<td>(0.71)</td>
+<td>(0.78)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>25x25</td>
+<td>random</td>
+<td></td>
+<td>lat/lon</td>
+<td>(0.91)</td>
+<td>(0.78)</td>
+<td>(0.83)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>A (embeddings)</td>
+<td>25x25</td>
+<td>H3 res 3 (55,743)</td>
+<td>A (embeddings)</td>
+<td>H3 res 5 (lat/lon)</td>
+<td>(0.58)</td>
+<td>(0.15)</td>
+<td>(0.15)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>A (embeddings)</td>
+<td>25x25</td>
+<td>H3 res 5 (2,125)</td>
+<td>A (embeddings)</td>
+<td>H3 res 5 (lat/lon)</td>
+<td>(0.65)</td>
+<td>(0.2)</td>
+<td>(0.21)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>A (embeddings)</td>
+<td>25x25</td>
+<td>H3 res 6 (335)</td>
+<td>A (embeddings)</td>
+<td>H3 res 5 (lat/lon)</td>
+<td><strong>(0.72)</strong></td>
+<td><strong>(0.29)</strong></td>
+<td><strong>(0.32)</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="limitations" class="level4">
+<h4 class="anchored" data-anchor-id="limitations">Limitations</h4>
+<ul>
+<li>Data
+<ul>
+<li>class imbalance:
+<ul>
+<li>classification with models with oversampling/undersampling</li>
+<li>we fit a weighted (add weights based on distribution) XGBoost model did not give better results</li>
+<li>potential way forward if continues to be a problem: join classes together</li>
+</ul></li>
+</ul></li>
+<li>Model constraints and generalisability
+<ul>
+<li>generalisability to other European countries
+<ul>
+<li>final model will be fit on urban form –&gt; hopefully improve the model
+<ul>
+<li>more data points of classes with small number of instances</li>
+</ul></li>
+<li>sampling across different countries, the final model will not just be trained on England but on a range of sample countries, so we are not anticipating any issues with generalisability</li>
+</ul></li>
+</ul></li>
+</ul>
 </section>
 </section>
 </section>
