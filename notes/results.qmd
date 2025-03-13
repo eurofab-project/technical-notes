@@ -1,0 +1,79 @@
+---
+title: "Test and Verification Results"
+subtitle: "Technical Note D4"
+author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
+institute: "Charles University; The Alan Turing Institute"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+  html:
+    toc: true
+    css: styles.css
+bibliography: ../references.bib
+---
+
+# Executive summary
+
+
+# Morphometric classification
+
+::: {#tbl-panel layout-nrow=2}
+|                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|-----------------|------------|-------------|---------|------|------|------|------|------|
+| **Weighted F1** | 0.74       | 0.66        | 0.59    | 0.54 | 0.60 | 0.59 | 0.63 | 0.56 |
+| **Micro F1**    | 0.74       | 0.65        | 0.57    | 0.53 | 0.61 | 0.58 | 0.62 | 0.53 |
+| **Macro F1**    | 0.73       | 0.63        | 0.48    | 0.45 | 0.54 | 0.47 | 0.49 | 0.45 |
+
+: Microsoft building footprints {#tbl-first}
+
+|                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|-----------------|------------|-------------|---------|------|------|------|------|------|
+| **Weighted F1** | 0.74       | 0.66        | 0.59    | 0.51 | 0.61 | 0.62 | 0.65 | 0.59 |
+| **Micro F1**    | 0.74       | 0.66        | 0.58    | 0.50 | 0.61 | 0.61 | 0.63 | 0.56 |
+| **Macro F1**    | 0.74       | 0.64        | 0.50    | 0.46 | 0.57 | 0.49 | 0.53 | 0.47 |
+
+: Overture building footprints {#tbl-second}
+
+Overall F1 scores at level 3
+:::
+
+
+Some text here about the
+
+
+
+
+::: {#tbl-panel layout-nrow=2}
+|                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|--------------------------------------|------------|-------------|---------|------|------|------|------|------|
+| **Central Urban Developments**       | 0.62       | 0.56        | 0.46    | 0.37 | 0.45 | 0.51 | 0.50 | 0.47 |
+| **Dense Urban Developments**         | 0.73       | 0.67        | 0.65    | 0.64 | 0.70 | 0.64 | 0.66 | 0.62 |
+| **Large Scale Developments**         | 0.54       | 0.46        | 0.42    | 0.34 | 0.55 | 0.37 | 0.39 | 0.42 |
+| **Linear Road Network Developments** | 0.87       | 0.67        | 0.36    | 0.45 | 0.59 | 0.36 | 0.20 | 0.20 |
+| **Sparse Road Network Developments** | 0.79       | 0.71        | 0.64    | 0.52 | 0.70 | 0.61 | 0.73 | 0.64 |
+| **Sparse Rural Development**         | 0.87       | 0.71        | 0.38    | 0.31 | 0.46 | 0.18 | 0.47 | 0.47 |
+| **Street-aligned Developments**      | 0.70       | 0.63        | 0.46    | 0.56 | 0.33 | 0.59 | 0.49 | 0.32 |
+: Microsoft building footprints {#tbl-first}
+
+|                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|--------------------------------------|------------|-------------|---------|------|------|------|------|------|
+| **Central Urban Developments**       | 0.74       | 0.69        | 0.59    | 0.41 | 0.62 | 0.67 | 0.65 | 0.62 |
+| **Dense Urban Developments**         | 0.72       | 0.67        | 0.65    | 0.64 | 0.69 | 0.64 | 0.66 | 0.63 |
+| **Large Scale Developments**         | 0.54       | 0.45        | 0.40    | 0.36 | 0.55 | 0.36 | 0.38 | 0.34 |
+| **Linear Road Network Developments** | 0.86       | 0.66        | 0.38    | 0.46 | 0.60 | 0.36 | 0.26 | 0.23 |
+| **Sparse Road Network Developments** | 0.78       | 0.70        | 0.64    | 0.49 | 0.69 | 0.60 | 0.73 | 0.67 |
+| **Sparse Rural Development**         | 0.85       | 0.71        | 0.39    | 0.36 | 0.47 | 0.16 | 0.51 | 0.47 |
+| **Street-aligned Developments**      | 0.69       | 0.62        | 0.46    | 0.49 | 0.35 | 0.60 | 0.51 | 0.35 |
+: Overture building footprints {#tbl-second}
+
+Individual F1 scores for  level 3 clusters
+:::
+
+
+
+
+
+
+# References {.unnumbered}
