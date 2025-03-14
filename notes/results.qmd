@@ -19,14 +19,21 @@ bibliography: ../references.bib
 
 # Morphometric classification
 
-::: {#tbl-panel layout-nrow=2}
+
+## Results
+
+### Level 3
+
+#### Aggregate scores
+
+::: {#tbl-f1agg layout-nrow=2}
 |                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |-----------------|------------|-------------|---------|------|------|------|------|------|
 | **Weighted F1** | 0.74       | 0.66        | 0.59    | 0.54 | 0.60 | 0.59 | 0.63 | 0.56 |
 | **Micro F1**    | 0.74       | 0.65        | 0.57    | 0.53 | 0.61 | 0.58 | 0.62 | 0.53 |
 | **Macro F1**    | 0.73       | 0.63        | 0.48    | 0.45 | 0.54 | 0.47 | 0.49 | 0.45 |
 
-: Microsoft building footprints {#tbl-first}
+: Microsoft building footprints {#tbl-f1aggms}
 
 |                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |-----------------|------------|-------------|---------|------|------|------|------|------|
@@ -34,18 +41,25 @@ bibliography: ../references.bib
 | **Micro F1**    | 0.74       | 0.66        | 0.58    | 0.50 | 0.61 | 0.61 | 0.63 | 0.56 |
 | **Macro F1**    | 0.74       | 0.64        | 0.50    | 0.46 | 0.57 | 0.49 | 0.53 | 0.47 |
 
-: Overture building footprints {#tbl-second}
+: Overture building footprints {#tbl-f1aggov}
 
 Overall F1 scores at level 3
 :::
 
+@tbl-f1agg shows the aggregate F1 scores for the level 3 models trained on the Microsoft Building footprint and Overturemaps building footprints data. The Random, column shows the F1 scores for the model tested on randomly selected stratified data; Spatial - on the spatially aware split; OoS - stands for "Out of Sample" and is the average of the models, tested on each individual country and trained on the rest; the other columns are the specific F1 scores for each country, that make up the OoS. There are three main patterns present in the reported results.
 
-Some text here about the
+First, overall the aggregate scores between the models trained on the two datasets are almost equal. with the Overturemaps models being very slightly higher. This suggests that at this level of disagregation of urban form, detailed characteristics of building footprints and their interactions with each other and the street network matter less. For example, the Overture data has more accurate information of building corners, adjacency, orientation and others but that does not significantly improve the overall F1 scores. 
+
+Second, more complex and relfective of the underlying phenomena testing splits result in more realistic model evaluations for both sub-tables. The Random split has the highest score, the spatial split is always lower and the OoS average lower still. OoS is the closest score to a realistic real-world application of the model - using it to predict unseen urban fabric types. The fact that the Spatial score is closer to it, shows that randomly spliting your modelling data leads to spatial leakage and spatially aware-splits result in more realistic evaluations. Nevertheless, the Out of Sample score is lower still, which suggests that even testing the model accuracy on spatially split data overestimates model performance.   
+
+Third, even at this high level of aggregation urban form shows signs of heterogeneity. The F1 scores for the individual countries vary both Overture and Microsoft trained models, but especially in @tbl-f1aggms. The scores for Slovakia are especially lower suggesting that it represents a more distinct type of morphology, whereas the scores for Austria are the highest suggesting that it is more similar on average to Central Europe as a whole.
+
+Note, since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data in the @tbl-f1aggms is different than the test data in @tbl-f1aggov - less volumous, much less detailed and overall different in character. For example, there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them.Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues.
 
 
+#### Class scores
 
-
-::: {#tbl-panel layout-nrow=2}
+::: {#tbl-f1class layout-nrow=2}
 |                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |--------------------------------------|------------|-------------|---------|------|------|------|------|------|
 | **Central Urban Developments**       | 0.62       | 0.56        | 0.46    | 0.37 | 0.45 | 0.51 | 0.50 | 0.47 |
@@ -55,7 +69,7 @@ Some text here about the
 | **Sparse Road Network Developments** | 0.79       | 0.71        | 0.64    | 0.52 | 0.70 | 0.61 | 0.73 | 0.64 |
 | **Sparse Rural Development**         | 0.87       | 0.71        | 0.38    | 0.31 | 0.46 | 0.18 | 0.47 | 0.47 |
 | **Street-aligned Developments**      | 0.70       | 0.63        | 0.46    | 0.56 | 0.33 | 0.59 | 0.49 | 0.32 |
-: Microsoft building footprints {#tbl-first}
+: Microsoft building footprints {#tbl-f1classms}
 
 |                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |--------------------------------------|------------|-------------|---------|------|------|------|------|------|
@@ -66,13 +80,42 @@ Some text here about the
 | **Sparse Road Network Developments** | 0.78       | 0.70        | 0.64    | 0.49 | 0.69 | 0.60 | 0.73 | 0.67 |
 | **Sparse Rural Development**         | 0.85       | 0.71        | 0.39    | 0.36 | 0.47 | 0.16 | 0.51 | 0.47 |
 | **Street-aligned Developments**      | 0.69       | 0.62        | 0.46    | 0.49 | 0.35 | 0.60 | 0.51 | 0.35 |
-: Overture building footprints {#tbl-second}
+: Overture building footprints {#tbl-f1classov}
 
 Individual F1 scores for  level 3 clusters
 :::
 
+@tbl-f1class shows the F1 scores broken down by prediction class for the level 3 models. The sub-tables and columns have the same interpretation as @tbl-f1agg.
+
+The patterns in the individual classes are mostly identical to patterns in the aggregated results. The scores for individual classes are mostly the same with the exception of the **Central Urban Developments** class, which is reflective of the higher quality in the Overture dataset. The higher prediction accuracy for this cluster does not significantly impact the overall F1 scores in @tbl-f1aggov, since it is relatively sparse compared to the rest of the classes. Similarly to @tbl-f1agg, the same patterns in accyracy across the splitting schemes holds: Random - highest; Spatial - lower, OoS - lowest. Furthermore, the heterogeneity of urban form is even more pronounced in the detailed classes, as evidenced by the even larger differences in F1 scores between the different countries.
 
 
+
+### Level 4
+
+#### Aggregate scores
+
+#### Class scores
+
+It is interesting that the spatial testing pattern holds across different scales of urban form dissimilarity.
+
+
+### Overture Spatial models
+
+#### Level 4 model
+
+#### Level 3 aggregations
+
+
+## Discussion
+
+The results from the study pertain to two areas - urban morphology and spatial modelling. 
+
+The results show that urban morphology is heretogenous and what is important changes across scales of dissimilarity.
+Furthermore, Data from heterogenous sources can be used to identify urban morphological types.
+
+
+The results from the comparisons between the different testing data splitting strategies open new avenues of research.
 
 
 
