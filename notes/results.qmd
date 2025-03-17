@@ -23,23 +23,6 @@ bibliography: ../references.bib
 ## Results
 
 ::: {#tbl-testcounts layout-nrow=2}
-|                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
-|----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
-| **Aligned Winding Streets**            | 1,906      | 1,911       | 602    | 593    | 7,681  | 334    | 320    |
-| **Compact Development**                | 1,632      | 1,646       | 201    | 127    | 7,708  | 75     | 48     |
-| **Cul-de-Sac Layout**                  | 1,354      | 1,362       | 446    | 484    | 5,152  | 429    | 260    |
-| **Dense Connected Developments**       | 1,850      | 1,843       | 157    | 662    | 7,494  | 262    | 676    |
-| **Dense Standalone Buildings**         | 1,062      | 1,073       | 324    | 1,540  | 2,524  | 465    | 454    |
-| **Dispersed Linear Development**       | 163        | 167         | 40     | 740    | 35     | 0      | 3      |
-| **Extensive Wide-Spaced Developments** | 175        | 186         | 63     | 468    | 215    | 35     | 94     |
-| **Large Interconnected Blocks**        | 216        | 218         | 11     | 45     | 872    | 82     | 70     |
-| **Large Utilitarian Development**      | 184        | 178         | 15     | 163    | 632    | 55     | 57     |
-| **Linear Development**                 | 468        | 464         | 173    | 1,797  | 320    | 11     | 41     |
-| **Sparse Open Layout**                 | 1,924      | 1,901       | 65     | 4,353  | 1,927  | 1,498  | 1,777  |
-| **Sparse Road-Linked Development**     | 1,387      | 1,377       | 531    | 2,045  | 3,921  | 226    | 213    |
-| **Sparse Rural Development**           | 639        | 643         | 42     | 2,811  | 82     | 150    | 108    |
-| **_Total_**                            | 12,966     | 12,974      | 2,675  | 15,832 | 38,570 | 3,627  | 4,127  |
-: Microsoft building footprints {#tbl-testcountsms}
 
 |                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
 |----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
@@ -57,6 +40,24 @@ bibliography: ../references.bib
 | **Sparse Road-Linked Development**     | 1,095      | 1,065       | 428    | 1,697  | 3,005  | 177    | 169    |
 | **Sparse Rural Development**           | 562        | 540         | 30     | 2,483  | 65     | 132    | 101    |
 | **_Total_**                            | 9,049      | 8,987       | 2,095  | 12,913 | 24,473 | 2,846  | 2,919  |
+: Microsoft building footprints {#tbl-testcountsms}
+
+|                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
+|----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
+| **Aligned Winding Streets**            | 1,906      | 1,911       | 602    | 593    | 7,681  | 334    | 320    |
+| **Compact Development**                | 1,632      | 1,646       | 201    | 127    | 7,708  | 75     | 48     |
+| **Cul-de-Sac Layout**                  | 1,354      | 1,362       | 446    | 484    | 5,152  | 429    | 260    |
+| **Dense Connected Developments**       | 1,850      | 1,843       | 157    | 662    | 7,494  | 262    | 676    |
+| **Dense Standalone Buildings**         | 1,062      | 1,073       | 324    | 1,540  | 2,524  | 465    | 454    |
+| **Dispersed Linear Development**       | 163        | 167         | 40     | 740    | 35     | 0      | 3      |
+| **Extensive Wide-Spaced Developments** | 175        | 186         | 63     | 468    | 215    | 35     | 94     |
+| **Large Interconnected Blocks**        | 216        | 218         | 11     | 45     | 872    | 82     | 70     |
+| **Large Utilitarian Development**      | 184        | 178         | 15     | 163    | 632    | 55     | 57     |
+| **Linear Development**                 | 468        | 464         | 173    | 1,797  | 320    | 11     | 41     |
+| **Sparse Open Layout**                 | 1,924      | 1,901       | 65     | 4,353  | 1,927  | 1,498  | 1,777  |
+| **Sparse Road-Linked Development**     | 1,387      | 1,377       | 531    | 2,045  | 3,921  | 226    | 213    |
+| **Sparse Rural Development**           | 639        | 643         | 42     | 2,811  | 82     | 150    | 108    |
+| **_Total_**                            | 12,966     | 12,974      | 2,675  | 15,832 | 38,570 | 3,627  | 4,127  |
 : Overture building footprints {#tbl-testcountsov}
 
 Distribution of test classes across the different models. The reported values are in the thousands.
@@ -64,9 +65,9 @@ Distribution of test classes across the different models. The reported values ar
 
 Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table @tbl-testcounts shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4. 
 
-The differences in _Large Interconnected Blocks_ and _Dense Connected Developments_  between @tbl-testcountsov and @tbl-testcountsms  highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, In all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently.
+The differences in _Large Interconnected Blocks_ and _Dense Connected Developments_  between @tbl-testcountsov and @tbl-testcountsms highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro f1 score weights the classes equially, so better performance in a class that doesnt appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the microsoft buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.
 
-Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class f1 scores highlight what is possible to detect with a specific datasets.
+Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class f1 scores highlight what is possible to detect with a specific datasets. Therefore, a high score means that a correct classification is more likely given all of the issues with the underlying data.
 
 
 
@@ -162,6 +163,16 @@ The patterns in the individual classes are mostly identical to patterns in the a
 Overall F1 scores at Level 4
 :::
 
+There are four conclusions from @f1agg4. 
+
+First, @tbl-f1aggov4 mostly has higher values than @tbl-f1aggms4, suggesting that as the detail of the target clusters increases, so does the importance of the building footprints quality.
+
+Second, overall the scores in @tbl-f1agg4 are lower than the scores in @tbl-f1agg across all models. This shows that the prediction task becomes more difficults. It also suggests that we do reasonable misclassifications - one class in Level 4  is often missclasified for another Level 4 class, but both have the same Level 3 class.
+
+Third, the same pattern as regards the models holds as in @f1agg - spatial leakege is present everywhere.
+
+Fourth, heterogeinety of urban form is same as @f1agg.
+
 #### Class scores
 
 
@@ -203,7 +214,12 @@ Overall F1 scores at Level 4
 Individual F1 scores for  level 4 clusters
 :::
 
-It is interesting that the spatial testing pattern holds across different scales of urban form dissimilarity.
+
+@tbl-f1classov4 has consistenly higher values than @tbl-f1classms4, in contrast to the pattern in @tbl-f1class, where only the **Central Urban Developments** class showed a significant difference. The one exception is Slovakia.
+
+Similarly to @tbl-f1class, the heterogeneity of urban form is pronounced in the detailed classes, as evidenced by large differences in F1 scores between countries.
+
+Lastly, the spatial testing pattern holds across different scales of urban form dissimilarity and across classes. As the spatial stratification becomes more complex, the accuracy falls.
 
 
 ### Overture Spatial models
@@ -218,11 +234,16 @@ It is interesting that the spatial testing pattern holds across different scales
 The results from the study pertain to two areas - urban morphology and spatial modelling. 
 
 The results show that urban morphology is heretogenous and what is important changes across scales of dissimilarity.
-Furthermore, Data from heterogenous sources can be used to identify urban morphological types.
+
+Since the street network is shared, the results show the importance of the street network and how it can make up for poor quality building footprints data.
+
+Data from heterogenous sources can be used to identify urban morphological types.
+Different types of characteristics and data quality are important for different types of urban form.
+
 
 
 The results from the comparisons between the different testing data splitting strategies open new avenues of research.
-
+The results also show some of the problems with reporting aggregate accuracy scores.
 
 ## Stakeholder considerations
 
