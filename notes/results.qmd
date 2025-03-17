@@ -22,6 +22,54 @@ bibliography: ../references.bib
 
 ## Results
 
+::: {#tbl-testcounts layout-nrow=2}
+|                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
+|----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
+| **Aligned Winding Streets**            | 1,906      | 1,911       | 602    | 593    | 7,681  | 334    | 320    |
+| **Compact Development**                | 1,632      | 1,646       | 201    | 127    | 7,708  | 75     | 48     |
+| **Cul-de-Sac Layout**                  | 1,354      | 1,362       | 446    | 484    | 5,152  | 429    | 260    |
+| **Dense Connected Developments**       | 1,850      | 1,843       | 157    | 662    | 7,494  | 262    | 676    |
+| **Dense Standalone Buildings**         | 1,062      | 1,073       | 324    | 1,540  | 2,524  | 465    | 454    |
+| **Dispersed Linear Development**       | 163        | 167         | 40     | 740    | 35     | 0      | 3      |
+| **Extensive Wide-Spaced Developments** | 175        | 186         | 63     | 468    | 215    | 35     | 94     |
+| **Large Interconnected Blocks**        | 216        | 218         | 11     | 45     | 872    | 82     | 70     |
+| **Large Utilitarian Development**      | 184        | 178         | 15     | 163    | 632    | 55     | 57     |
+| **Linear Development**                 | 468        | 464         | 173    | 1,797  | 320    | 11     | 41     |
+| **Sparse Open Layout**                 | 1,924      | 1,901       | 65     | 4,353  | 1,927  | 1,498  | 1,777  |
+| **Sparse Road-Linked Development**     | 1,387      | 1,377       | 531    | 2,045  | 3,921  | 226    | 213    |
+| **Sparse Rural Development**           | 639        | 643         | 42     | 2,811  | 82     | 150    | 108    |
+| **_Total_**                            | 12,966     | 12,974      | 2,675  | 15,832 | 38,570 | 3,627  | 4,127  |
+: Microsoft building footprints {#tbl-testcountsms}
+
+|                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
+|----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
+| **Aligned Winding Streets**            | 1,308      | 1,312       | 474    | 406    | 5,219  | 245    | 195    |
+| **Compact Development**                | 1,067      | 1,083       | 160    | 75     | 5,041  | 33     | 23     |
+| **Cul-de-Sac Layout**                  | 1,023      | 1,027       | 358    | 400    | 3,798  | 344    | 212    |
+| **Dense Connected Developments**       | 735        | 750         | 92     | 268    | 2,971  | 138    | 207    |
+| **Dense Standalone Buildings**         | 818        | 785         | 273    | 1,224  | 1,899  | 358    | 338    |
+| **Dispersed Linear Development**       | 136        | 133         | 36     | 613    | 31     | 0      | 2      |
+| **Extensive Wide-Spaced Developments** | 113        | 104         | 26     | 329    | 130    | 20     | 61     |
+| **Large Interconnected Blocks**        | 36         | 33          | 3      | 8      | 138    | 21     | 11     |
+| **Large Utilitarian Development**      | 133        | 131         | 11     | 134    | 429    | 43     | 46     |
+| **Linear Development**                 | 391        | 396         | 139    | 1,526  | 254    | 11     | 27     |
+| **Sparse Open Layout**                 | 1,626      | 1,621       | 59     | 3,744  | 1,486  | 1,319  | 1,521  |
+| **Sparse Road-Linked Development**     | 1,095      | 1,065       | 428    | 1,697  | 3,005  | 177    | 169    |
+| **Sparse Rural Development**           | 562        | 540         | 30     | 2,483  | 65     | 132    | 101    |
+| **_Total_**                            | 9,049      | 8,987       | 2,095  | 12,913 | 24,473 | 2,846  | 2,919  |
+: Overture building footprints {#tbl-testcountsov}
+
+Distribution of test classes across the different models. The reported values are in the thousands.
+:::
+
+Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table @tbl-testcounts shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4. 
+
+The differences in _Large Interconnected Blocks_ and _Dense Connected Developments_  between @tbl-testcountsov and @tbl-testcountsms  highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, In all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently.
+
+Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class f1 scores highlight what is possible to detect with a specific datasets.
+
+
+
 ### Level 3
 
 #### Aggregate scores
@@ -54,7 +102,6 @@ Second, more complex and relfective of the underlying phenomena testing splits r
 
 Third, even at this high level of aggregation urban form shows signs of heterogeneity. The F1 scores for the individual countries vary both Overture and Microsoft trained models, but especially in @tbl-f1aggms. The scores for Slovakia are especially lower suggesting that it represents a more distinct type of morphology, whereas the scores for Austria are the highest suggesting that it is more similar on average to Central Europe as a whole.
 
-Note, since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data in the @tbl-f1aggms is different than the test data in @tbl-f1aggov - less volumous, much less detailed and overall different in character. For example, there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them.Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues.
 
 
 #### Class scores
@@ -95,7 +142,66 @@ The patterns in the individual classes are mostly identical to patterns in the a
 
 #### Aggregate scores
 
+::: {#tbl-f1agg4 layout-nrow=2}
+|                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|-----------------|------------|-------------|---------|------|------|------|------|------|
+| **Weighted F1** | 0.59       | 0.52        | 0.38    | 0.38 | 0.42 | 0.36 | 0.44 | 0.29 |
+| **Micro F1**    | 0.59       | 0.52        | 0.37    | 0.38 | 0.42 | 0.37 | 0.40 | 0.28 |
+| **Macro F1**    | 0.59       | 0.49        | 0.30    | 0.30 | 0.35 | 0.31 | 0.30 | 0.26 |
+
+: Microsoft building footprints {#tbl-f1aggms4}
+
+|                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|-----------------|------------|-------------|---------|------|------|------|------|------|
+| **Weighted F1** | 0.70       | 0.55        | 0.41    | 0.35 | 0.43 | 0.41 | 0.49 | 0.39 |
+| **Micro F1**    | 0.70       | 0.54        | 0.40    | 0.34 | 0.43 | 0.41 | 0.46 | 0.36 |
+| **Macro F1**    | 0.71       | 0.54        | 0.34    | 0.30 | 0.38 | 0.35 | 0.36 | 0.32 |
+
+: Overture building footprints {#tbl-f1aggov4}
+
+Overall F1 scores at Level 4
+:::
+
 #### Class scores
+
+
+::: {#tbl-f1class4 layout-nrow=2}
+|                                        | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|----------------------------------------|------------|-------------|---------|------|------|------|------|------|
+| **Aligned Winding Streets**            | 0.51       | 0.45        | 0.28    | 0.35 | 0.21 | 0.36 | 0.28 | 0.18 |
+| **Compact Development**                | 0.59       | 0.55        | 0.13    | 0.15 | 0.09 | 0.24 | 0.09 | 0.08 |
+| **Cul-de-Sac Layout**                  | 0.57       | 0.52        | 0.43    | 0.52 | 0.31 | 0.52 | 0.47 | 0.32 |
+| **Dense Connected Developments**       | 0.50       | 0.46        | 0.33    | 0.29 | 0.29 | 0.45 | 0.33 | 0.29 |
+| **Dense Standalone Buildings**         | 0.63       | 0.56        | 0.54    | 0.53 | 0.65 | 0.38 | 0.55 | 0.57 |
+| **Dispersed Linear Development**       | 0.91       | 0.64        | 0.19    | 0.17 | 0.34 | 0.18 | 0.06 | 0.18 |
+| **Extensive Wide-Spaced Developments** | 0.41       | 0.31        | 0.25    | 0.25 | 0.46 | 0.13 | 0.19 | 0.25 |
+| **Large Interconnected Blocks**        | 0.36       | 0.28        | 0.24    | 0.22 | 0.17 | 0.37 | 0.30 | 0.15 |
+| **Large Utilitarian Development**      | 0.49       | 0.40        | 0.32    | 0.23 | 0.34 | 0.36 | 0.34 | 0.34 |
+| **Linear Development**                 | 0.73       | 0.50        | 0.28    | 0.37 | 0.43 | 0.29 | 0.13 | 0.16 |
+| **Sparse Open Layout**                 | 0.62       | 0.56        | 0.31    | 0.14 | 0.36 | 0.32 | 0.50 | 0.24 |
+| **Sparse Road-Linked Development**     | 0.57       | 0.46        | 0.27    | 0.40 | 0.32 | 0.29 | 0.17 | 0.19 |
+| **Sparse Rural Development**           | 0.79       | 0.69        | 0.39    | 0.29 | 0.54 | 0.17 | 0.49 | 0.47 |
+: Microsoft building footprints {#tbl-f1classms4}
+
+|                                        | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
+|----------------------------------------|------------|-------------|---------|------|------|------|------|------|
+| **Aligned Winding Streets**            | 0.61       | 0.46        | 0.29    | 0.28 | 0.27 | 0.37 | 0.31 | 0.25 |
+| **Compact Development**                | 0.66       | 0.55        | 0.16    | 0.09 | 0.12 | 0.30 | 0.18 | 0.11 |
+| **Cul-de-Sac Layout**                  | 0.65       | 0.51        | 0.42    | 0.48 | 0.31 | 0.50 | 0.47 | 0.32 |
+| **Dense Connected Developments**       | 0.67       | 0.58        | 0.43    | 0.30 | 0.44 | 0.58 | 0.39 | 0.44 |
+| **Dense Standalone Buildings**         | 0.69       | 0.57        | 0.53    | 0.53 | 0.63 | 0.36 | 0.53 | 0.61 |
+| **Dispersed Linear Development**       | 0.96       | 0.65        | 0.16    | 0.09 | 0.31 | 0.16 | 0.07 | 0.19 |
+| **Extensive Wide-Spaced Developments** | 0.52       | 0.36        | 0.27    | 0.30 | 0.47 | 0.13 | 0.23 | 0.22 |
+| **Large Interconnected Blocks**        | 0.69       | 0.60        | 0.46    | 0.41 | 0.35 | 0.57 | 0.57 | 0.42 |
+| **Large Utilitarian Development**      | 0.60       | 0.44        | 0.37    | 0.28 | 0.37 | 0.42 | 0.38 | 0.41 |
+| **Linear Development**                 | 0.88       | 0.53        | 0.30    | 0.37 | 0.44 | 0.29 | 0.21 | 0.18 |
+| **Sparse Open Layout**                 | 0.74       | 0.61        | 0.36    | 0.07 | 0.38 | 0.34 | 0.61 | 0.38 |
+| **Sparse Road-Linked Development**     | 0.72       | 0.49        | 0.29    | 0.37 | 0.34 | 0.32 | 0.21 | 0.21 |
+| **Sparse Rural Development**           | 0.88       | 0.71        | 0.41    | 0.35 | 0.55 | 0.15 | 0.50 | 0.47 |
+: Overture building footprints {#tbl-f1classov4}
+
+Individual F1 scores for  level 4 clusters
+:::
 
 It is interesting that the spatial testing pattern holds across different scales of urban form dissimilarity.
 
@@ -118,5 +224,12 @@ Furthermore, Data from heterogenous sources can be used to identify urban morpho
 The results from the comparisons between the different testing data splitting strategies open new avenues of research.
 
 
+## Stakeholder considerations
+
+Stakeholders prefern results at the building level or aggregated to h3 grids.
+
+Stakeholders express interest in morphotopes therefore overture is more usefull, since the concept transfers directly from the original classification.
+
+Stakeholders like the hierarchy, therefore lower level models are better but that has to be balanced with the accuracy.
 
 # References {.unnumbered}
