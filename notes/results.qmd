@@ -135,7 +135,10 @@ Individual F1 scores for  level 3 clusters
 
 @tbl-f1class shows the F1 scores broken down by prediction class for the level 3 models. The sub-tables and columns have the same interpretation as @tbl-f1agg.
 
-The patterns in the individual classes are mostly identical to patterns in the aggregated results. The scores for individual classes are mostly the same with the exception of the **Central Urban Developments** class, which is reflective of the higher quality in the Overture dataset. The higher prediction accuracy for this cluster does not significantly impact the overall F1 scores in @tbl-f1aggov, since it is relatively sparse compared to the rest of the classes. Similarly to @tbl-f1agg, the same patterns in accyracy across the splitting schemes holds: Random - highest; Spatial - lower, OoS - lowest. Furthermore, the heterogeneity of urban form is even more pronounced in the detailed classes, as evidenced by the even larger differences in F1 scores between the different countries.
+The differences in f1 scores across classes shows that some types of urban form is easier to predict that others. **Dense Urban Developments** has the highest score, whereas **Sparse Rural Development** the lowest.
+
+
+The patterns in the individual classes between sub-tables @tbl-f1classms and @tbl-f1classov are mostly identical to patterns in the aggregated results. The scores for individual classes are similar, with the overture data performing very slightly better. The exception is the **Central Urban Developments** class, which is reflective of the higher quality in the Overture dataset. The higher prediction accuracy for this cluster does not significantly impact the overall F1 scores in @tbl-f1aggov, since it is relatively sparse compared to the rest of the classes. Furthermore, the same patterns in f1 scores hold across the train / test schemes : Random is the highest; Spatial is lower, OoS lowest.  Lastly, the heterogeneity of urban form between countries and across detailed classes  is even more pronounced , as evidenced by the even larger differences in F1 scores between the country specific models countries.
 
 
 
@@ -163,15 +166,16 @@ The patterns in the individual classes are mostly identical to patterns in the a
 Overall F1 scores at Level 4
 :::
 
-There are four conclusions from @f1agg4. 
+@tbl-f1agg4 shows the overall F1 scores for the Level 4 prediction models. 
 
-First, @tbl-f1aggov4 mostly has higher values than @tbl-f1aggms4, suggesting that as the detail of the target clusters increases, so does the importance of the building footprints quality.
+First, overall the scores in @tbl-f1agg4 are lower than the scores in @tbl-f1agg across all models. This shows that the prediction task becomes more difficult as we move down the ground truth taxonomy. 
 
-Second, overall the scores in @tbl-f1agg4 are lower than the scores in @tbl-f1agg across all models. This shows that the prediction task becomes more difficults. It also suggests that we do reasonable misclassifications - one class in Level 4  is often missclasified for another Level 4 class, but both have the same Level 3 class.
+Second, @tbl-f1aggov4 mostly has higher values than @tbl-f1aggms4 across all models, suggesting that as the detail of the target clusters increases, so does the importance of the building footprints quality.
 
-Third, the same pattern as regards the models holds as in @f1agg - spatial leakege is present everywhere.
+Third, heterogeinety of urban form is more prominent as evidenced by the relatively larger differences in f1 scores between the country specific models.
 
-Fourth, heterogeinety of urban form is same as @f1agg.
+Fourth, the same pattern of spatial leakege is present as in @tbl-f1agg. As the complexity of the spatial splitting schemes increase to match the underlying phenomena, the f1 scores decrease.
+
 
 #### Class scores
 
@@ -214,43 +218,49 @@ Fourth, heterogeinety of urban form is same as @f1agg.
 Individual F1 scores for  level 4 clusters
 :::
 
+@tbl-f1class4 shows the breakdown of f1 scores across Level 4 individual clusters and models. The same patterns with regard to spatial leakeage and urban heterogeneity hold as in @tbl-f1agg4, @tbl-f1agg and @tbl-f1agg. However, there is a more pronounced difference in the data sources.
 
-@tbl-f1classov4 has consistenly higher values than @tbl-f1classms4, in contrast to the pattern in @tbl-f1class, where only the **Central Urban Developments** class showed a significant difference. The one exception is Slovakia.
-
-Similarly to @tbl-f1class, the heterogeneity of urban form is pronounced in the detailed classes, as evidenced by large differences in F1 scores between countries.
-
-Lastly, the spatial testing pattern holds across different scales of urban form dissimilarity and across classes. As the spatial stratification becomes more complex, the accuracy falls.
+@tbl-f1classov4 has consistenly higher values than @tbl-f1classms4, in contrast to the pattern at Level 3, reported in @tbl-f1class, where only the **Central Urban Developments** class showed a significant difference. 
+@tbl-f1classov4 has higher values of alteast .05 for **Dense Connected Developments** , **Large Interconnected Blocks**, **Large Utilitarian Development**, **Sparse Open Layout**.
+The one exception to the overall pattern is Slovakia, where the @tbl-f1classms4 is higher.
 
 
-### Overture Spatial models
+### Overture Spatial model
 
-#### Level 4 model
+#### Level 4 model example predictions
 
-#### Level 3 aggregations
+#### Confusion matrix
 
 
 ## Discussion
 
-The results from the study pertain to two areas - urban morphology and spatial modelling. 
+The results from the study pertain to three areas - urban morphology, spatial modelling and data quality. 
 
-The results show that urban morphology is heretogenous and what is important changes across scales of dissimilarity.
+### Urban morphology
+With regard to urban morphology, the results show that modelling urban morphology is possible, howecer morphological types are heretogenous and what characteristics and factors are important change across scales of dissimilarity.
 
-Since the street network is shared, the results show the importance of the street network and how it can make up for poor quality building footprints data.
+The modeling results show there is a lot of useful information that can be learned morphologically from one country and transfered to new contexts.
+@tbl-f1agg show that at Level 3, the OoS average are close to the spatial split F1 score of approximately **.6** . This is comparable to other land use prediction models with two caveats. First, we we are making predictions at a much higher level of detail - the individual building level - than typicaly land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out of sample scores. Furthermore, the higher scores in @tbl-f1agg  also suggests that we do reasonable misclassifications - one class in Level 4 is often missclasified for another Level 4 class, that has the same Level 3 class, i.e. it is part of the same branch in the ground truth taxonomy. If this was not the case the @tbl-f1agg f1 scores would be equal or lower than the @tbl-f1agg4 scores. 
 
-Data from heterogenous sources can be used to identify urban morphological types.
-Different types of characteristics and data quality are important for different types of urban form.
+Nevertheless, inspite of these results urban morphology is still highly heterogenous. The differences between the country specific models reflect the ability to use information from several countries' analysed urban form, to infer the urban form type in an unseen country. If the results across these models were similar to each other, it would mean that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. This in itself is not a new finding, however it has not been quantatively demonstrated before, based on tens of morphological characters calculated using tens of millions of urban geometries, across several countries. 
+
+This heterogeneigy however varies. Austria has on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomometric tree the results across countries are relatively more similar than at Level 4. Furthermore, **Dense Standalone Buildings** , **Large Interconnected Blocks** , **Large Utilitarian Development**, are more predictable across all the country models than other classes.
+
+Furthermore, identifying different types of urban form requires specific types of characteristics and data quality. The relative overall similarity between the scores in @tbl-f1aggms and @tbl-f1aggov, suggest that except in the case of **Central Urban Developments**, building polygon quality is not that important. Coversely, since the street network is shared, the results show the importance of the street network and how it can make up for poor quality building footprints data. As the required level of detail increases however, @tbl-f1aggms4 and @tbl-f1aggov4, data quality and aspects of building morphology such as adjacency, configuration and shape become more important.
 
 
 
-The results from the comparisons between the different testing data splitting strategies open new avenues of research.
-The results also show some of the problems with reporting aggregate accuracy scores.
+### Morphological data quality
 
-## Stakeholder considerations
+The results also suggest that heterogenous, but more detailed data is prefereble to homogenous but coarser data for urban morphological analysis. Furthermore, the morphological pipeline, developed for cadastre data, can can be run without modification on both the Microsoft (homogenous, generally more detailed) and Overture data (heterogenous, generally more detailed). The overall higher or equivalent performance of OvertureData, shows that this data should be used when possible to identify urban morphological types for countries not in the training data. The consistently higher performance of the spatial models also suggest to use as much data as possible in model training, from any source, since it provides some local context.
 
-Stakeholders prefern results at the building level or aggregated to h3 grids.
 
-Stakeholders express interest in morphotopes therefore overture is more usefull, since the concept transfers directly from the original classification.
+### Spatial modelling in general
 
-Stakeholders like the hierarchy, therefore lower level models are better but that has to be balanced with the accuracy.
+The results from the comparisons highlight the need for more complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores numerous land use prediction models do not take into account spatial autocorrelation, and as consistenly shown in the F1 score tables in this work, this means that they report artificially higher results. Even worse, in the case of more complex models maybe they are not learning the weights necassary to do inference, but rather overfit and memorise the training data. This work further shows that for urban morphological predictions and analysis specifically, spatial leakage is ubiqutous. 
+
+There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other apporaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.
+
+In the specific case of urban morphology, there are also other possible scales to consider such as regional, or city-level which could also have an effect on the predictions. We focused specifically on the national scale, since data quality from openstreetmap varries widely at that level. Furthermore, the most common use case for the model would be to predict the morphological classes for a whole country that is not part of the training data. Nevertheles, the implications of our results is that when modelling spatial phenomena using machine learning models, and train and test splits, properties of the specific phenomena under analysis should be considered. Works that do not explicitly do this, risks reporting arteficially higher accuracies that do not reflect real model use cases. 
 
 # References {.unnumbered}
