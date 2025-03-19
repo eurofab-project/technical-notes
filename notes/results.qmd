@@ -227,9 +227,20 @@ The one exception to the overall pattern is Slovakia, where the @tbl-f1classms4 
 
 ### Overture Spatial model
 
-#### Level 4 model example predictions
+We provide the confusion matrix and example predictions for the Level 4 model, trained using a spatial split on Overture data. We picked this model to provide example predictions across multiple counties and urban areas of different sizes. 
 
 #### Confusion matrix
+
+![Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (rowwise)](../figures/results/cm.png){.nostretch fig-align="center" #fig-cm}
+
+@fig-cm shows the confusion matrix for the model. The Classes are ordered to reflect the hierarchical releationships. The first row, **Dense Connected Developments**  and the second, **Large Interconnected Blocks**, form one branch, **Central Urban Developments**,one levep up in the taxonomy. Similarly the $n$ and $n+1$ row form one branch. The first four classes form one branch two levels up, and so on.
+
+The results show that misclasified classes are generally misclassified within one or two cophereic distances in the taxonomy. In other words, if an ETC is misclassified there is a high chance, it will be labeled as a related class in the full taxonomy.
+
+
+#### Level 4 model example predictions
+
+![Example Level 4 predictions for the areas around Vienna (Austria), Munich (Germany), Wroclaw (Poland) and Brno (Czechia)](../figures/results/examples.png){.nostretch fig-align="center" #fig-examples}
 
 
 ## Discussion
@@ -240,7 +251,7 @@ The results from the study pertain to three areas - urban morphology, spatial mo
 With regard to urban morphology, the results show that modelling urban morphology is possible, howecer morphological types are heretogenous and what characteristics and factors are important change across scales of dissimilarity.
 
 The modeling results show there is a lot of useful information that can be learned morphologically from one country and transfered to new contexts.
-@tbl-f1agg show that at Level 3, the OoS average are close to the spatial split F1 score of approximately **.6** . This is comparable to other land use prediction models with two caveats. First, we we are making predictions at a much higher level of detail - the individual building level - than typicaly land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out of sample scores. Furthermore, the higher scores in @tbl-f1agg  also suggests that we do reasonable misclassifications - one class in Level 4 is often missclasified for another Level 4 class, that has the same Level 3 class, i.e. it is part of the same branch in the ground truth taxonomy. If this was not the case the @tbl-f1agg f1 scores would be equal or lower than the @tbl-f1agg4 scores. 
+@tbl-f1agg show that at Level 3, the OoS average are close to the spatial split F1 score of approximately **.6** . This is comparable to other land use prediction models with two caveats. First, we we are making predictions at a much higher level of detail - the individual building level - than typicaly land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out of sample scores. Furthermore, the higher scores in @tbl-f1agg as well as the confusion matrix in @fig-cm also suggests that we do reasonable misclassifications - one class in Level 4 is often missclasified for another Level 4 class, that has the same Level 3 class, i.e. it is part of the same branch in the ground truth taxonomy. If this was not the case the @tbl-f1agg f1 scores would be equal or lower than the @tbl-f1agg4 scores. 
 
 Nevertheless, inspite of these results urban morphology is still highly heterogenous. The differences between the country specific models reflect the ability to use information from several countries' analysed urban form, to infer the urban form type in an unseen country. If the results across these models were similar to each other, it would mean that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. This in itself is not a new finding, however it has not been quantatively demonstrated before, based on tens of morphological characters calculated using tens of millions of urban geometries, across several countries. 
 
