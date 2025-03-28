@@ -33,11 +33,11 @@ Sentinel-2 satellite imagery covering 2016 to 2021 was acquired using the Google
 
 ### Urban Fabric Classes (Outcome)
 
-We employed labels from the Spatial Signatures Framework[^2], a typology classifying British urban environments based on form (physical appearance) and function (usage). Spatial signatures effectively characterise urban areas, reflecting both visual form and operational functionality. Although our project specifically targets urban fabric classification based primarily on visible form—potentially simpler to predict—the form-specific classification scheme remains under development. Consequently, the comprehensive Spatial Signatures Framework currently serves as a proxy aligning closely with our project's urban characterisation objectives.
+We employed labels from the Spatial Signatures Framework[^2], a typology classifying British urban environments based on form (physical appearance) and function (usage). Although our project specifically targets urban fabric classification based primarily on visible form — which might be sipler to predict — the form-specific classification scheme remains under development (as detailed in the Sections on *Morphometric Classification*). Consequently, the comprehensive Spatial Signatures Framework currently serves as a proxy aligning closely with our project's urban characterisation objectives.
 
 [^2]: Fleischmann, M. & Arribas-Bel, D., 2022. Geographical characterisation of British urban form using the spatial signatures framework. *Scientific Data*, 9(1), p.546.
 
-We used two versions of this dataset: one with 12 classes and another simplified version with 7 classes. The 12-class scheme consolidates the various urbanity categories into a single class, maintaining all other Spatial Signatures classes:
+We used two versions of this dataset: one with 12 classes and another simplified version with 7 classes. The 12-class scheme combines the various urbanity categories into a single class, maintaining all other Spatial Signatures classes:
 
 ```python
 class_labels = {
@@ -76,19 +76,19 @@ class_labels_k7 = {
 
 Based on earlier experiments documented in the technical notes ([Algorithm Design](https://eurofab.org/technical-notes/notes/algorithm-design.html#ai-modelling-using-satellite-imagery-1)), we adopted a final analytical scale of 250×250 metres across Great Britain (GB).
 
-A significant issue in our dataset is class imbalance, with specific urban fabric classes being substantially underrepresented. This imbalance informed our decisions on model architecture and loss function selection, motivating exploration of specialised methods to handle imbalanced data.
+A significant issue in our dataset is class imbalance, with specific urban fabric classes being substantially underrepresented. This imbalance informed our decisions on model architecture and loss function selection, motivating exploration of specialised methods to handle imbalanced data. Yet, common modelling approaches were not sufficient, which means we had to resort to data augmentation methods, as described below.
 
 ![Sampling Strategy](../figures/algo_design/sampling.png){.nostretch fig-align="left" height="400"}
 
 ### Handling Imbalanced Dataset with Image Augmentation
 
-Due to the significant class imbalance, particularly the underrepresentation of urban classes, we implemented a sliding-window augmentation strategy for classes comprising less than 10% of the dataset (all except *Countryside agriculture* and *Wild countryside*).
+Due to the significant class imbalance, particularly the underrepresentation of urban classes, we implemented a sliding-window augmentation strategy for classes comprising less than 10% of the dataset (all classes except *Countryside agriculture* and *Wild countryside*).
 
-This sliding-window approach systematically shifted the sampling window horizontally and vertically by increments of 50, 100, 150, and 200 metres, significantly increasing the volume of available training data.
+This sliding-window approach systematically shifted the sampling window horizontally and vertically by increments of 50, 100, 150, and 200 metres, significantly increasing the volume of available training data for underrepresented classes.
 
 ![Sliding Window Augmentation](../figures/results/img_aug.jpg){.nostretch fig-align="center" height="420"}
 
-The images below illustrate class distributions before (left) and after (right) augmentation:
+The images below shows class distributions before (left) and after (right) augmentation:
 
 ![Before Augmentation](../figures/results/type_clean_encode.png){.nostretch fig-align="left" height="200"}
 ![After Augmentation](../figures/results/type_clean_encode_augmented.png){.nostretch fig-align="right" height="200"}
@@ -110,7 +110,7 @@ The following table summarises augmentation results, highlighting the substantia
 | Warehouse/Park land                  | 21,282              | 195,105            |
 | Wild countryside                     | 1,395,048           | 1,395,048          |
 
-## Classifier
+# Results
 
 ### Classifier Performance
 
@@ -125,7 +125,7 @@ The table below summarises classifier performance for two classification schemes
 | 12          | None            | 0.4617   | 0.2666         | 0.2127         |
 | 12          | H3 (res 5)      | 0.6654   | 0.4328         | 0.3654         |
 
-Including spatial context (H3 resolution) notably improved classification accuracy and F1 scores. This improvement shows the importance of spatial context in predicting urban fabric classes.
+Including spatial context (H3 resolution) notably improved classification accuracy and F1 scores. This improvement shows the importance of spatial context in predicting urban fabric classes. Similarily, and as anticipated, the model with a lower number of classes performed better compared to the one with 12 classes.
 
 #### Per Class Performance 
 
@@ -145,11 +145,9 @@ We further analysed the relationship between the number of training observations
 ![Number of observations vs accuracy](../figures/results/class_acc.png){.nostretch fig-align="center" height="420"}
 
 
-# Results
-
-The overall overlap between the initial year (2016) and final year (2021) remained high at 88%. This confirms that urban fabric classes remained relatively stable across the study period. However, minor variations may indicate either genuine urban fabric evolution or model uncertainty, warranting further exploration.
-
 ## Changes Over Time / Temporal Analysis
+
+We use the trained XGBoost classifier to make predictions across the years 2016 to 2021. The overall overlap between the initial year (2016) and final year (2021) remained high at 88%. This confirms that Spatial Signatures classes remained relatively stable across the study period. However, minor variations may indicate either genuine change or model uncertainty.
 
 We measured urban fabric diversity using the Shannon Index across each year studied. The index showed limited variability over time, typically around 1.86–1.87, except for a noticeable spike in diversity in 2019 (2.007):
 
@@ -159,7 +157,6 @@ We measured urban fabric diversity using the Shannon Index across each year stud
 - 2019 → 2020: 86%
 - 2020 → 2021: 88%
 
-The overall overlap between the start (2016) and end (2021) years remains high at 88%, further confirming the relative stability in the urban fabric classes across the entire study period. These changes may capture actual changes in the urban fabric, however, could also point to uncertainty in the classifier.
 
 ### Diversity Analysis (Shannon Index)
 
@@ -174,15 +171,15 @@ We assessed changes in urban fabric diversity using the Shannon Index across the
 | 2020 | 1.873         |
 | 2021 | 1.872         |
 
-The marked increase in the Shannon Index in 2019 suggests an increase in class diversity during that year, followed by a subsequent return to previous levels.
+The marked increase in the Shannon Index in 2019 suggests an increase in class diversity during that year, followed by a subsequent return to previous levels. This could point out some differences in the image as caused by weather or sensor in the year 2019.
 
 ### Spatial Patterns of Change
 
-Spatial analysis identified areas across England with frequent class transitions (map below), particularly around major urban centres and suburban zones. These frequent transitions may either represent genuine urban transformations or result from classifier uncertainty, especially in ambiguous zones between visually similar urban fabric classes.
+Spatial analysis identified areas across England with frequent class transitions (map below), particularly around major urban centres and suburban zones. These frequent transitions may either represent genuine urban transformations or result from classifier uncertainty, especially in ambiguous zones between visually similar Spatial signatures classes.
 
 ![Frequency Map](https://eurofab.org/talks/figures/202502_progress_turing/frequency_map.png){.nostretch fig-align="center" height="420"}
 
-Class-specific analysis further highlighted particular urban fabric types prone to transitions. The figure below shows which classes experienced frequent transitions:
+Class-specific analysis further highlighted particular Spatial signatures types prone to transitions. The figure below shows which classes experienced frequent transitions:
 
 ![Class Transitions](https://eurofab.org/talks/figures/202502_progress_turing/class_transitions.png){.nostretch fig-align="center" height="420"}
 
@@ -194,14 +191,14 @@ Lastly, we analysed the inverse-probability-based distances of urban fabric clas
 
 ![Probability of change across classes](https://eurofab.org/talks/figures/202502_progress_turing/1d_transitions.png)
 
-This analysis shows urban fabric classes such as *Urbanity*, Warehouse/Park land*, *Dense urban neighbourhoods*, and *Connected residential neighbourhoods* have shorter inverse distances, indicating higher levels of dynamic change or redevelopment. Conversely, classes such as *Wild countryside* and *Countryside agriculture* have longer distances, suggesting greater temporal stability. Although these results align with expectations about urban and rural dynamics, they may also reflect the classifier's varying uncertainty across these visually distinct environments.
+This analysis shows urban fabric classes such as *Urbanity*, *Warehouse/Park land*, *Dense urban neighbourhoods*, and *Connected residential neighbourhoods* have shorter inverse distances, indicating higher levels of dynamic change or redevelopment. Conversely, classes such as *Wild countryside* and *Countryside agriculture* have longer distances, suggesting greater temporal stability. Although these results align with expectations about urban and rural dynamics, they may also reflect the classifier's varying uncertainty across these visually distinct environments.
 
 
 # Discussion
 
 ### Key Findings
 
-The analysis shows that urban fabric classifications exhibit distinct temporal and spatial dynamics, reflecting varying levels of stability and diversity over time. Notably, urban classes such as Urbanity, Dense urban neighbourhoods, and Warehouse/Park land displayed higher probabilities of transition, indicating active urban transformation. Conversely, rural classes showed significant stability. This is most probably related to the uncertainty in the classifier than connected to actual changes of the environment.
+The analysis shows that urban fabric classifications exhibit distinct temporal and spatial dynamics, reflecting varying levels of stability and diversity over time. Notably, urban classes such as *Dense urban neighbourhoods*, and *Connected residential neighbourhoods* displayed higher probabilities of transition, indicating active urban transformation. Similarily, suburban classes, such as *Accessible suburbia*, *Disconnected suburbia* and *Urban buffer*, also show a higher probability of change between said classes. Conversely, rural classes showed significant stability. This is most probably related to the uncertainty in the classifier than connected to actual changes of the environment.
 
 #### Lessons Learned
 
@@ -209,7 +206,7 @@ The analysis shows that urban fabric classifications exhibit distinct temporal a
 
 - **Embeddings vs fine-tuned foundation model**: Fine-tuning foundation models involves significant complexity and requires careful design decisions. In our case, the limited number of training examples was insufficient to achieve noticeable improvements through fine-tuning. The effort required for fine-tuning did not outweigh the simpler alternative of using off-the-shelf embeddings.
 
-- **Regional trends**: Including regional contextual information substantially improved the classifier’s accuracy. Nonetheless, we found it essential that embeddings themselves already capture enough visual detail for accurate classification, ensuring that predictions remain robust even without regional context (and don't rely on just the spatial information to make predictions).
+- **Regional trends**: Including regional contextual information substantially improved the classifier’s accuracy. Nonetheless, we found it essential that embeddings themselves already capture enough visual detail for accurate classification, ensuring that predictions remain robust even without regional context (and simply do not just rely on the spatial information to make predictions).
 
 - **Data augmentation**: The sliding window augmentation approach effectively addressed class imbalances, significantly improving model performance by increasing representation of previously underrepresented urban fabric classes. This could boost the performance of the classifier another 10-20% in terms of accuracy.
 
@@ -217,7 +214,7 @@ The analysis shows that urban fabric classifications exhibit distinct temporal a
 
 There are a number of possible directions that would be beneficial to explore. The two main ones are as follows:
 
-- Misclassifications typically occur between visually similar urban fabric classes, indicating inherent uncertainty in predictions. Incorporating prediction probabilities into a secondary model could help address this issue. By explicitly using probability scores from the initial classification as input for a refinement model—as previously demonstrated by Fleischmann and Arribas-Bel[^3]—we could better distinguish between ambiguous cases. This approach may "smooth" predictions, reducing noise and improving overall classification accuracy. Future work should explore how prediction confidence scores can be systematically utilised, either by employing spatial smoothing algorithms or by applying secondary machine learning models trained specifically to correct uncertain predictions.
+- Misclassifications typically occur between visually similar urban fabric classes, indicating inherent uncertainty in predictions. Incorporating prediction probabilities into a secondary model could help address this issue. By explicitly using probability scores from the initial classification as input for a refinement model — as previously shown by Fleischmann and Arribas-Bel[^3] — we could better distinguish between ambiguous cases. This approach may "smooth" predictions, reducing noise and improving overall classification accuracy. Future work should explore how prediction confidence scores can be systematically utilised, either by employing spatial smoothing algorithms or by applying secondary machine learning models trained specifically to correct uncertain predictions.
 
 - Evaluating the generalisability of this methodological framework is crucial for its wider applicability. Future research should test this modelling approach in different European regions, assessing whether the chosen methods, including data preprocessing, augmentation strategies, spatial embeddings, and classifier architectures, perform consistently outside Great Britain. This would involve exploring variations in urban form and regional urban planning contexts across Europe. Understanding these factors will help identify potential adjustments needed to ensure reliable predictions when extending the model beyond the original study area.
 
@@ -228,8 +225,6 @@ There are a number of possible directions that would be beneficial to explore. T
 
 All analyses presented here are supported by openly accessible software hosted on [GitHub](https://github.com/eurofab-project/eo/tree/main). The AI prediction pipeline, including preprocessing, embedding generation, and prediction of spatial signatures, is fully documented and accessible at EO repository.
 
-Example visualisations and datasets generated during verification exercises are also available in the EO repository.
-
 
 ## Software: AI Method for Urban Fabric classification and morphometric characterization
 
@@ -238,22 +233,22 @@ All the work supporting this analysis can be found on GitHub. The main predictio
 ```
 # Run the pipeline
 pipeline.spatial_sig_prediction(
-    geo_path= "../spatial_signatures/eo/data/example/london_25_25_grid_clipped.geojson",
-    vrt_file= "../satellite_demoland/data/mosaic_cube/vrt_allbands/2017_combined.vrt",
-    xgb_weights = "../spatial_signatures/classifier/k12_h5_slided_gb_xgb_model.bin",
-    model_weights = "../satellite_demoland/models/satlas/weights/satlas-model-v1-lowres.pth",
-    output_path= "../vjgo8416-demoland/spatial_signatures/eo/data/predictions/test_london_h6.parquet",
-    h3_resolution=5
+    geo_path= "../spatial_signatures/eo/data/example/london_25_25_grid_clipped.geojson", ## Vector file (geojson or parquet) of analysis area (grid).
+    vrt_file= "../satellite_demoland/data/mosaic_cube/vrt_allbands/2017_combined.vrt", ## Vrt file of the satellite composite
+    xgb_weights = "../spatial_signatures/classifier/k12_h5_slided_gb_xgb_model.bin", ## Model weights for XGBoost classifier
+    model_weights = "../satellite_demoland/models/satlas/weights/satlas-model-v1-lowres.pth", ## Model weights for embedding model (Satlas)
+    output_path= "../vjgo8416-demoland/spatial_signatures/eo/data/predictions/test_london_h6.parquet", ## Output file with predictions, prediction probabilities and geometries
+    h3_resolution=5 ## h3 resolution to be added to analysis (spatial context)
 )`
 ```
 
-More details and documentation can be found in the EO repository https://github.com/eurofab-project/eo/tree/main.
+More details and documentation on how to run the pipeline can be found in the example on the [EO repository](https://github.com/eurofab-project/eo/blob/main/notebooks/run_pipeline.ipynb).
 
 ## Example datasets generated during Verification Exercises
 
 The final datacube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the repository.
 
-Here are some example visualisations from the dataset:
+Here are some example visualisations showing London and Liverpool from the dataset:
 
 ## London
 ![London, 7 classes](../figures/results/london_k7.png){.nostretch fig-align="center" height="400"}
