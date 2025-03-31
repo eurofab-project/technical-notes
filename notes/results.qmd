@@ -20,6 +20,22 @@ The ground truth hierarchy is available at uscuni.org/himoc.
 
 # Morphometric classification
 
+This section presents the results of the morphometric analysis described in "Technical Note 2 - Algorithm Design".
+There are two extensions to the present methodology, which were also outside of the original scope of the project.
+
+![Train/test data splits for different models.](../figures/results/model_split.drawio.png){.nostretch fig-align="center" #fig-traintest}
+
+First, we train two additional models per ground truth hierarchical (taxonometric) level - a global random model and a global spatially explicit model.
+This is done to highlight the effects of spatial lag in model training and testing, as well as the ability of the models to generalise from one context to another.
+@fig-traintest shows the new train / test splits.
+
+![Comparison between data sources.](../figures/results/building_comparison.png){.nostretch fig-align="center" #fig-data}
+
+The second change is that we repeat all experiments with a new data set based on Overture Data.
+However, the experiment is done to demonstrate that the morphological pipeline can handle more detailed, but heterogenous data, which may lead to better predictions.
+Furthermore, the overture data is easily accessable for numerous regions across the world and significantly increases our pipeline's generalisibility.
+@fig-data shows a comparison between the datasets.
+
 
 ## Results
 
@@ -64,7 +80,7 @@ The ground truth hierarchy is available at uscuni.org/himoc.
 Distribution of test classes across the different models. The reported values are in the thousands.
 :::
 
-Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table @tbl-testcounts shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4. 
+Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table @tbl-testcounts shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4.
 
 The differences in _Large Interconnected Blocks_ and _Dense Connected Developments_  between @tbl-testcountsov and @tbl-testcountsms highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro f1 score weights the classes equially, so better performance in a class that doesnt appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the microsoft buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.
 
