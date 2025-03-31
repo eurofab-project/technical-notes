@@ -16,6 +16,7 @@ bibliography: ../references.bib
 
 # Executive summary
 
+The ground truth hierarchy is available at uscuni.org/himoc.
 
 # Morphometric classification
 
@@ -261,14 +262,18 @@ Furthermore, identifying different types of urban form requires specific types o
 
 
 
-### Morphological data quality
+### Morphological data
 
-The results also suggest that heterogenous, but more detailed data is prefereble to homogenous but coarser data for urban morphological analysis. Furthermore, the morphological pipeline, developed for cadastre data, can can be run without modification on both the Microsoft (homogenous, generally more detailed) and Overture data (heterogenous, generally more detailed). The overall higher or equivalent performance of OvertureData, shows that this data should be used when possible to identify urban morphological types for countries not in the training data. The consistently higher performance of the spatial models also suggest to use as much data as possible in model training, from any source, since it provides some local context.
+The results also suggest that heterogenous, but more detailed data is prefereble to homogenous but coarser data for urban morphological analysis. Furthermore, the morphological pipeline, developed for cadastre data, can can be run without modification on both the Microsoft (homogenous, generally more detailed) and Overture data (heterogenous, generally more detailed). 
+
+The overall higher or equivalent performance of OvertureData, shows that this data should be used when possible to identify urban morphological types for countries not in the training data. Overture's schema and easy access the Openstreetmap street networks are a further benefit. Taken together ther the results show that overall, when cadastre data is not available Overturemaps data should be used in place of satellite derived footprints.
+
+The consistently higher performance of the spatial models also suggest to use as much data as possible in model training, from any source, since it provides some local context. 
 
 
 ### Spatial modelling in general
 
-The results from the comparisons highlight the need for more complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores numerous land use prediction models do not take into account spatial autocorrelation, and as consistenly shown in the F1 score tables in this work, this means that they report artificially higher results. Even worse, in the case of more complex models maybe they are not learning the weights necassary to do inference, but rather overfit and memorise the training data. This work further shows that for urban morphological predictions and analysis specifically, spatial leakage is ubiqutous. 
+The results from the comparisons highlight the need for complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores numerous land use prediction models do not take into account spatial autocorrelation, and as consistenly shown in the F1 score tables in this work, this means that they report artificially higher results. Even worse, in the case of more complex models maybe they are not learning the weights necassary to do inference, but rather overfit and memorise the training data. This work further shows that for urban morphological predictions and analysis specifically, spatial leakage is ubiqutous. 
 
 There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other apporaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.
 
