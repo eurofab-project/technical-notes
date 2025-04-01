@@ -21,7 +21,28 @@ The ground truth hierarchy is available at uscuni.org/himoc.
 # Morphometric classification
 
 This section presents the results of the morphometric analysis described in "Technical Note 2 - Algorithm Design".
-There are two extensions to the present methodology, which were also outside of the original scope of the project.
+
+
+| **Level 1**                 | **Level 2**                    | **Level 3**                      | **Level 4**                        |
+|-----------------------------|--------------------------------|----------------------------------|------------------------------------|
+| Traditional Street Network  | Central Urban Developments     | Central Urban Developments       | Dense Connected Developments       |
+|                             |                                |                                  | Large Interconnected Blocks        |
+|                             | Traditional Urban Developments | Dense Urban Developments         | Dense Standalone Buildings         |
+|                             |                                |                                  | Compact Development	                |
+|                             |                                | Street-aligned Developments      | Aligned Winding Streets            |
+|                             |                                |                                  | Cul-de-Sac Layout                  |
+| Utilitarian Street Network  | Utalitarian street network     | Large Scale Developments         | Large Utilitarian Development      |
+|                             |                                |                                  | Extensive Wide-Spaced Developments |
+|                             |                                | Sparse Road Network Developments | Sparse Open Layout                 |
+|                             |                                |                                  | Sparse Road-Linked Development     |
+|                             | Linear & Rural Development     | Linear Road Network Developments | Dispersed Linear Development       |
+|                             |                                |                                  | Linear Development                 |
+|                             |                                | Sparse Rural Development         |  Sparse Rural Development          |
+: Taxonometric tree {#tbl-taxonomy}
+
+The taxonomy of ground truth classes is presented in @tbl-taxonomy and all subsequent analysis focuses on Levels 3 and 4. There is an interactive map of the taxonomy available at https://uscuni.org/himoc/ . More detail abut 
+
+We have made two changes to the methodoly presented in "Technical Note 2 - Algorithm Design", which are outside of the original scope of the project.
 
 ![Train/test data splits for different models.](../figures/results/model_split.drawio.png){.nostretch fig-align="center" #fig-traintest}
 
@@ -35,6 +56,9 @@ The second change is that we repeat all experiments with a new data set based on
 However, the experiment is done to demonstrate that the morphological pipeline can handle more detailed, but heterogenous data, which may lead to better predictions.
 Furthermore, the overture data is easily accessable for numerous regions across the world and significantly increases our pipeline's generalisibility.
 @fig-data shows a comparison between the datasets.
+
+
+
 
 
 ## Results
