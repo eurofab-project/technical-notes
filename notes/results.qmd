@@ -54,10 +54,8 @@ This is done to highlight the effects of spatial lag in model training and testi
 
 The second change is that we repeat all experiments with a new data set based on Overture Data.
 However, the experiment is done to demonstrate that the morphological pipeline can handle more detailed, but heterogenous data, which may lead to better predictions.
-Furthermore, the overture data is easily accessable for numerous regions across the world and significantly increases our pipeline's generalisibility.
+Furthermore, the Overture data is easily accessable for numerous regions across the world and significantly increases our pipeline's generalisibility.
 @fig-data shows a comparison between the datasets.
-
-
 
 
 
@@ -106,7 +104,7 @@ Distribution of test classes across the different models. The reported values ar
 
 Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table @tbl-testcounts shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4.
 
-The differences in _Large Interconnected Blocks_ and _Dense Connected Developments_  between @tbl-testcountsov and @tbl-testcountsms highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro f1 score weights the classes equially, so better performance in a class that doesnt appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the microsoft buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.
+The differences in _Large Interconnected Blocks_ and _Dense Connected Developments_  between @tbl-testcountsov and @tbl-testcountsms highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro F1 score weights the classes equially, so better performance in a class that doesnt appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the microsoft buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.
 
 Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class f1 scores highlight what is possible to detect with a specific datasets. Therefore, a high score means that a correct classification is more likely given all of the issues with the underlying data.
 
@@ -176,7 +174,7 @@ Individual F1 scores for  level 3 clusters
 
 @tbl-f1class shows the F1 scores broken down by prediction class for the level 3 models. The sub-tables and columns have the same interpretation as @tbl-f1agg.
 
-The differences in f1 scores across classes shows that some types of urban form is easier to predict that others. **Dense Urban Developments** has the highest score, whereas **Sparse Rural Development** the lowest.
+The differences in F1 scores across classes shows that some types of urban form is easier to predict that others. **Dense Urban Developments** has the highest score, whereas **Sparse Rural Development** the lowest.
 
 
 The patterns in the individual classes between sub-tables @tbl-f1classms and @tbl-f1classov are mostly identical to patterns in the aggregated results. The scores for individual classes are similar, with the overture data performing very slightly better. The exception is the **Central Urban Developments** class, which is reflective of the higher quality in the Overture dataset. The higher prediction accuracy for this cluster does not significantly impact the overall F1 scores in @tbl-f1aggov, since it is relatively sparse compared to the rest of the classes. Furthermore, the same patterns in f1 scores hold across the train / test schemes : Random is the highest; Spatial is lower, OoS lowest.  Lastly, the heterogeneity of urban form between countries and across detailed classes  is even more pronounced , as evidenced by the even larger differences in F1 scores between the country specific models countries.
@@ -286,38 +284,243 @@ The results show that misclasified classes are generally misclassified within on
 
 ## Discussion
 
-The results from the study pertain to three areas - urban morphology, spatial modelling and data quality. 
+The results from the study pertain to three areas – urban morphology, spatial modelling, and data quality.
 
 ### Urban morphology
-With regard to urban morphology, the results show that modelling urban morphology is possible, howecer morphological types are heretogenous and what characteristics and factors are important change across scales of dissimilarity.
+With regard to urban morphology, the results show that modelling urban morphology is possible. However, morphological types are heterogeneous, and the characteristics and factors that are important vary across scales of dissimilarity.
 
-The modeling results show there is a lot of useful information that can be learned morphologically from one country and transfered to new contexts.
-@tbl-f1agg show that at Level 3, the OoS average are close to the spatial split F1 score of approximately **.6** . This is comparable to other land use prediction models with two caveats. First, we we are making predictions at a much higher level of detail - the individual building level - than typicaly land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out of sample scores. Furthermore, the higher scores in @tbl-f1agg as well as the confusion matrix in @fig-cm also suggests that we do reasonable misclassifications - one class in Level 4 is often missclasified for another Level 4 class, that has the same Level 3 class, i.e. it is part of the same branch in the ground truth taxonomy. If this was not the case the @tbl-f1agg f1 scores would be equal or lower than the @tbl-f1agg4 scores. 
+The modelling results show that a lot of useful information can be learned morphologically from one country and transferred to new contexts.
+@tbl-f1agg shows that at Level 3, the out-of-sample (OoS) averages are close to the spatial split F1 score of approximately 0.6. This is comparable to other land use prediction models, with two caveats. First, we are making predictions at a much higher level of detail—the individual building level—than typical land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out-of-sample scores. Furthermore, the higher scores in @tbl-f1agg, as well as the confusion matrix in @fig-cm, also suggest that we make reasonable misclassifications—one class at Level 4 is often misclassified as another Level 4 class within the same Level 3 category, i.e., part of the same branch in the ground truth taxonomy. If this were not the case, the @tbl-f1agg F1 scores would be equal to or lower than the @tbl-f1agg4 scores. 
 
-Nevertheless, inspite of these results urban morphology is still highly heterogenous. The differences between the country specific models reflect the ability to use information from several countries' analysed urban form, to infer the urban form type in an unseen country. If the results across these models were similar to each other, it would mean that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. This in itself is not a new finding, however it has not been quantatively demonstrated before, based on tens of morphological characters calculated using tens of millions of urban geometries, across several countries. 
+Nevertheless, in spite of these results, urban morphology remains highly heterogeneous. The differences between the country-specific models reflect the ability to use information from the analysed urban forms of several countries to infer the urban form type in an unseen country. If the results across these models were similar, it would imply that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. While this in itself is not a new finding, it has not been quantitatively demonstrated before, especially based on tens of morphological characteristics calculated using tens of millions of urban geometries across several countries.
 
-This heterogeneigy however varies. Austria has on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomometric tree the results across countries are relatively more similar than at Level 4. Furthermore, **Dense Standalone Buildings** , **Large Interconnected Blocks** , **Large Utilitarian Development**, are more predictable across all the country models than other classes.
+This heterogeneity, however, varies. Austria has, on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomometric tree the results across countries are relatively more similar than at Level 4. Furthermore, **Dense Standalone Buildings** , **Large Interconnected Blocks** , **Large Utilitarian Development**, are more predictable across all the country models than other classes.
 
-Furthermore, identifying different types of urban form requires specific types of characteristics and data quality. The relative overall similarity between the scores in @tbl-f1aggms and @tbl-f1aggov, suggest that except in the case of **Central Urban Developments**, building polygon quality is not that important. Coversely, since the street network is shared, the results show the importance of the street network and how it can make up for poor quality building footprints data. As the required level of detail increases however, @tbl-f1aggms4 and @tbl-f1aggov4, data quality and aspects of building morphology such as adjacency, configuration and shape become more important.
+Identifying different types of urban form also requires specific types of characteristics and data quality. The relative overall similarity between the scores in @tbl-f1aggms and @tbl-f1aggov suggests that, except in the case of **Central Urban Developments**, building polygon quality is not that important. Conversely, since the street network is shared, the results show the importance of the street network and how it can compensate for poor-quality building footprint data. As the required level of detail increases, however (see @tbl-f1aggms4 and @tbl-f1aggov4), data quality and aspects of building morphology such as adjacency, configuration, and shape become more important.
 
 
 
 ### Morphological data
 
-The results also suggest that heterogenous, but more detailed data is prefereble to homogenous but coarser data for urban morphological analysis. Furthermore, the morphological pipeline, developed for cadastre data, can can be run without modification on both the Microsoft (homogenous, generally more detailed) and Overture data (heterogenous, generally more detailed). 
+The results also suggest that heterogeneous but more detailed data is preferable to homogeneous but coarser data for urban morphological analysis. Furthermore, the morphological pipeline developed for cadastre data can be run without modification on both the Microsoft (homogeneous, generally more detailed) and Overture maps data (heterogeneous, generally more detailed).
 
-The overall higher or equivalent performance of OvertureData, shows that this data should be used when possible to identify urban morphological types for countries not in the training data. Overture's schema and easy access the Openstreetmap street networks are a further benefit. Taken together ther the results show that overall, when cadastre data is not available Overturemaps data should be used in place of satellite derived footprints.
+The overall higher or equivalent performance of Overture maps data shows that this data should be used when possible to identify urban morphological types for countries not in the training data. Overture maps’ schema and easy access to the OpenStreetMap street networks are additional benefits. Taken together, the results show that, overall, when cadastre data is not available, Overture maps data should be used in place of satellite-derived footprints.
 
-The consistently higher performance of the spatial models also suggest to use as much data as possible in model training, from any source, since it provides some local context. 
-
+The consistently higher performance of the spatial models also suggests using as much data as possible in model training, from any source, since it provides some local context.
 
 ### Spatial modelling in general
 
-The results from the comparisons highlight the need for complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores numerous land use prediction models do not take into account spatial autocorrelation, and as consistenly shown in the F1 score tables in this work, this means that they report artificially higher results. Even worse, in the case of more complex models maybe they are not learning the weights necassary to do inference, but rather overfit and memorise the training data. This work further shows that for urban morphological predictions and analysis specifically, spatial leakage is ubiqutous. 
+The results from the comparisons highlight the need for complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores, many land use prediction models do not take into account spatial autocorrelation. As consistently shown in the F1 score tables in this work, this results in artificially higher scores. Even worse, in the case of more complex models, they may not be learning the weights necessary to perform inference, but rather overfitting and memorising the training data. This work further shows that, for urban morphological predictions and analysis specifically, spatial leakage is ubiquitous.
 
 There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other apporaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.
 
-In the specific case of urban morphology, there are also other possible scales to consider such as regional, or city-level which could also have an effect on the predictions. We focused specifically on the national scale, since data quality from openstreetmap varries widely at that level. Furthermore, the most common use case for the model would be to predict the morphological classes for a whole country that is not part of the training data. Nevertheles, the implications of our results is that when modelling spatial phenomena using machine learning models, and train and test splits, properties of the specific phenomena under analysis should be considered. Works that do not explicitly do this, risks reporting arteficially higher accuracies that do not reflect real model use cases. 
+In the specific case of urban morphology, there are also other possible scales to consider, such as regional or city-level, which could also affect predictions. We focused specifically on the national scale, since data quality from OpenStreetMap varies widely at that level. Furthermore, the most common use case for the model would be to predict morphological classes for an entire country that is not part of the training data. Nevertheless, the implications of our results are that when modelling spatial phenomena using machine learning models, train/test splits should account for the specific properties of the phenomenon under analysis. Works that do not explicitly do this risk reporting artificially high accuracies that do not reflect real model use cases.
+
+
+# Test and Verification Results: AI Model
+
+This section expands on the [Algorithm Design](https://eurofab.org/technical-notes/notes/algorithm-design.html#ai-modelling-using-satellite-imagery-1) and [Reference Data Selection](https://eurofab.org/technical-notes/notes/data-selection.html#ai-data) sections, detailing the dataset and previous analyses leading to the final model. We discuss model performance in detail and present results of temporal predictions spanning 2016 to 2021.
+
+## Data
+
+### Satellite Imagery (Input)
+
+Satellite image data used to train the XGBoost classifier was sourced from the GHS-composite-S2 R2020A dataset[^1], as detailed in the [Reference Data Selection](https://eurofab.org/technical-notes/notes/data-selection.html#ai-data). This dataset is a global, cloud-free image composite derived from Sentinel-2 L1C data, covering January 2017 through December 2018. We utilised RGB bands at 10 metres per pixel resolution.
+
+[^1]: Corbane, C. et al., 2020. A global cloud-free pixel-based image composite from Sentinel-2 data. *Data in Brief*, 31, p.105737.
+
+#### Temporal Change Prediction
+
+Sentinel-2 satellite imagery covering 2016 to 2021 was acquired using the Google Earth Engine API through automated Python scripts (as described in [GEE pipeline](https://github.com/urbangrammarai/gee_pipeline). Images were selected for low cloud coverage, resulting in composite summary products for each year.
+
+### Urban Fabric Classes (Outcome)
+
+We employed labels from the Spatial Signatures Framework[^2], a typology classifying British urban environments based on form (physical appearance) and function (usage). Although our project specifically targets urban fabric classification based primarily on visible form — which might be sipler to predict — the form-specific classification scheme remains under development (as detailed in the Sections on *Morphometric Classification*). Consequently, the comprehensive Spatial Signatures Framework currently serves as a proxy aligning closely with our project's urban characterisation objectives.
+
+[^2]: Fleischmann, M. & Arribas-Bel, D., 2022. Geographical characterisation of British urban form using the spatial signatures framework. *Scientific Data*, 9(1), p.546.
+
+We used two versions of this dataset: one with 12 classes and another simplified version with 7 classes. The 12-class scheme combines the various urbanity categories into a single class, maintaining all other Spatial Signatures classes:
+
+```python
+class_labels = {
+    'Accessible suburbia': 0,
+    'Connected residential neighbourhoods': 1,
+    'Countryside agriculture': 2,
+    'Dense residential neighbourhoods': 3,
+    'Dense urban neighbourhoods': 4,
+    'Disconnected suburbia': 5,
+    'Gridded residential quarters': 6,
+    'Open sprawl': 7,
+    'Urban buffer': 8,
+    'Urbanity': 9,
+    'Warehouse/Park land': 10,
+    'Wild countryside': 11
+}
+```
+
+For the simplified 7-class version, we reclustered underlying data from the Spatial Signatures Framework using K-means clustering (K=7). The resulting classes are:
+
+```python
+class_labels_k7 = {
+    'Countryside agriculture': 0,
+    'Open sprawl': 1,
+    'Compact suburbia': 2,
+    'Urban': 3,
+    'Urban buffer': 4,
+    'Warehouse/Park land': 5,
+    'Wild countryside': 6
+}
+```
+
+## Data Preprocessing
+
+### Scale
+
+Based on earlier experiments documented in the technical notes ([Algorithm Design](https://eurofab.org/technical-notes/notes/algorithm-design.html#ai-modelling-using-satellite-imagery-1)), we adopted a final analytical scale of 250×250 metres across Great Britain (GB).
+
+A significant issue in our dataset is class imbalance, with specific urban fabric classes being substantially underrepresented. This imbalance informed our decisions on model architecture and loss function selection, motivating exploration of specialised methods to handle imbalanced data. Yet, common modelling approaches were not sufficient, which means we had to resort to data augmentation methods, as described below.
+
+![Sampling Strategy](../figures/algo_design/sampling.png){.nostretch fig-align="left" height="400"}
+
+### Handling Imbalanced Dataset with Image Augmentation
+
+Due to the significant class imbalance, particularly the underrepresentation of urban classes, we implemented a sliding-window augmentation strategy for classes comprising less than 10% of the dataset (all classes except *Countryside agriculture* and *Wild countryside*).
+
+This sliding-window approach systematically shifted the sampling window horizontally and vertically by increments of 50, 100, 150, and 200 metres, significantly increasing the volume of available training data for underrepresented classes.
+
+![Sliding Window Augmentation](../figures/results/img_aug.jpg){.nostretch fig-align="center" height="420"}
+
+The images below shows class distributions before (left) and after (right) augmentation:
+
+![Before Augmentation](../figures/results/type_clean_encode.png){.nostretch fig-align="left" height="200"}
+![After Augmentation](../figures/results/type_clean_encode_augmented.png){.nostretch fig-align="right" height="200"}
+
+The following table summarises augmentation results, highlighting the substantial increase in training samples for previously underrepresented classes:
+
+| Class                                | Before Augmentation | After Augmentation |
+|--------------------------------------|---------------------|--------------------|
+| Accessible suburbia                  | 15,054              | 129,620            |
+| Connected residential neighbourhoods | 2,567               | 21,021             |
+| Countryside agriculture              | 1,367,999           | 1,367,999          |
+| Dense residential neighbourhoods     | 4,299               | 34,507             |
+| Dense urban neighbourhoods           | 3,636               | 31,657             |
+| Disconnected suburbia                | 2,644               | 20,113             |
+| Gridded residential quarters         | 1,518               | 12,849             |
+| Open sprawl                          | 33,910              | 292,884            |
+| Urban buffer                         | 381,283             | 381,283            |
+| Urbanity                             | 2,495               | 21,929             |
+| Warehouse/Park land                  | 21,282              | 195,105            |
+| Wild countryside                     | 1,395,048           | 1,395,048          |
+
+# Results
+
+### Classifier Performance
+
+The final XGBoost classifier was trained using the augmented dataset and evaluated using three metrics: micro accuracy, macro accuracy (every class has same weighting), and macro F1 score. We validated the model using 5-fold spatial cross-validation at H3 resolution 6, ensuring an 80/20 training-testing split.
+
+The table below summarises classifier performance for two classification schemes (7 and 12 classes) and two spatial contexts (with and without H3 resolution):
+
+| Classes (K) | Spatial Context | Accuracy | Macro Accuracy | Macro F1 Score |
+|-------------|-----------------|----------|----------------|----------------|
+| 7           | None            | 0.4924   | 0.3856         | 0.3389         |
+| 7           | H3 (res 5)      | 0.6959   | 0.5713         | **0.5221**       |
+| 12          | None            | 0.4617   | 0.2666         | 0.2127         |
+| 12          | H3 (res 5)      | 0.6654   | 0.4328         | 0.3654         |
+
+Including spatial context (H3 resolution) notably improved classification accuracy and F1 scores. This improvement shows the importance of spatial context in predicting urban fabric classes. Similarily, and as anticipated, the model with a lower number of classes performed better compared to the one with 12 classes.
+
+#### Per Class Performance 
+
+Examining the 12-class model with spatial context (H3 resolution 5) in greater detail reveals that some classes consistently performed better than others. Specifically, classes such as *Wild countryside*, *Countryside agriculture* and *Urbanity* achieved relatively high accuracy, reflecting their visual distinctiveness in satellite imagery. In contrast, classes like *Dense residential neighbourhoods* and *Connected residential neighbourhoods* showed lower accuracy scores. These urban classes heavily depend on road connectivity patterns, which the limited patch size (250×250 metres) does not adequately capture. This limitation might likely contributed to their poorer performance.
+
+
+![Per class accuracy, 12 classes with spatial context](../figures/results/perclass_acc_12h3.png){.nostretch height="420"}
+
+The model without spatial context exhibited similar performance patterns but consistently lower accuracy overall. Interestingly, despite limited training examples, the class *Urbanity* maintained relatively high accuracy, indicating that its visual characteristics are clearly represented within the embeddings.
+
+![Per class accuracy](../figures/results/perclassacc_k12.png){.nostretch fig-align="center" height="420"}
+
+
+We further analysed the relationship between the number of training observations per class and accuracy scores. While a moderate correlation exists — classes with more training samples generally performed better — this does not fully explain the accuracy differences. For example, *Urbanity*, *Gridded residential quarters* and *Accessible suburbia* performed notably better than classes with a comparable number of samples, such as *Dense residential neighbourhoods* and *Connected residential neighbourhoods*. This discrepancy likely arises from inherent visual representation of the signatures and distinguishability of these classes, rather than solely due to sample frequency.
+
+
+![Number of observations vs accuracy](../figures/results/class_acc.png){.nostretch fig-align="center" height="420"}
+
+
+## Changes Over Time / Temporal Analysis
+
+We use the trained XGBoost classifier to make predictions across the years 2016 to 2021. The overall overlap between the initial year (2016) and final year (2021) remained high at 88%. This confirms that Spatial Signatures classes remained relatively stable across the study period. However, minor variations may indicate either genuine change or model uncertainty.
+
+We measured urban fabric diversity using the Shannon Index across each year studied. The index showed limited variability over time, typically around 1.86–1.87, except for a noticeable spike in diversity in 2019 (2.007):
+
+- 2016 → 2017: 88%
+- 2017 → 2018: 88%
+- 2018 → 2019: 86%
+- 2019 → 2020: 86%
+- 2020 → 2021: 88%
+
+
+### Diversity Analysis (Shannon Index)
+
+We assessed changes in urban fabric diversity using the Shannon Index across the studied years. The results are summarised in the table below, indicating slight fluctuations, with the most notable increase in diversity occurring in 2019:
+
+| Year | Shannon Index |
+|------|---------------|
+| 2016 | 1.868         |
+| 2017 | 1.863         |
+| 2018 | 1.868         |
+| 2019 | 2.007         |
+| 2020 | 1.873         |
+| 2021 | 1.872         |
+
+The marked increase in the Shannon Index in 2019 suggests an increase in class diversity during that year, followed by a subsequent return to previous levels. This could point out some differences in the image as caused by weather or sensor in the year 2019.
+
+### Spatial Patterns of Change
+
+Spatial analysis identified areas across England with frequent class transitions (map below), particularly around major urban centres and suburban zones. These frequent transitions may either represent genuine urban transformations or result from classifier uncertainty, especially in ambiguous zones between visually similar Spatial signatures classes.
+
+![Frequency Map](https://eurofab.org/talks/figures/202502_progress_turing/frequency_map.png){.nostretch fig-align="center" height="420"}
+
+Class-specific analysis further highlighted particular Spatial signatures types prone to transitions. The figure below shows which classes experienced frequent transitions:
+
+![Class Transitions](https://eurofab.org/talks/figures/202502_progress_turing/class_transitions.png){.nostretch fig-align="center" height="420"}
+
+To better interpret these transitions, we calculated transition probabilities and organised them into a structured confusion matrix. This matrix clearly shows the urban fabric classes most likely to interchange over the studied period:
+
+!['Reasonable' confusion matrix](https://eurofab.org/talks/figures/202502_progress_turing/class_transitions_reasonable.png){.nostretch fig-align="center" height="420"}
+
+Lastly, we analysed the inverse-probability-based distances of urban fabric classes over time. Shorter distances represent a higher likelihood of transitioning or changing classes from year to year, whereas longer distances indicate greater stability:
+
+![Probability of change across classes](https://eurofab.org/talks/figures/202502_progress_turing/1d_transitions.png)
+
+This analysis shows urban fabric classes such as *Urbanity*, *Warehouse/Park land*, *Dense urban neighbourhoods*, and *Connected residential neighbourhoods* have shorter inverse distances, indicating higher levels of dynamic change or redevelopment. Conversely, classes such as *Wild countryside* and *Countryside agriculture* have longer distances, suggesting greater temporal stability. Although these results align with expectations about urban and rural dynamics, they may also reflect the classifier's varying uncertainty across these visually distinct environments.
+
+
+# Discussion
+
+### Key Findings
+
+The analysis shows that urban fabric classifications exhibit distinct temporal and spatial dynamics, reflecting varying levels of stability and diversity over time. Notably, urban classes such as *Dense urban neighbourhoods*, and *Connected residential neighbourhoods* displayed higher probabilities of transition, indicating active urban transformation. Similarily, suburban classes, such as *Accessible suburbia*, *Disconnected suburbia* and *Urban buffer*, also show a higher probability of change between said classes. Conversely, rural classes showed significant stability. This is most probably related to the uncertainty in the classifier than connected to actual changes of the environment.
+
+#### Lessons Learned
+
+- **Scale**: Urban fabric classes, like spatial signatures, have fuzzy boundaries. Pixel-level classifications provide the highest possible spatial resolution, which is beneficial for detailed analysis. However, pixels often lack clear visual cues indicating exact boundaries between classes, making pixel-level predictions challenging for the model. Patch-level classification, although lower in spatial resolution depending on patch size, provided clearer visual context and resulted in better overall performance.
+
+- **Embeddings vs fine-tuned foundation model**: Fine-tuning foundation models involves significant complexity and requires careful design decisions. In our case, the limited number of training examples was insufficient to achieve noticeable improvements through fine-tuning. The effort required for fine-tuning did not outweigh the simpler alternative of using off-the-shelf embeddings.
+
+- **Regional trends**: Including regional contextual information substantially improved the classifier’s accuracy. Nonetheless, we found it essential that embeddings themselves already capture enough visual detail for accurate classification, ensuring that predictions remain robust even without regional context (and simply do not just rely on the spatial information to make predictions).
+
+- **Data augmentation**: The sliding window augmentation approach effectively addressed class imbalances, significantly improving model performance by increasing representation of previously underrepresented urban fabric classes. This could boost the performance of the classifier another 10-20% in terms of accuracy.
+
+### Potential Research Directions
+
+There are a number of possible directions that would be beneficial to explore. The two main ones are as follows:
+
+- Misclassifications typically occur between visually similar urban fabric classes, indicating inherent uncertainty in predictions. Incorporating prediction probabilities into a secondary model could help address this issue. By explicitly using probability scores from the initial classification as input for a refinement model — as previously shown by Fleischmann and Arribas-Bel[^3] — we could better distinguish between ambiguous cases. This approach may "smooth" predictions, reducing noise and improving overall classification accuracy. Future work should explore how prediction confidence scores can be systematically utilised, either by employing spatial smoothing algorithms or by applying secondary machine learning models trained specifically to correct uncertain predictions.
+
+- Evaluating the generalisability of this methodological framework is crucial for its wider applicability. Future research should test this modelling approach in different European regions, assessing whether the chosen methods, including data preprocessing, augmentation strategies, spatial embeddings, and classifier architectures, perform consistently outside Great Britain. This would involve exploring variations in urban form and regional urban planning contexts across Europe. Understanding these factors will help identify potential adjustments needed to ensure reliable predictions when extending the model beyond the original study area.
+
+[^3]: Fleischmann and Arribas-Bel, 2024. Decoding (urban) form and function using spatially explicit deep learning. *Computers, Environment and Urban Systems*, 31, p.105737.
 
 
 # Conclusion
