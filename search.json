@@ -172,7 +172,28 @@
     "href": "notes/deliverables.html#ai-model",
     "title": "Software and Example datasets generated during Verification Exercises",
     "section": "AI model",
-    "text": "AI model\nThe final datacube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the GitHub repository.\nHere are some example visualisations showing London and Liverpool from the dataset:"
+    "text": "AI model\nThe final datacube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the GitHub repository."
+  },
+  {
+    "objectID": "notes/deliverables.html#example-datasets-generated-during-verification-exercises",
+    "href": "notes/deliverables.html#example-datasets-generated-during-verification-exercises",
+    "title": "Software and Example datasets generated during Verification Exercises",
+    "section": "Example datasets generated during Verification Exercises",
+    "text": "Example datasets generated during Verification Exercises\nHere are some example visualisations showing London and Liverpool from the dataset:"
+  },
+  {
+    "objectID": "notes/deliverables.html#london",
+    "href": "notes/deliverables.html#london",
+    "title": "Software and Example datasets generated during Verification Exercises",
+    "section": "London",
+    "text": "London\n\n\n\nLondon, 7 classes\n\n\n\n\n\nLondon, 12 classes"
+  },
+  {
+    "objectID": "notes/deliverables.html#liverpool",
+    "href": "notes/deliverables.html#liverpool",
+    "title": "Software and Example datasets generated during Verification Exercises",
+    "section": "Liverpool",
+    "text": "Liverpool\n\n\n\nLiverpool, 7 classes\n\n\n\n\n\nLiverpool, 12 classes"
   },
   {
     "objectID": "index.html",
