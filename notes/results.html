@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel">
+
+<title>Test and Verification Results – Technical notes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ad12125f43b1cd0365d2f9404fbc2628.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#executive-summary" id="toc-executive-summary" class="nav-link active" data-scroll-target="#executive-summary">Executive summary</a></li>
+  <li><a href="#morphometric-classification" id="toc-morphometric-classification" class="nav-link" data-scroll-target="#morphometric-classification">Morphometric classification</a>
+  <ul class="collapse">
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#level-3" id="toc-level-3" class="nav-link" data-scroll-target="#level-3">Level 3</a></li>
+  <li><a href="#level-4" id="toc-level-4" class="nav-link" data-scroll-target="#level-4">Level 4</a></li>
+  <li><a href="#overture-spatial-model" id="toc-overture-spatial-model" class="nav-link" data-scroll-target="#overture-spatial-model">Overture Spatial model</a></li>
+  </ul></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a>
+  <ul class="collapse">
+  <li><a href="#urban-morphology" id="toc-urban-morphology" class="nav-link" data-scroll-target="#urban-morphology">Urban morphology</a></li>
+  <li><a href="#morphological-data" id="toc-morphological-data" class="nav-link" data-scroll-target="#morphological-data">Morphological data</a></li>
+  <li><a href="#spatial-modelling-in-general" id="toc-spatial-modelling-in-general" class="nav-link" data-scroll-target="#spatial-modelling-in-general">Spatial modelling in general</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">Limitations</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="results.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Test and Verification Results</h1>
+<p class="subtitle lead">Technical Note D4</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Charles University; The Alan Turing Institute
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="executive-summary" class="level1">
+<h1>Executive summary</h1>
+<p>This technical note presents the results from the modelling work specified in technical note “Technical Note D2 - Algorithm Design and Theoretical Basis Description” for both the morphometric and AI models. The first section “Morphometric classification” focuses on the morphometric prediction pipeline, its results accuracies and examples and introduces two extensions to the experiment design - an additional dataset and two new models that are evaluated. Similarly, the second section “Test and Verification Results: AI Model” describes the extensions and changes from the design specification and the results of the space-time modelling. This note ends with a conclusion section that brings together the two sets of results and discusses the limitations of the project. In summary, we are able to achieve high acuracies at multiple resolutions - at the building level for the morphometric model, and at the 250 metre grid cell resolution for the AI model. And that these results show that it is possible to use alternative data sources to characterize urban fort at scale, while preserving detail that is currently not captured by other large urban descriptors.</p>
+</section>
+<section id="morphometric-classification" class="level1">
+<h1>Morphometric classification</h1>
+<p>This section presents the results of the morphometric analysis described in “Technical Note 2 - Algorithm Design”.</p>
+<div id="tbl-taxonomy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-taxonomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Taxonometric tree
+</figcaption>
+<div aria-describedby="tbl-taxonomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 24%">
+<col style="width: 25%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Level 1</strong></th>
+<th><strong>Level 2</strong></th>
+<th><strong>Level 3</strong></th>
+<th><strong>Level 4</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Traditional Street Network</td>
+<td>Central Urban Developments</td>
+<td>Central Urban Developments</td>
+<td>Dense Connected Developments</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td>Large Interconnected Blocks</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Traditional Urban Developments</td>
+<td>Dense Urban Developments</td>
+<td>Dense Standalone Buildings</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td>Compact Development</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Street-aligned Developments</td>
+<td>Aligned Winding Streets</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td>Cul-de-Sac Layout</td>
+</tr>
+<tr class="odd">
+<td>Utilitarian Street Network</td>
+<td>Utalitarian street network</td>
+<td>Large Scale Developments</td>
+<td>Large Utilitarian Development</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td>Extensive Wide-Spaced Developments</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Sparse Road Network Developments</td>
+<td>Sparse Open Layout</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td>Sparse Road-Linked Development</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Linear &amp; Rural Development</td>
+<td>Linear Road Network Developments</td>
+<td>Dispersed Linear Development</td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+<td>Linear Development</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td>Sparse Rural Development</td>
+<td>Sparse Rural Development</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The taxonomy of ground truth classes is presented in <a href="#tbl-taxonomy" class="quarto-xref">Table&nbsp;1</a> and all subsequent analysis focuses on Levels 3 and 4. There is an interactive map of the taxonomy available at https://uscuni.org/himoc/ . More detail abut</p>
+<p>We have made two changes to the methodoly presented in “Technical Note 2 - Algorithm Design”, which are outside of the original scope of the project.</p>
+<div id="fig-traintest" class="nostretch quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-traintest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/results/model_split.drawio.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-traintest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Train/test data splits for different models.
+</figcaption>
+</figure>
+</div>
+<p>First, we train two additional models per ground truth hierarchical (taxonometric) level - a global random model and a global spatially explicit model. This is done to highlight the effects of spatial lag in model training and testing, as well as the ability of the models to generalise from one context to another. <a href="#fig-traintest" class="quarto-xref">Figure&nbsp;1</a> shows the new train / test splits.</p>
+<div id="fig-data" class="nostretch quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/results/building_comparison.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Comparison between data sources.
+</figcaption>
+</figure>
+</div>
+<p>The second change is that we repeat all experiments with a new data set based on Overture Data. However, the experiment is done to demonstrate that the morphological pipeline can handle more detailed, but heterogenous data, which may lead to better predictions. Furthermore, the overture data is easily accessable for numerous regions across the world and significantly increases our pipeline’s generalisibility. <a href="#fig-data" class="quarto-xref">Figure&nbsp;2</a> shows a comparison between the datasets.</p>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<div id="tbl-testcounts" class="quarto-layout-panel anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-testcounts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Distribution of test classes across the different models. The reported values are in the thousands.
+</figcaption>
+<div aria-describedby="tbl-testcounts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-testcounts" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-testcountsms" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-testcountsms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Microsoft building footprints
+</figcaption>
+<div aria-describedby="tbl-testcountsms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>SK</strong></th>
+<th style="text-align: left;"><strong>PL</strong></th>
+<th style="text-align: left;"><strong>DE</strong></th>
+<th style="text-align: left;"><strong>AT</strong></th>
+<th style="text-align: left;"><strong>CZ</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Aligned Winding Streets</strong></td>
+<td style="text-align: left;">1,308</td>
+<td style="text-align: left;">1,312</td>
+<td style="text-align: left;">474</td>
+<td style="text-align: left;">406</td>
+<td style="text-align: left;">5,219</td>
+<td style="text-align: left;">245</td>
+<td style="text-align: left;">195</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Compact Development</strong></td>
+<td style="text-align: left;">1,067</td>
+<td style="text-align: left;">1,083</td>
+<td style="text-align: left;">160</td>
+<td style="text-align: left;">75</td>
+<td style="text-align: left;">5,041</td>
+<td style="text-align: left;">33</td>
+<td style="text-align: left;">23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cul-de-Sac Layout</strong></td>
+<td style="text-align: left;">1,023</td>
+<td style="text-align: left;">1,027</td>
+<td style="text-align: left;">358</td>
+<td style="text-align: left;">400</td>
+<td style="text-align: left;">3,798</td>
+<td style="text-align: left;">344</td>
+<td style="text-align: left;">212</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dense Connected Developments</strong></td>
+<td style="text-align: left;">735</td>
+<td style="text-align: left;">750</td>
+<td style="text-align: left;">92</td>
+<td style="text-align: left;">268</td>
+<td style="text-align: left;">2,971</td>
+<td style="text-align: left;">138</td>
+<td style="text-align: left;">207</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Dense Standalone Buildings</strong></td>
+<td style="text-align: left;">818</td>
+<td style="text-align: left;">785</td>
+<td style="text-align: left;">273</td>
+<td style="text-align: left;">1,224</td>
+<td style="text-align: left;">1,899</td>
+<td style="text-align: left;">358</td>
+<td style="text-align: left;">338</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dispersed Linear Development</strong></td>
+<td style="text-align: left;">136</td>
+<td style="text-align: left;">133</td>
+<td style="text-align: left;">36</td>
+<td style="text-align: left;">613</td>
+<td style="text-align: left;">31</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Extensive Wide-Spaced Developments</strong></td>
+<td style="text-align: left;">113</td>
+<td style="text-align: left;">104</td>
+<td style="text-align: left;">26</td>
+<td style="text-align: left;">329</td>
+<td style="text-align: left;">130</td>
+<td style="text-align: left;">20</td>
+<td style="text-align: left;">61</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Large Interconnected Blocks</strong></td>
+<td style="text-align: left;">36</td>
+<td style="text-align: left;">33</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">138</td>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Large Utilitarian Development</strong></td>
+<td style="text-align: left;">133</td>
+<td style="text-align: left;">131</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">134</td>
+<td style="text-align: left;">429</td>
+<td style="text-align: left;">43</td>
+<td style="text-align: left;">46</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Linear Development</strong></td>
+<td style="text-align: left;">391</td>
+<td style="text-align: left;">396</td>
+<td style="text-align: left;">139</td>
+<td style="text-align: left;">1,526</td>
+<td style="text-align: left;">254</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">27</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Open Layout</strong></td>
+<td style="text-align: left;">1,626</td>
+<td style="text-align: left;">1,621</td>
+<td style="text-align: left;">59</td>
+<td style="text-align: left;">3,744</td>
+<td style="text-align: left;">1,486</td>
+<td style="text-align: left;">1,319</td>
+<td style="text-align: left;">1,521</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sparse Road-Linked Development</strong></td>
+<td style="text-align: left;">1,095</td>
+<td style="text-align: left;">1,065</td>
+<td style="text-align: left;">428</td>
+<td style="text-align: left;">1,697</td>
+<td style="text-align: left;">3,005</td>
+<td style="text-align: left;">177</td>
+<td style="text-align: left;">169</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Rural Development</strong></td>
+<td style="text-align: left;">562</td>
+<td style="text-align: left;">540</td>
+<td style="text-align: left;">30</td>
+<td style="text-align: left;">2,483</td>
+<td style="text-align: left;">65</td>
+<td style="text-align: left;">132</td>
+<td style="text-align: left;">101</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong><em>Total</em></strong></td>
+<td style="text-align: left;">9,049</td>
+<td style="text-align: left;">8,987</td>
+<td style="text-align: left;">2,095</td>
+<td style="text-align: left;">12,913</td>
+<td style="text-align: left;">24,473</td>
+<td style="text-align: left;">2,846</td>
+<td style="text-align: left;">2,919</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-testcounts" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-testcountsov" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-testcountsov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Overture building footprints
+</figcaption>
+<div aria-describedby="tbl-testcountsov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>SK</strong></th>
+<th style="text-align: left;"><strong>PL</strong></th>
+<th style="text-align: left;"><strong>DE</strong></th>
+<th style="text-align: left;"><strong>AT</strong></th>
+<th style="text-align: left;"><strong>CZ</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Aligned Winding Streets</strong></td>
+<td style="text-align: left;">1,906</td>
+<td style="text-align: left;">1,911</td>
+<td style="text-align: left;">602</td>
+<td style="text-align: left;">593</td>
+<td style="text-align: left;">7,681</td>
+<td style="text-align: left;">334</td>
+<td style="text-align: left;">320</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Compact Development</strong></td>
+<td style="text-align: left;">1,632</td>
+<td style="text-align: left;">1,646</td>
+<td style="text-align: left;">201</td>
+<td style="text-align: left;">127</td>
+<td style="text-align: left;">7,708</td>
+<td style="text-align: left;">75</td>
+<td style="text-align: left;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cul-de-Sac Layout</strong></td>
+<td style="text-align: left;">1,354</td>
+<td style="text-align: left;">1,362</td>
+<td style="text-align: left;">446</td>
+<td style="text-align: left;">484</td>
+<td style="text-align: left;">5,152</td>
+<td style="text-align: left;">429</td>
+<td style="text-align: left;">260</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dense Connected Developments</strong></td>
+<td style="text-align: left;">1,850</td>
+<td style="text-align: left;">1,843</td>
+<td style="text-align: left;">157</td>
+<td style="text-align: left;">662</td>
+<td style="text-align: left;">7,494</td>
+<td style="text-align: left;">262</td>
+<td style="text-align: left;">676</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Dense Standalone Buildings</strong></td>
+<td style="text-align: left;">1,062</td>
+<td style="text-align: left;">1,073</td>
+<td style="text-align: left;">324</td>
+<td style="text-align: left;">1,540</td>
+<td style="text-align: left;">2,524</td>
+<td style="text-align: left;">465</td>
+<td style="text-align: left;">454</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dispersed Linear Development</strong></td>
+<td style="text-align: left;">163</td>
+<td style="text-align: left;">167</td>
+<td style="text-align: left;">40</td>
+<td style="text-align: left;">740</td>
+<td style="text-align: left;">35</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Extensive Wide-Spaced Developments</strong></td>
+<td style="text-align: left;">175</td>
+<td style="text-align: left;">186</td>
+<td style="text-align: left;">63</td>
+<td style="text-align: left;">468</td>
+<td style="text-align: left;">215</td>
+<td style="text-align: left;">35</td>
+<td style="text-align: left;">94</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Large Interconnected Blocks</strong></td>
+<td style="text-align: left;">216</td>
+<td style="text-align: left;">218</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">45</td>
+<td style="text-align: left;">872</td>
+<td style="text-align: left;">82</td>
+<td style="text-align: left;">70</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Large Utilitarian Development</strong></td>
+<td style="text-align: left;">184</td>
+<td style="text-align: left;">178</td>
+<td style="text-align: left;">15</td>
+<td style="text-align: left;">163</td>
+<td style="text-align: left;">632</td>
+<td style="text-align: left;">55</td>
+<td style="text-align: left;">57</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Linear Development</strong></td>
+<td style="text-align: left;">468</td>
+<td style="text-align: left;">464</td>
+<td style="text-align: left;">173</td>
+<td style="text-align: left;">1,797</td>
+<td style="text-align: left;">320</td>
+<td style="text-align: left;">11</td>
+<td style="text-align: left;">41</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Open Layout</strong></td>
+<td style="text-align: left;">1,924</td>
+<td style="text-align: left;">1,901</td>
+<td style="text-align: left;">65</td>
+<td style="text-align: left;">4,353</td>
+<td style="text-align: left;">1,927</td>
+<td style="text-align: left;">1,498</td>
+<td style="text-align: left;">1,777</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sparse Road-Linked Development</strong></td>
+<td style="text-align: left;">1,387</td>
+<td style="text-align: left;">1,377</td>
+<td style="text-align: left;">531</td>
+<td style="text-align: left;">2,045</td>
+<td style="text-align: left;">3,921</td>
+<td style="text-align: left;">226</td>
+<td style="text-align: left;">213</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Rural Development</strong></td>
+<td style="text-align: left;">639</td>
+<td style="text-align: left;">643</td>
+<td style="text-align: left;">42</td>
+<td style="text-align: left;">2,811</td>
+<td style="text-align: left;">82</td>
+<td style="text-align: left;">150</td>
+<td style="text-align: left;">108</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong><em>Total</em></strong></td>
+<td style="text-align: left;">12,966</td>
+<td style="text-align: left;">12,974</td>
+<td style="text-align: left;">2,675</td>
+<td style="text-align: left;">15,832</td>
+<td style="text-align: left;">38,570</td>
+<td style="text-align: left;">3,627</td>
+<td style="text-align: left;">4,127</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p>Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table <a href="#tbl-testcounts" class="quarto-xref">Table&nbsp;2</a> shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4.</p>
+<p>The differences in <em>Large Interconnected Blocks</em> and <em>Dense Connected Developments</em> between <a href="#tbl-testcountsov" class="quarto-xref">Table&nbsp;2 (b)</a> and <a href="#tbl-testcountsms" class="quarto-xref">Table&nbsp;2 (a)</a> highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro f1 score weights the classes equially, so better performance in a class that doesnt appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the microsoft buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.</p>
+<p>Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class f1 scores highlight what is possible to detect with a specific datasets. Therefore, a high score means that a correct classification is more likely given all of the issues with the underlying data.</p>
+<section id="level-3" class="level3">
+<h3 class="anchored" data-anchor-id="level-3">Level 3</h3>
+<section id="aggregate-scores" class="level4">
+<h4 class="anchored" data-anchor-id="aggregate-scores">Aggregate scores</h4>
+<div id="tbl-f1agg" class="quarto-layout-panel anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-f1agg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Overall F1 scores at level 3
+</figcaption>
+<div aria-describedby="tbl-f1agg-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1agg" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1aggms" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1aggms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Microsoft building footprints
+</figcaption>
+<div aria-describedby="tbl-f1aggms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Weighted F1</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.63</td>
+<td style="text-align: left;">0.56</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Micro F1</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.58</td>
+<td style="text-align: left;">0.62</td>
+<td style="text-align: left;">0.53</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Macro F1</strong></td>
+<td style="text-align: left;">0.73</td>
+<td style="text-align: left;">0.63</td>
+<td style="text-align: left;">0.48</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.45</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1agg" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1aggov" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1aggov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Overture building footprints
+</figcaption>
+<div aria-describedby="tbl-f1aggov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Weighted F1</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.62</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.59</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Micro F1</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.58</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.63</td>
+<td style="text-align: left;">0.56</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Macro F1</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.47</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> shows the aggregate F1 scores for the level 3 models trained on the Microsoft Building footprint and Overturemaps building footprints data. The Random, column shows the F1 scores for the model tested on randomly selected stratified data; Spatial - on the spatially aware split; OoS - stands for “Out of Sample” and is the average of the models, tested on each individual country and trained on the rest; the other columns are the specific F1 scores for each country, that make up the OoS. There are three main patterns present in the reported results.</p>
+<p>First, overall the aggregate scores between the models trained on the two datasets are almost equal. with the Overturemaps models being very slightly higher. This suggests that at this level of disagregation of urban form, detailed characteristics of building footprints and their interactions with each other and the street network matter less. For example, the Overture data has more accurate information of building corners, adjacency, orientation and others but that does not significantly improve the overall F1 scores.</p>
+<p>Second, more complex and relfective of the underlying phenomena testing splits result in more realistic model evaluations for both sub-tables. The Random split has the highest score, the spatial split is always lower and the OoS average lower still. OoS is the closest score to a realistic real-world application of the model - using it to predict unseen urban fabric types. The fact that the Spatial score is closer to it, shows that randomly spliting your modelling data leads to spatial leakage and spatially aware-splits result in more realistic evaluations. Nevertheless, the Out of Sample score is lower still, which suggests that even testing the model accuracy on spatially split data overestimates model performance.</p>
+<p>Third, even at this high level of aggregation urban form shows signs of heterogeneity. The F1 scores for the individual countries vary both Overture and Microsoft trained models, but especially in <a href="#tbl-f1aggms" class="quarto-xref">Table&nbsp;3 (a)</a>. The scores for Slovakia are especially lower suggesting that it represents a more distinct type of morphology, whereas the scores for Austria are the highest suggesting that it is more similar on average to Central Europe as a whole.</p>
+</section>
+<section id="class-scores" class="level4">
+<h4 class="anchored" data-anchor-id="class-scores">Class scores</h4>
+<div id="tbl-f1class" class="quarto-layout-panel anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-f1class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Individual F1 scores for level 3 clusters
+</figcaption>
+<div aria-describedby="tbl-f1class-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1class" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1classms" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1classms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Microsoft building footprints
+</figcaption>
+<div aria-describedby="tbl-f1classms-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Central Urban Developments</strong></td>
+<td style="text-align: left;">0.62</td>
+<td style="text-align: left;">0.56</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.47</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dense Urban Developments</strong></td>
+<td style="text-align: left;">0.73</td>
+<td style="text-align: left;">0.67</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Large Scale Developments</strong></td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.39</td>
+<td style="text-align: left;">0.42</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Linear Road Network Developments</strong></td>
+<td style="text-align: left;">0.87</td>
+<td style="text-align: left;">0.67</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.20</td>
+<td style="text-align: left;">0.20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Road Network Developments</strong></td>
+<td style="text-align: left;">0.79</td>
+<td style="text-align: left;">0.71</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.73</td>
+<td style="text-align: left;">0.64</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sparse Rural Development</strong></td>
+<td style="text-align: left;">0.87</td>
+<td style="text-align: left;">0.71</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.18</td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Street-aligned Developments</strong></td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.63</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.56</td>
+<td style="text-align: left;">0.33</td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.32</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1class" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1classov" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1classov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Overture building footprints
+</figcaption>
+<div aria-describedby="tbl-f1classov-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Central Urban Developments</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.62</td>
+<td style="text-align: left;">0.67</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.62</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dense Urban Developments</strong></td>
+<td style="text-align: left;">0.72</td>
+<td style="text-align: left;">0.67</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.63</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Large Scale Developments</strong></td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.40</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Linear Road Network Developments</strong></td>
+<td style="text-align: left;">0.86</td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.26</td>
+<td style="text-align: left;">0.23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Road Network Developments</strong></td>
+<td style="text-align: left;">0.78</td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0.73</td>
+<td style="text-align: left;">0.67</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sparse Rural Development</strong></td>
+<td style="text-align: left;">0.85</td>
+<td style="text-align: left;">0.71</td>
+<td style="text-align: left;">0.39</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0.16</td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.47</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Street-aligned Developments</strong></td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.62</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.35</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-f1class" class="quarto-xref">Table&nbsp;4</a> shows the F1 scores broken down by prediction class for the level 3 models. The sub-tables and columns have the same interpretation as <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>.</p>
+<p>The differences in f1 scores across classes shows that some types of urban form is easier to predict that others. <strong>Dense Urban Developments</strong> has the highest score, whereas <strong>Sparse Rural Development</strong> the lowest.</p>
+<p>The patterns in the individual classes between sub-tables <a href="#tbl-f1classms" class="quarto-xref">Table&nbsp;4 (a)</a> and <a href="#tbl-f1classov" class="quarto-xref">Table&nbsp;4 (b)</a> are mostly identical to patterns in the aggregated results. The scores for individual classes are similar, with the overture data performing very slightly better. The exception is the <strong>Central Urban Developments</strong> class, which is reflective of the higher quality in the Overture dataset. The higher prediction accuracy for this cluster does not significantly impact the overall F1 scores in <a href="#tbl-f1aggov" class="quarto-xref">Table&nbsp;3 (b)</a>, since it is relatively sparse compared to the rest of the classes. Furthermore, the same patterns in f1 scores hold across the train / test schemes : Random is the highest; Spatial is lower, OoS lowest. Lastly, the heterogeneity of urban form between countries and across detailed classes is even more pronounced , as evidenced by the even larger differences in F1 scores between the country specific models countries.</p>
+</section>
+</section>
+<section id="level-4" class="level3">
+<h3 class="anchored" data-anchor-id="level-4">Level 4</h3>
+<section id="aggregate-scores-1" class="level4">
+<h4 class="anchored" data-anchor-id="aggregate-scores-1">Aggregate scores</h4>
+<div id="tbl-f1agg4" class="quarto-layout-panel anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-f1agg4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Overall F1 scores at Level 4
+</figcaption>
+<div aria-describedby="tbl-f1agg4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1agg4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1aggms4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1aggms4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Microsoft building footprints
+</figcaption>
+<div aria-describedby="tbl-f1aggms4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Weighted F1</strong></td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.44</td>
+<td style="text-align: left;">0.29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Micro F1</strong></td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.40</td>
+<td style="text-align: left;">0.28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Macro F1</strong></td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.26</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1agg4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1aggov4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1aggov4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Overture building footprints
+</figcaption>
+<div aria-describedby="tbl-f1aggov4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 14%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Weighted F1</strong></td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.39</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Micro F1</strong></td>
+<td style="text-align: left;">0.70</td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.40</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.36</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Macro F1</strong></td>
+<td style="text-align: left;">0.71</td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.32</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> shows the overall F1 scores for the Level 4 prediction models.</p>
+<p>First, overall the scores in <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> are lower than the scores in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> across all models. This shows that the prediction task becomes more difficult as we move down the ground truth taxonomy.</p>
+<p>Second, <a href="#tbl-f1aggov4" class="quarto-xref">Table&nbsp;5 (b)</a> mostly has higher values than <a href="#tbl-f1aggms4" class="quarto-xref">Table&nbsp;5 (a)</a> across all models, suggesting that as the detail of the target clusters increases, so does the importance of the building footprints quality.</p>
+<p>Third, heterogeinety of urban form is more prominent as evidenced by the relatively larger differences in f1 scores between the country specific models.</p>
+<p>Fourth, the same pattern of spatial leakege is present as in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>. As the complexity of the spatial splitting schemes increase to match the underlying phenomena, the f1 scores decrease.</p>
+</section>
+<section id="class-scores-1" class="level4">
+<h4 class="anchored" data-anchor-id="class-scores-1">Class scores</h4>
+<div id="tbl-f1class4" class="quarto-layout-panel anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-f1class4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6: Individual F1 scores for level 4 clusters
+</figcaption>
+<div aria-describedby="tbl-f1class4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1class4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1classms4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1classms4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(a) Microsoft building footprints
+</figcaption>
+<div aria-describedby="tbl-f1classms4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Aligned Winding Streets</strong></td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.21</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Compact Development</strong></td>
+<td style="text-align: left;">0.59</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.13</td>
+<td style="text-align: left;">0.15</td>
+<td style="text-align: left;">0.09</td>
+<td style="text-align: left;">0.24</td>
+<td style="text-align: left;">0.09</td>
+<td style="text-align: left;">0.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cul-de-Sac Layout</strong></td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0.32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dense Connected Developments</strong></td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.33</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.45</td>
+<td style="text-align: left;">0.33</td>
+<td style="text-align: left;">0.29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Dense Standalone Buildings</strong></td>
+<td style="text-align: left;">0.63</td>
+<td style="text-align: left;">0.56</td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.57</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dispersed Linear Development</strong></td>
+<td style="text-align: left;">0.91</td>
+<td style="text-align: left;">0.64</td>
+<td style="text-align: left;">0.19</td>
+<td style="text-align: left;">0.17</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.18</td>
+<td style="text-align: left;">0.06</td>
+<td style="text-align: left;">0.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Extensive Wide-Spaced Developments</strong></td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.25</td>
+<td style="text-align: left;">0.25</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.13</td>
+<td style="text-align: left;">0.19</td>
+<td style="text-align: left;">0.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Large Interconnected Blocks</strong></td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.24</td>
+<td style="text-align: left;">0.22</td>
+<td style="text-align: left;">0.17</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Large Utilitarian Development</strong></td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.40</td>
+<td style="text-align: left;">0.32</td>
+<td style="text-align: left;">0.23</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Linear Development</strong></td>
+<td style="text-align: left;">0.73</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.13</td>
+<td style="text-align: left;">0.16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Open Layout</strong></td>
+<td style="text-align: left;">0.62</td>
+<td style="text-align: left;">0.56</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.14</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.32</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sparse Road-Linked Development</strong></td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.27</td>
+<td style="text-align: left;">0.40</td>
+<td style="text-align: left;">0.32</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.17</td>
+<td style="text-align: left;">0.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Rural Development</strong></td>
+<td style="text-align: left;">0.79</td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.39</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.54</td>
+<td style="text-align: left;">0.17</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.47</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell-subref quarto-layout-cell" data-ref-parent="tbl-f1class4" style="flex-basis: 100.0%;justify-content: center;">
+<div id="tbl-f1classov4" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-subfloat-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-subfloat-caption quarto-subfloat-tbl" id="tbl-f1classov4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+(b) Overture building footprints
+</figcaption>
+<div aria-describedby="tbl-f1classov4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;"><strong>Random</strong></th>
+<th style="text-align: left;"><strong>Spatial</strong></th>
+<th style="text-align: left;"><strong>OoS</strong></th>
+<th style="text-align: left;">SK</th>
+<th style="text-align: left;">PL</th>
+<th style="text-align: left;">DE</th>
+<th style="text-align: left;">AT</th>
+<th style="text-align: left;">CZ</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Aligned Winding Streets</strong></td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.27</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Compact Development</strong></td>
+<td style="text-align: left;">0.66</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.16</td>
+<td style="text-align: left;">0.09</td>
+<td style="text-align: left;">0.12</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.18</td>
+<td style="text-align: left;">0.11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Cul-de-Sac Layout</strong></td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.51</td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0.48</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0.32</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dense Connected Developments</strong></td>
+<td style="text-align: left;">0.67</td>
+<td style="text-align: left;">0.58</td>
+<td style="text-align: left;">0.43</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.44</td>
+<td style="text-align: left;">0.58</td>
+<td style="text-align: left;">0.39</td>
+<td style="text-align: left;">0.44</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Dense Standalone Buildings</strong></td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.63</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.61</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Dispersed Linear Development</strong></td>
+<td style="text-align: left;">0.96</td>
+<td style="text-align: left;">0.65</td>
+<td style="text-align: left;">0.16</td>
+<td style="text-align: left;">0.09</td>
+<td style="text-align: left;">0.31</td>
+<td style="text-align: left;">0.16</td>
+<td style="text-align: left;">0.07</td>
+<td style="text-align: left;">0.19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Extensive Wide-Spaced Developments</strong></td>
+<td style="text-align: left;">0.52</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.27</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.47</td>
+<td style="text-align: left;">0.13</td>
+<td style="text-align: left;">0.23</td>
+<td style="text-align: left;">0.22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Large Interconnected Blocks</strong></td>
+<td style="text-align: left;">0.69</td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0.46</td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.57</td>
+<td style="text-align: left;">0.42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Large Utilitarian Development</strong></td>
+<td style="text-align: left;">0.60</td>
+<td style="text-align: left;">0.44</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.28</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.42</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.41</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Linear Development</strong></td>
+<td style="text-align: left;">0.88</td>
+<td style="text-align: left;">0.53</td>
+<td style="text-align: left;">0.30</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.44</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.21</td>
+<td style="text-align: left;">0.18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Open Layout</strong></td>
+<td style="text-align: left;">0.74</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.36</td>
+<td style="text-align: left;">0.07</td>
+<td style="text-align: left;">0.38</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.61</td>
+<td style="text-align: left;">0.38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Sparse Road-Linked Development</strong></td>
+<td style="text-align: left;">0.72</td>
+<td style="text-align: left;">0.49</td>
+<td style="text-align: left;">0.29</td>
+<td style="text-align: left;">0.37</td>
+<td style="text-align: left;">0.34</td>
+<td style="text-align: left;">0.32</td>
+<td style="text-align: left;">0.21</td>
+<td style="text-align: left;">0.21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Sparse Rural Development</strong></td>
+<td style="text-align: left;">0.88</td>
+<td style="text-align: left;">0.71</td>
+<td style="text-align: left;">0.41</td>
+<td style="text-align: left;">0.35</td>
+<td style="text-align: left;">0.55</td>
+<td style="text-align: left;">0.15</td>
+<td style="text-align: left;">0.50</td>
+<td style="text-align: left;">0.47</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+<p><a href="#tbl-f1class4" class="quarto-xref">Table&nbsp;6</a> shows the breakdown of f1 scores across Level 4 individual clusters and models. The same patterns with regard to spatial leakeage and urban heterogeneity hold as in <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a>, <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> and <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>. However, there is a more pronounced difference in the data sources.</p>
+<p><a href="#tbl-f1classov4" class="quarto-xref">Table&nbsp;6 (b)</a> has consistenly higher values than <a href="#tbl-f1classms4" class="quarto-xref">Table&nbsp;6 (a)</a>, in contrast to the pattern at Level 3, reported in <a href="#tbl-f1class" class="quarto-xref">Table&nbsp;4</a>, where only the <strong>Central Urban Developments</strong> class showed a significant difference. <a href="#tbl-f1classov4" class="quarto-xref">Table&nbsp;6 (b)</a> has higher values of alteast .05 for <strong>Dense Connected Developments</strong> , <strong>Large Interconnected Blocks</strong>, <strong>Large Utilitarian Development</strong>, <strong>Sparse Open Layout</strong>. The one exception to the overall pattern is Slovakia, where the <a href="#tbl-f1classms4" class="quarto-xref">Table&nbsp;6 (a)</a> is higher.</p>
+</section>
+</section>
+<section id="overture-spatial-model" class="level3">
+<h3 class="anchored" data-anchor-id="overture-spatial-model">Overture Spatial model</h3>
+<p>We provide the confusion matrix and example predictions for the Level 4 model, trained using a spatial split on Overture data. We picked this model to provide example predictions across multiple counties and urban areas of different sizes.</p>
+<section id="confusion-matrix" class="level4">
+<h4 class="anchored" data-anchor-id="confusion-matrix">Confusion matrix</h4>
+<div id="fig-cm" class="nostretch quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/results/cm.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (rowwise)
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-cm" class="quarto-xref">Figure&nbsp;3</a> shows the confusion matrix for the model. The Classes are ordered to reflect the hierarchical releationships. The first row, <strong>Dense Connected Developments</strong> and the second, <strong>Large Interconnected Blocks</strong>, form one branch, <strong>Central Urban Developments</strong>,one levep up in the taxonomy. Similarly the <span class="math inline">\(n\)</span> and <span class="math inline">\(n+1\)</span> row form one branch. The first four classes form one branch two levels up, and so on.</p>
+<p>The results show that misclasified classes are generally misclassified within one or two cophereic distances in the taxonomy. In other words, if an ETC is misclassified there is a high chance, it will be labeled as a related class in the full taxonomy.</p>
+</section>
+<section id="level-4-model-example-predictions" class="level4">
+<h4 class="anchored" data-anchor-id="level-4-model-example-predictions">Level 4 model example predictions</h4>
+<div id="fig-examples" class="nostretch quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-examples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="../figures/results/examples.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-examples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Example Level 4 predictions for the areas around Vienna (Austria), Munich (Germany), Wroclaw (Poland) and Brno (Czechia)
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>The results from the study pertain to three areas - urban morphology, spatial modelling and data quality.</p>
+<section id="urban-morphology" class="level3">
+<h3 class="anchored" data-anchor-id="urban-morphology">Urban morphology</h3>
+<p>With regard to urban morphology, the results show that modelling urban morphology is possible, howecer morphological types are heretogenous and what characteristics and factors are important change across scales of dissimilarity.</p>
+<p>The modeling results show there is a lot of useful information that can be learned morphologically from one country and transfered to new contexts. <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> show that at Level 3, the OoS average are close to the spatial split F1 score of approximately <strong>.6</strong> . This is comparable to other land use prediction models with two caveats. First, we we are making predictions at a much higher level of detail - the individual building level - than typicaly land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out of sample scores. Furthermore, the higher scores in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> as well as the confusion matrix in <a href="#fig-cm" class="quarto-xref">Figure&nbsp;3</a> also suggests that we do reasonable misclassifications - one class in Level 4 is often missclasified for another Level 4 class, that has the same Level 3 class, i.e.&nbsp;it is part of the same branch in the ground truth taxonomy. If this was not the case the <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> f1 scores would be equal or lower than the <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> scores.</p>
+<p>Nevertheless, inspite of these results urban morphology is still highly heterogenous. The differences between the country specific models reflect the ability to use information from several countries’ analysed urban form, to infer the urban form type in an unseen country. If the results across these models were similar to each other, it would mean that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. This in itself is not a new finding, however it has not been quantatively demonstrated before, based on tens of morphological characters calculated using tens of millions of urban geometries, across several countries.</p>
+<p>This heterogeneigy however varies. Austria has on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomometric tree the results across countries are relatively more similar than at Level 4. Furthermore, <strong>Dense Standalone Buildings</strong> , <strong>Large Interconnected Blocks</strong> , <strong>Large Utilitarian Development</strong>, are more predictable across all the country models than other classes.</p>
+<p>Furthermore, identifying different types of urban form requires specific types of characteristics and data quality. The relative overall similarity between the scores in <a href="#tbl-f1aggms" class="quarto-xref">Table&nbsp;3 (a)</a> and <a href="#tbl-f1aggov" class="quarto-xref">Table&nbsp;3 (b)</a>, suggest that except in the case of <strong>Central Urban Developments</strong>, building polygon quality is not that important. Coversely, since the street network is shared, the results show the importance of the street network and how it can make up for poor quality building footprints data. As the required level of detail increases however, <a href="#tbl-f1aggms4" class="quarto-xref">Table&nbsp;5 (a)</a> and <a href="#tbl-f1aggov4" class="quarto-xref">Table&nbsp;5 (b)</a>, data quality and aspects of building morphology such as adjacency, configuration and shape become more important.</p>
+</section>
+<section id="morphological-data" class="level3">
+<h3 class="anchored" data-anchor-id="morphological-data">Morphological data</h3>
+<p>The results also suggest that heterogenous, but more detailed data is prefereble to homogenous but coarser data for urban morphological analysis. Furthermore, the morphological pipeline, developed for cadastre data, can can be run without modification on both the Microsoft (homogenous, generally more detailed) and Overture data (heterogenous, generally more detailed).</p>
+<p>The overall higher or equivalent performance of OvertureData, shows that this data should be used when possible to identify urban morphological types for countries not in the training data. Overture’s schema and easy access the Openstreetmap street networks are a further benefit. Taken together ther the results show that overall, when cadastre data is not available Overturemaps data should be used in place of satellite derived footprints.</p>
+<p>The consistently higher performance of the spatial models also suggest to use as much data as possible in model training, from any source, since it provides some local context.</p>
+</section>
+<section id="spatial-modelling-in-general" class="level3">
+<h3 class="anchored" data-anchor-id="spatial-modelling-in-general">Spatial modelling in general</h3>
+<p>The results from the comparisons highlight the need for complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores numerous land use prediction models do not take into account spatial autocorrelation, and as consistenly shown in the F1 score tables in this work, this means that they report artificially higher results. Even worse, in the case of more complex models maybe they are not learning the weights necassary to do inference, but rather overfit and memorise the training data. This work further shows that for urban morphological predictions and analysis specifically, spatial leakage is ubiqutous.</p>
+<p>There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other apporaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.</p>
+<p>In the specific case of urban morphology, there are also other possible scales to consider such as regional, or city-level which could also have an effect on the predictions. We focused specifically on the national scale, since data quality from openstreetmap varries widely at that level. Furthermore, the most common use case for the model would be to predict the morphological classes for a whole country that is not part of the training data. Nevertheles, the implications of our results is that when modelling spatial phenomena using machine learning models, and train and test splits, properties of the specific phenomena under analysis should be considered. Works that do not explicitly do this, risks reporting arteficially higher accuracies that do not reflect real model use cases.</p>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>The main finding of the modelling work is that it is possible to use alternative, non-cadastre level data for the accurate prediction of urban fabric over time. These predictions are more detailed than existing large-scale urban fabric classifications and the predicted classes are tailored to urban planners, researchers, policymakers and development companies.</p>
+<p>One of the main use cases identified by stakeholders was the ability to compare different areas or identify similar cities or regions across countries. The models support this by producing fine-grained, spatially consistent urban classifications that are tailored to comparative analysis at a highly local, regional or continental scale. In addition, the models can capture urban transitions over time, adding a valuable temporal dimension to the analysis. This enables comparisons not only across space, but also through time - making it possible to examine how urban areas evolve, diverge, or converge. The temporal insights unlocked by AI modelling enhance the overall utility of urban classifications for planners, researchers, and policymakers.</p>
+<p>A key insight from the modelling work is that increasing the amount of training data improves predictive performance - particularly in the presence of class imbalance, where underrepresented classes can otherwise lead to biased outcomes. This makes data sampling strategies especially important for ensuring balanced model learning across diverse urban forms. The morphometric classification, based on the Overture model, performs well at the building level, and can be deployed at scale to generate detailed urban classes across Europe. These outputs can serve as a rich source of training data for the AI-based model, helping to fill gaps in underrepresented regions or classes. By leveraging morphometric results across multiple countries, the AI model’s predictive accuracy can be further improved - leading to more robust and precise time-series predictions of urban change.</p>
+<p>Third, the modelling work highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalization, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.</p>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
+<p>While the presented methods demonstrate strong potential for scalable urban classification, several limitations should be acknowledged:</p>
+<ul>
+<li><p>Dependence on ground truth and input data quality While alternative datasets such as Overture or satellite-derived imagery allow broad geographic coverage, they cannot fully substitute for cadastral or on-the-ground verification data. The quality and consistency of input data - particularly building footprints - remain critical to model accuracy, especially at higher classification detail. Differences in data completeness or geometric fidelity can significantly impact performance across regions and classes.</p></li>
+<li><p>Uncertainty in temporal and spatial predictions Evaluating the accuracy of predictions over time is inherently challenging due to the absence of ground truth data for intermediate years. Although the classifier identifies plausible transitions, particularly in suburban areas, it is difficult to distinguish genuine urban change from model uncertainty or noise introduced by seasonal imagery variation, cloud cover, or sensor differences.</p></li>
+<li><p>Transferability across geographic and morphological contexts The models demonstrate strong generalization within Great Britain and across several Central European countries. However, their performance varies in regions with distinct urban morphologies, socio-economic conditions, or planning traditions not well represented in the training data. Expanding the training set to include more diverse examples of urban fabric will likely improve transferability and robustness across broader European or global contexts.</p></li>
+</ul>
+</section>
+</section>
+<section id="references" class="level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
