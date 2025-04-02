@@ -79,16 +79,6 @@ The final datacube including predictions for the years 2016 to 2021 for 7 and 12
 
 Here are some example visualisations showing London and Liverpool from the dataset:
 
-## London
-![London, 7 classes](../figures/results/london_k7.png){.nostretch fig-align="center" height="400"}
-
-![London, 12 classes](../figures/results/london_k12.png){.nostretch fig-align="center" height="400"}
-
-
-## Liverpool
-![Liverpool, 7 classes](../figures/results/liverpool_k7.png){.nostretch fig-align="center" height="400"}
-
-![Liverpool, 12 classes](../figures/results/liverpool_k12.png){.nostretch fig-align="center" height="400"}
 
 
 # References {.unnumbered}
