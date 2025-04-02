@@ -62,7 +62,6 @@ pipeline.spatial_sig_prediction(
 More details and documentation on how to run the pipeline can be found in the example on the [EuroFab project EO repository](https://github.com/eurofab-project/eo/blob/main/notebooks/run_pipeline.ipynb).
 
 
-
 # Example datasets
 
 ## Morphometric model
@@ -77,7 +76,21 @@ A non-interactive version of the notebooks used in the pipeline is available on 
 
 The final datacube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the [GitHub repository](https://github.com/eurofab-project/eo/tree/main).
 
+
+## Example datasets generated during Verification Exercises
+
 Here are some example visualisations showing London and Liverpool from the dataset:
+
+## London
+![London, 7 classes](../figures/results/london_k7.png){.nostretch fig-align="center" height="400"}
+
+![London, 12 classes](../figures/results/london_k12.png){.nostretch fig-align="center" height="400"}
+
+
+## Liverpool
+![Liverpool, 7 classes](../figures/results/liverpool_k7.png){.nostretch fig-align="center" height="400"}
+
+![Liverpool, 12 classes](../figures/results/liverpool_k12.png){.nostretch fig-align="center" height="400"}
 
 
 
