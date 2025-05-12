@@ -53,7 +53,7 @@ This is done to highlight the effects of spatial lag in model training and testi
 ![Comparison between data sources.](../figures/results/building_comparison.png){.nostretch fig-align="center" #fig-data}
 
 The second change is that we repeat all experiments with a new data set based on Overture Data.
-However, the experiment is done to demonstrate that the morphological pipeline can handle more detailed, but heterogenous data, which may lead to better predictions.
+The experiment is done to demonstrate that the morphological pipeline can handle more detailed, but heterogenous data, which may lead to better predictions.
 Furthermore, the Overture data is easily accessable for numerous regions across the world and significantly increases our pipeline's generalisibility.
 @fig-data shows a comparison between the datasets.
 
