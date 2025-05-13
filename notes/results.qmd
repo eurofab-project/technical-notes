@@ -533,7 +533,7 @@ A key insight from the modelling work is that increasing the amount of training 
 
 The modelling work also highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalization, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.
 
-Lastly, the interest and various feature requests from the stakeholders confirm the need for a detailed urban classification at a granular level. Such a dataset can act as the foundation for multiple derived data products adapted to particular use cases. Examples included comparisons between countries at different scales - neighbourhoods, cities and regions, as well as 
+Lastly, the interest and various feature requests from the stakeholders confirm the need for a detailed urban classification at a granular level. Such a dataset can act as the foundation for multiple derived data products adapted to particular use cases. Examples included comparisons between countries at different scales - neighbourhoods, cities and regions. 
 
 ## Limitations
 While the presented methods demonstrate strong potential for scalable urban classification, several limitations should be acknowledged:
