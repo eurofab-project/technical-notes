@@ -1,7 +1,10 @@
 ---
 title: "EUROFAB: EUROPEAN URBAN FABRIC CLASSIFICATION USING ARTIFICIAL INTELLIGENCE"
 subtitle: "Final Report"
-author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, \\ Daniel Arribas-Bel, Claudia Baranzelli, Alexandre Banquet"
+author: 
+  - "K. Samardzhiev, M. Fleischmann"
+  - "B. Metzler, D. Arribas-Bel"
+  - "C. Baranzelli, A. Banquet"
 institute: "Charles University; The Alan Turing Institute, OECD"
 format:
   pdf:
@@ -19,9 +22,9 @@ bibliography: ../references.bib
 
 # Introduction
 
-The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessability [@calafiore2023inequalities], subjective experience of the city and cost of housing [@QIU2022104358], as well as energy effeciency [@ZHU2022104576] are some of the application areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The derived classes vary depending on the application. Example coarse groups are continuous, discontinious and non-urban land [@corine]. More detailed groupings capture the characteristics of streets and buildings, for example organic and gridiron streets [@arinaldi2025]. These resulting classifications of urban form provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.
+The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessability [@calafiore2023inequalities], subjective experience of the city and cost of housing [@QIU2022104358], as well as energy effeciency [@ZHU2022104576] are some of the application areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The derived classes vary depending on the application. Example coarse groups are continuous, discontinious and non-urban land [@europeanenvironmentagency1990]. More detailed groupings capture the characteristics of streets and buildings, for example organic and gridiron streets [@araldi:hal-04774886]. These resulting classifications of urban form provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.
 
-However, detailed, scalable, and consistent classifications that reflecting the nature of the local data all at the same time are scarcely available. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. [@corine, @lcz]. The classifications developed by key members of the EuroFab project team overcome these limitations [@primus ; @fleischmann2022geographical ; @fleischmann2022methodological], but are  dependent on the availability of high quality data capturing urban form, e.g. individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.
+However, detailed, scalable, and consistent classifications that reflecting the nature of the local data all at the same time are scarcely available. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. [@europeanenvironmentagency1990, @stewart2012]. The classifications developed by key members of the EuroFab project team overcome these limitations [@primus ; @fleischmann2022geographical ; @fleischmann2022methodological], but are  dependent on the availability of high quality data capturing urban form, e.g. individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.
 
 <!--Aims-->
 Therefore, there is a need to: one, derive detailed classifications at scale from suboptimal data that does not have the same qualities as, for example, cadastre would have; and two, add a temporal dimension to the classification which shows how it evolves over time. Such a novel classification can improve urban-form related research and policy applications, by providing researchers, policy makers and practicioners with unprecedented detail and temporal information on urban form. Existing work can be extended using the new detailed classes, while new avenues of research can be established using the temporal dimension.
@@ -40,7 +43,7 @@ More details about the methodology, background and results of each stage of the 
 
 ## Methodology
 
-The main aim of the morphological machine learning model is to show that the [@primus] urban fabric classification, built on cadastre data, can be reproduced using more widely available data sources - building footprints derived from satellite imary, volunatarily contributed building footrints, i.e. Openstreetmap building footprints, or combinations of both [@overture]. This model can be later used to expand the cadastral taxonomy and generate training data for the AI vision model. 
+The main aim of the morphological machine learning model is to show that the [@primus] urban fabric classification, built on cadastre data, can be reproduced using more widely available data sources - building footprints derived from satellite imary, volunatarily contributed building footrints, i.e. Openstreetmap building footprints, or combinations of both - OvertureMap. This model can be later used to expand the cadastral taxonomy and generate training data for the AI vision model. 
 
 The study area covers five countries in Central Europe - Germany, Poland, Slovakia, Austria, Czechia. These countries were chosen as they cover a large area demonstrating the ability of the methodology to scale and have a rich variety of urban form types, developed under different planning regimes.
 
@@ -82,6 +85,28 @@ This pipeline results in around 62 million ETCs with 52 morpholgical characteris
 
 ### Ground truth classes
 
+
+
+| **Cluster name**                   	| **Cluster Description**                                                                                                                                                                                                                                                                                                                                             	|
+|------------------------------------	|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+| Dense Connected Developments       	| In this cluster, the built-up density and local street connectivity are high, while inter-building distances remain relatively small. Buildings frequently share walls, forming larger structures along relatively short and narrow streets.                                                                                                                        	|
+| Large Interconnected Blocks        	| This cluster has very high built-up density and local street connectivity, with narrow and short streets. It is  primarily characterised by a high count of connected buildings forming enclosed blocks with courtyards. Furthermore, the distances between the formed blocks is small.                                                                             	|
+| Dense Standalone Buildings         	| This cluster has moderate to high built-up density and local street connectivity, with longer and wider streets compared to other dense developments. Shared walls between buildings are less common, and distances within buildings are moderate, reflecting a pattern of standalone structures within a robust street network .                                   	|
+| Compact Development                	| Development in this cluster is characterised by a high number of buildings and relatively dense local street connectivity, with short and narrow streets. Shared walls appear regularly, and inter-building distances are relatively small, with building sizes being typically small and uniform.                                                                  	|
+| Cul-de-Sac Layout                  	| Development in this cluster is characterised by a moderate to high built-up density, short and moderately dense locally street connectivity. A distinguishing feature is the significant presence of cul-de-sacs. The buildings along the streets are relatively smaller, and more numerous, than in Aligned Winding Streets.                                       	|
+| Aligned Winding Streets            	| This cluster has low to moderate built-up and street connectivity. Buildings exhibit a consistent alignment among themselves and also along streets of varying length, width and linearity. There is also a significant number of shared walls between structures.                                                                                                  	|
+| Sparse Rural Development           	| This cluster has a sparse built-up area with low street connectivity and messiness. The streets are long and the widest in the taxonomy, while the distance between buildings is the largest. Adjacency between structures is also the lowest.                                                                                                                      	|
+| Dispersed  Linear Development      	| This cluster has a moderate built up area and the lowest local street connectivity in the taxonomy, typically forming long linear villages. Its streets are the longest, linear, wide and have considerable distances between street intersections, and minimal shared walls between structures.                                                                    	|
+| Linear Development                 	| This cluster has a moderate built up area and the low local street connectivity in the taxonomy, typically forming long linear villages. Its streets are long, linear, wide and there are minimal shared walls between structures. Its distinguishing features from “Extended Linear Development” is the shorter streets and relatively higher street connectivity. 	|
+| Sparse Open Layout                 	| This cluster is characterized by low built-up density, low street connectivity, large distances between buildings, few shared walls, and large open spaces around buildings. The streets are few, open and wide. The buildings are moderate in size and more diverse than those in the Sparse Road-Linked Development cluster.                                      	|
+| Sparse Road-Linked Development     	| This cluster is characterized by low built-up density, low street connectivity, large distances between buildings, few shared walls, and large open spaces around buildings. The streets are few, open and wide.  In contrast, with ‘ Sparse Open Layout’ the buildings are smaller and more uniform.                                                               	|
+| Large Utilitarian Development      	| This cluster consists of the largest buildings with notable variations in size and shape, as well as low to moderate street connectivity and wide streets. The design does not emphasize sunlight exposure, creating broad but less refined configurations, typical of industrial and other service areas.                                                          	|
+| Extensive Wide-Spaced Developments 	| This cluster consists of the large buildings with moderate variations in size and shape, as well as low to moderate street connectivity and wide streets. The resulting environment is spacious, with significant open areas between structures, typical of modernist housing.                                                                                      	|                                                                                    |
+: Cluster descriptions {#tbl-level4names tbl-colwidths="[20,80]" .striped}
+
+{{< pagebreak >}}
+
+
 | **Level 1**                 | **Level 2**                    | **Level 3**                      | **Level 4**                        |
 |-----------------------------|--------------------------------|----------------------------------|------------------------------------|
 | Traditional Street Network  | Central Urban Developments     | Central Urban Developments       | Dense Connected Developments       |
@@ -99,7 +124,9 @@ This pipeline results in around 62 million ETCs with 52 morpholgical characteris
 |                             |                                | Sparse Rural Development         |  Sparse Rural Development          |
 : Taxonometric tree {#tbl-taxonomy}
 
-The taxonomy of ground truth classes from [@primus] and available as an interactive map online at [HiMOC](https://uscuni.org/himoc/) is presented in @tbl-taxonomy. All subsequent analysis focuses on Levels 3 and 4. The target labels from this are assigned to each building from the morphological pipeline based on spatial intersections.
+
+
+The taxonomy of ground truth classes from [@primus] and available as an interactive map online at [HiMOC](https://uscuni.org/himoc/) is presented in @tbl-taxonomy. The descriptions for the level 4 classes are available in @tbl-level4names. All subsequent analysis focuses on Levels 3 and 4. The target labels from this are assigned to each building from the morphological pipeline based on spatial intersections.
 
 
 ### Modeling scenarios

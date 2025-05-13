@@ -40,7 +40,7 @@ This section presents the results of the morphometric analysis described in "Tec
 |                             |                                | Sparse Rural Development         |  Sparse Rural Development          |
 : Taxonometric tree {#tbl-taxonomy}
 
-The taxonomy of ground truth classes is presented in @tbl-taxonomy and all subsequent analysis focuses on Levels 3 and 4. There is an interactive map of the taxonomy available at https://uscuni.org/himoc/ . More detail abut 
+The taxonomy of ground truth classes is presented in @tbl-taxonomy and all subsequent analysis focuses on Levels 3 and 4. There is an interactive map of the taxonomy available at https://uscuni.org/himoc/ .
 
 We have made two changes to the methodoly presented in "Technical Note 2 - Algorithm Design", which are outside of the original scope of the project.
 
