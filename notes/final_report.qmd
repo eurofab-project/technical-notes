@@ -19,36 +19,48 @@ bibliography: ../references.bib
 
 # Introduction
 
-The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessability to different areas [@calafiore2023inequalities], overall economic performance[@WANG2024105043], cost of living [@QIU2022104358], as well as energy effeciency[@ZHU2022104576] and heat islands[@WU2025105314] are some of the areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The resulting classification of urban form can provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.
+The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessability [@calafiore2023inequalities], overall economic performance[@WANG2024105043], cost of living [@QIU2022104358], as well as energy effeciency[@ZHU2022104576] and heat island effects [@WU2025105314] are some of the application areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The derived classes vary depending on the application. Example coarse groups are continuous, discontinious and non-urban land [@corine]. More detailed groupings capture the characteristics of streets and buildings, for example organic and gridiron streets [@arinaldi2025]. These resulting classifications of urban form provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.
 
-However, classification of this sort are scarcely available and even fewer are detailed, scalable, and consistent while reflecting the nature of the local data all at the same time. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. [@corine, @lcz]. The classifications developed by key members of the EuroFab project team overcome these limitations[@primus ; @fleischmann2022geographical ; @fleischmann2022methodological], but are  dependent on the availability of high quality data capturing urban form, e.g. individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.
+However, detailed, scalable, and consistent classifications that reflecting the nature of the local data all at the same time are scarcely available. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. [@corine, @lcz]. The classifications developed by key members of the EuroFab project team overcome these limitations [@primus ; @fleischmann2022geographical ; @fleischmann2022methodological], but are  dependent on the availability of high quality data capturing urban form, e.g. individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.
 
 <!--Aims-->
-Therefore, there is a need to: one, derive detailed classifications at scale from suboptimal data that does not have the same qualities as, for example, cadastre would have; and two, add a temporal dimension to the classification which shows how it evolves over time.
+Therefore, there is a need to: one, derive detailed classifications at scale from suboptimal data that does not have the same qualities as, for example, cadastre would have; and two, add a temporal dimension to the classification which shows how it evolves over time. Such a novel classification can improve urban-form related research and policy applications, by providing researchers, policy makers and practicioners with unprecedented detail and temporal information on urban form. Existing work can be extended using the new detailed classes, while new avenues of research can be established using the temporal dimension.
 
 <!--Approach-->
-This project develops a methodology to achieve these two objectives, and verifies it through a pilot study in Central Europe and the United Kingdom. The basis for our work are two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The overall goal is to use the first machine learning model to produce training data at scale for the second AI model, since currently such datasets do not exist, and to finally use the AI model to derive a detailed temporal classification of urban form in Europe. Such a novel classification can improve urban-form related research and policy applications, by providing researchers, policy makers and practicioners with unprecedented detail and temporal information on urban form. To verify the validity of our approach and the usefulness of the results, we further carry out consultations with stakeholders from the private sector, local planning departments and government organisations.
+The goal of this project is to develop a methodology capable of achieving these two objectives and verify its validity through a pilot study in Central Europe and the United Kingdom. The basis for our work are two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The overall approach is to use the first machine learning model to produce training data at scale for the second AI model, since currently such datasets do not exist, and to finally use the AI model to derive a detailed temporal classification of urban form in Europe. To further verify the validity of our approach and the usefulness of the results, we further carry out consultations with stakeholders from the private sector, local planning departments and government organisations. This work will give us insights into how to adapt the methodology and data for practical use cases.
 
+The strategic goal of the project is to be the basis for subseqent work that will deliver a practically useful, detailed classification of European urban fabric across time.
+
+The next three sections of the report describe in more detail the methodological approaches and results of the three workstreams - the first machine learning morphological model, the second AI vision model, and the stakeholder engagement. The conclusion section interprets these findings and proposes how to scale the methodology for the whole of Europe, while highlighting potential limitations. The last Open Science section highlights the open source software and datasets developed during the project. 
+
+More details about the methodology, background and results of each stage of the project are available in the respective technical notes. The methodology and results from the report are being prepared for scientific publication in leading urban analytics journals.
 
 
 # Morphological machine learning model
 
 ## Methodology
 
-The main aim of the morphological machine learning model is to show that the [@primus] urban fabric classification, built on cadastre data, can be reproduced using more widely available data sources - building footprints derived from satellite imary, volunatarily contributed building footrints, i.e. Openstreetmap building footprints, or combinations of both [@overture]. These models can be later used to expand the cadastral taxonomy and generate training data for the AI vision model, which will provide a temporal dimension of the classification. The study area covers five countries in Central Europe - Germany, Poland, Slovakia, Austria, Czechia. The bulk of the morphological work can be summarised as: 
+The main aim of the morphological machine learning model is to show that the [@primus] urban fabric classification, built on cadastre data, can be reproduced using more widely available data sources - building footprints derived from satellite imary, volunatarily contributed building footrints, i.e. Openstreetmap building footprints, or combinations of both [@overture]. This model can be later used to expand the cadastral taxonomy and generate training data for the AI vision model. 
+
+The study area covers five countries in Central Europe - Germany, Poland, Slovakia, Austria, Czechia. These countries were chosen as they cover a large area demonstrating the ability of the methodology to scale and have a rich variety of urban form types, developed under different planning regimes.
+
+The bulk of the morphological work can be summarised as: 
 
 1. Developing a scalable pipeline to generate morphological characteristics from alternative building footprints
-2. Assignment of cadastral urban classes to the alternative building footprints ( the ground truth )
-3. Training several models in different contexts and evaluating their ability to predict cadastral urban form classes , based on the features calculated in 1.
+2. Assignment of cadastral urban classes to the alternative building footprints ( the ground truth for the model training)
+3. Training several models in different contexts and evaluating their ability to predict the assigned cadastral urban form classes , based on the features calculated in 1.
 
 ### Morphological data pipeline
 
 #### Core data
 
-![Comparison between data sources.](../figures/results/building_comparison.png){.nostretch fig-align="center" #fig-data}
+![Example unprocessed and processed street network.](../figures/algo_design/street_processing.png){.nostretch fig-align="center" #fig-street}
+
+![Comparison between buiding footprint data sources.](../figures/results/building_comparison.png){.nostretch fig-align="center" #fig-data}
 
 The core datasets used in the analysis are two types of buidling footprints - Microsoft Satelite Building footprints  and OvertureMap building footprints - and street geometries from OvertuMaps.
-The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data.
+The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. And example for Prague is shown in @fig-street.
+
 @fig-data shows a comparison between the cadastral data, Microsoft building footprints and Overtumap building footprints.
 Both types of datasets have issues compared to cadastral information, however they generally have larger coverage.
 Microsoft building footprints have almost global coverage and are heterogenous - they come from the same source.
@@ -57,13 +69,13 @@ But this heterogeneity can make statistics calculated in different areas within 
 
 #### Morphological pipeline
 
-The morphometric characterisation is directly derived from the method of [@primus] as closely as possible to ensure that we minimise the conceptual differences between the methodological backbone using the derivation of the target classification and the the data used within our model. Therefore, we focus the morphological charactarisation around the concept of Enclosed Tessellation Cells [@fleischmann2022methodological] - “the portion of space that results from growing a morphological tessellation within an enclosure delineated by a series of natural or built barriers identified from the literature on urban form, function and perception”, where the morphological tessellation is a delineation of the space based on Voronoi polygons centred around buildings and an enclosure is any area enclosed by streets. The boundaries of ETCs also represent the closest area of land to each building, than to any other building within an enclosure, and therefore can act as the unit that combines aspects of building and street morphological characteristics.
+The morphometric characterisation is directly derived from the method of [@primus] to ensure that we minimise conceptual differences between the methodological backbone used to derive the target classification and the the data used within our model. Therefore, we focus the morphological charactarisation around the concept of Enclosed Tessellation Cells [@fleischmann2022methodological] - “the portion of space that results from growing a morphological tessellation within an enclosure delineated by a series of natural or built barriers identified from the literature on urban form, function and perception”. In this definition, the morphological tessellation is a delineation of the space based on Voronoi polygons centred around buildings and an enclosure is any area enclosed by streets. The boundaries of ETCs also represent the closest area of land to each building, than to any other building within an enclosure, and therefore can act as the unit that combines aspects of building and street morphological characteristics.
 
 Broadly the pipeline can be summarised as:
 
-1. Street & building preprocessing. This includes simplifying the street network, and fixing topological issues with the building footprints.
-2. Generating the Enclosed Tessellation cells. 
-3. Calculating morphological characteristics
+1. Street & building preprocessing. This includes downloading the streets and buildings, simplifying the street network, and fixing topological issues with the building footprints.
+2. Generating derived morphological elements - street nodes, street enclosures, Enclosed Tessellation cells. 
+3. Calculating 52 morphological characteristics which capture aspects of all individual elements (i.e. building area or perimenter), as well as their interactions - for example, buildings per street or number of reachable ETCs within five topological steps of the street network.
 
 This pipeline results in around 62 million ETCs with 52 morpholgical characteristics for the Microsoft data, and around 88 million ETCs with 52 morpholgical characteristics for the OvertureMaps data.
 
@@ -94,15 +106,12 @@ The taxonomy of ground truth classes from [@primus] and available as an interact
 
 ![Train/test data splits for different models.](../figures/results/model_split.drawio.png){.nostretch fig-align="center" #fig-traintest}
 
-@fig-traintest shows the new train / test splits. The main goal with so many training configurations is to get detailed statistics about the expected model performance in realistic scenarios - predicting urban form in various types of new environemnts. Two models - a global random model and a global spatially explicit model - are trained to highlight the effects of spatial lag in model training and testing, while the contry specific models are trained to evaluate the ability of the models to generalise.
+@fig-traintest shows the all experiments that will be performed for each dataset. The main goal with so many training / testing configurations is to get detailed statistics about the expected model performance in realistic scenarios - predicting urban form in various types of new environemnts. Two models - a global random model and a global spatially explicit model - are trained to highlight the effects of spatial lag in model training and testing, while the country specific models are trained to evaluate the ability of the models to generalise outside of the training data scope. The train / test configuration for the spatially explicit model first deliniates the study area into h3 level second hexagon cells with an area of around 500 sq.m.. The dataset is then split into train and test subsets randomly, but ensuring that all buildings within a hexagon are either part of the train or test subset.
 
-Furthermore, all experiments are repeated independely for each dataset - once for overture and once for microsoft building footprints. This is done to verify in which cases what data can be used to derive detailed urban form classifications.
-
-The models for each experiment are HistogramBoostedTrees and share the same parameters - .
+In total we test 24 models to gain information about the predictability of detailed urban form classes. All experiments are repeated independently for each dataset - once for the Overture and once for the Microsoft building footprints - and for each of Level 3 and Level 4 of the taxonomy. This is done to verify in which cases, what data can be used to derive detailed urban form classifications. The models for each experiment are HistogramGradientBoostingClassifier and share the same parameters - no max depth, no max leaf nodes, max_features = 0.5, learning_rate = .03 .
 
 ## Results
 
-### Level 3 Performance scores
 ::: {#tbl-f1agg layout-nrow=2}
 |                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |-----------------|------------|-------------|---------|------|------|------|------|------|
@@ -148,8 +157,6 @@ Overall F1 scores at level 3
 
 Individual F1 scores for  level 3 clusters
 :::
-
-### Level 4 Performance scores
 
 ::: {#tbl-f1agg4 layout-nrow=2}
 |                 | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
@@ -218,7 +225,7 @@ Individual F1 scores for  level 4 clusters
 ![Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (rowwise)](../figures/results/cm.png){.nostretch fig-align="center" #fig-cm}
 
 
-With regard to urban morphology, the results show that modelling urban morphology is possible. However, morphological types are heterogeneous, and the characteristics and factors that are important vary across scales of dissimilarity.
+With regard to urban morphology, the results show that deriving detailed urban morphology classes from alternative data sources is possible. However, morphological types are heterogeneous, and the characteristics and factors that are important vary across scales of dissimilarity.
 
 The modelling results show that a lot of useful information can be learned morphologically from one country and transferred to new contexts.
 @tbl-f1agg shows that at Level 3, the out-of-sample (OoS) averages are close to the spatial split F1 score of approximately 0.6. This is comparable to other land use prediction models, with two caveats. First, we are making predictions at a much higher level of detail—the individual building level—than typical land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out-of-sample scores. Furthermore, the higher scores in @tbl-f1agg, as well as the confusion matrix in @fig-cm, also suggest that we make reasonable misclassifications—one class at Level 4 is often misclassified as another Level 4 class within the same Level 3 category, i.e., part of the same branch in the ground truth taxonomy. If this were not the case, the @tbl-f1agg F1 scores would be equal to or lower than the @tbl-f1agg4 scores. 
@@ -252,12 +259,6 @@ In the specific case of urban morphology, there are also other possible scales t
 
 
 # AI-Based Urban Fabric Classification using Satellite Imagery
-
-<!-- ## Methodology
-
-## Results -->
-
-## Background
 
 Urban areas represent complex and dynamic environments, making traditional analysis challenging due to their diverse characteristics. Remote sensing technologies, particularly satellite imagery, provide powerful tools for understanding and characterizing urban areas at scale. As part of the EuroFab project, we employed AI modeling techniques using Sentinel-2 satellite imagery to classify and analyze urban fabric across Great Britain. The aim was to generate detailed insights into urban spatial structures and track temporal changes spanning from 2016 to 2021.
 
@@ -558,9 +559,6 @@ One of the main use cases identified by stakeholders was the ability to compare 
 A key insight from the modelling work is that increasing the amount of training data improves predictive performance - particularly in the presence of class imbalance, where underrepresented classes can otherwise lead to biased outcomes. This makes data sampling strategies especially important for ensuring balanced model learning across diverse urban forms. The morphometric classification, based on the Overture model, performs well at the building level, and can be deployed at scale to generate detailed urban classes across Europe. These outputs can serve as a rich source of training data for the AI-based model, helping to fill gaps in underrepresented regions or classes. By leveraging morphometric results across multiple countries, the AI model’s predictive accuracy can be further improved - leading to more robust and precise time-series predictions of urban change.
 
 Third, the modelling work highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalization, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.
-
-<!-- expand -->
-The stakeholder work provides support for this.
 
 
 ## Limitations
