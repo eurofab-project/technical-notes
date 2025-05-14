@@ -1,0 +1,44 @@
+---
+title: "EUROFAB: EUROPEAN URBAN FABRIC CLASSIFICATION USING ARTIFICIAL INTELLIGENCE"
+subtitle: "Executive summary"
+author: 
+  - "K. Samardzhiev, M. Fleischmann"
+  - "B. Metzler, D. Arribas-Bel"
+  - "C. Baranzelli, A. Banquet"
+institute: "Charles University; The Alan Turing Institute, OECD"
+format:
+  pdf:
+    toc: false
+    number-sections: true
+    colorlinks: true
+  html:
+    toc: true
+    css: styles.css
+bibliography: ../references.bib
+---
+
+
+The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessability [@calafiore2023inequalities], subjective experience of the city and cost of housing [@QIU2022104358], as well as energy effeciency [@ZHU2022104576] are some of the application areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The derived classes vary depending on the application. Example coarse groups are continuous, discontinious and non-urban land [@europeanenvironmentagency1990]. More detailed groupings capture the characteristics of streets and buildings, for example organic and gridiron streets [@araldi:hal-04774886]. These resulting classifications of urban form provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.
+
+However, detailed, scalable, and consistent classifications that reflect the nature of the local data all at the same time are scarcely available. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. [@europeanenvironmentagency1990, @stewart2012]. The classifications developed by key members of the EuroFab project team overcome these limitations [@primus ; @fleischmann2022geographical ; @fleischmann2022methodological], but are  dependent on the availability of high quality data capturing urban form - individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.
+
+Therefore, there is a need to: one, derive detailed classifications at scale from suboptimal data that does not have the same qualities as, for example, cadastre would have; and two, add a temporal dimension to the classification which shows how it evolves over time. Such a novel classification can improve urban-form related research and policy applications, by providing researchers, policy makers and practicioners with unprecedented detail and temporal information on urban form. Existing work can be extended using the new detailed classes, while new avenues of research can be established using the temporal dimension.
+
+The strategic goal of the project is to be the basis for subseqent work that will deliver a practically useful, detailed classification of all European urban fabric across time. The specific immediate aim of the current work is to develop a methodology capable of achieving the two objectives and verify its validity through a pilot study in Central Europe and the United Kingdom. 
+
+The basis for our work are two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The overall approach is to use the first machine learning model to produce training data at scale for the second AI model, since currently such datasets do not exist, and to finally use the AI model to derive a detailed temporal classification of urban form in Europe. To further verify the validity of our approach and the usefulness of the results, we further carry out consultations with stakeholders from the private sector, local planning departments and government organisations. This work will give us insights into how to adapt the methodology and data for practical use cases.
+
+The main findings of the modelling and stakeholder work is that it is possible to use alternative, non-cadastre level data for the accurate prediction of urban fabric over time, at detail relevant for practical applications.
+
+One of the main use cases identified by stakeholders was the ability to compare different areas or identify similar cities or regions across countries. In addition to producing fine-grained, spatially consistent urban classifications, the models can capture urban transitions over time. This enables comparisons not only across space, but also through time - making it possible to examine how urban areas evolve, diverge, or converge.
+
+A key insight from the modelling work is that increasing the amount of training data improves predictive performance - particularly in the presence of class imbalance, where underrepresented classes can otherwise lead to biased outcomes. This makes data sampling strategies especially important for ensuring balanced model learning across diverse urban forms. The morphometric classification, based on the Overture model, performs well at the building level, and can be deployed at scale to generate detailed urban classes across Europe. These outputs can serve as a rich source of training data for the AI-based model, helping to fill gaps in underrepresented regions or classes. By leveraging morphometric results across multiple countries, the AI model’s predictive accuracy can be further improved - leading to more robust and precise time-series predictions of urban change.
+
+The modelling work also highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalization, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.
+
+Lastly, the interest and various feature requests from the stakeholders confirm the need for a detailed urban classification at a granular level. Such a dataset can act as the foundation for multiple derived data products adapted to particular use cases. Examples included comparisons between countries at different scales - neighbourhoods, cities and regions; access to the building-level morphological data of the taxonomy; and the ability to figure out where newly-designed areas would fall within the taxonomy before they are built.
+
+More details about the methodology, background and results of each stage of the project are available in the respective technical notes. The methodology and results from the report are being prepared for scientific publication in leading urban analytics journals.
+
+
+# References {.unnumbered}
