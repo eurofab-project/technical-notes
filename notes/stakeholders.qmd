@@ -1,16 +1,55 @@
 ---
 title: "Consolidated Stakeholder Requirements Specification"
 subtitle: "Technical Note D1"
-author: "Claudia Baranzelli"
-institute: "OECD"
+author:
+  - name: Krasen Samardzhiev
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Martin Fleischmann
+    email: martin.fleischmann@natur.cuni.cz
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
 format:
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
   html:
     toc: true
     css: styles.css
+  titlepage-pdf:
+    documentclass: scrbook
+    classoption: ["oneside", "open=any"]
+    toc: true
+    number-sections: true
+    colorlinks: true
+    coverpage: true
+    coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
+    coverpage-footer: |
+      Technical Note D1\
+      Consolidated Stakeholder Requirements Specification
+    coverpage-bg-image: "../figures/himoc.png"
+    coverpage-theme:
+      page-html-color: "000000"
+      title-fontsize: 40
+      title-color: "white"
+      title-align: "right"
+      title-bottom: "10in"
+      title-fontfamily: "Open Sans"
+      header-style: "none"
+      author-style: "none"
+      footer-fontsize: 20
+      footer-color: "white"
+      footer-align: "right"
+      footer-bottom: "7in"
+      footer-fontfamily: "Open Sans"
+      date-style: "none"
+      bg-image-fading: "north"
+    titlepage-footer: |
+      The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
+      \
+      eurofab.org
+    titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 
 ---

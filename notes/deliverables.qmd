@@ -1,16 +1,65 @@
 ---
 title: "Software and Example datasets generated during Verification Exercises"
 subtitle: "Technical Note D6"
-author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
-institute: "Charles University; The Alan Turing Institute"
+author:
+  - name: Krasen Samardzhiev
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Barbara Metzler
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
+  - name: Martin Fleischmann
+    email: martin.fleischmann@natur.cuni.cz
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Daniel Arribas-Bel
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
 format:
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
   html:
     toc: true
     css: styles.css
+  titlepage-pdf:
+    documentclass: scrbook
+    classoption: ["oneside", "open=any"]
+    toc: true
+    number-sections: true
+    colorlinks: true
+    coverpage: true
+    coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
+    coverpage-footer: |
+      Technical Note D6\
+      Software and Example datasets generated during Verification Exercises
+    coverpage-bg-image: "../figures/himoc.png"
+    coverpage-theme:
+      page-html-color: "000000"
+      title-fontsize: 40
+      title-color: "white"
+      title-align: "right"
+      title-bottom: "10in"
+      title-fontfamily: "Open Sans"
+      header-style: "none"
+      author-style: "none"
+      footer-fontsize: 20
+      footer-color: "white"
+      footer-align: "right"
+      footer-bottom: "7in"
+      footer-fontfamily: "Open Sans"
+      date-style: "none"
+      bg-image-fading: "north"
+    titlepage-footer: |
+      The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
+      \
+      eurofab.org
+    titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 ---
 
@@ -29,14 +78,14 @@ In this note we present the software and datasets generated for the project and 
 
 ### Interactive web application
 
-We developed an interactive web app that displays the entire ground truth morphometric classification for Central Europe - [HiMOC](https://uscuni.org/himoc/). The webapp make possible the sharing of the Central European data with an even wider audience, than the original specified stakeholders, regardless of their technical expertise. Furthermore, it allowed stakeholders to to visually explore the geospatial data, zoom in and out, pan across areas, and overlay different layers. It was the focus of multiple stakeholder consultations and enabled them to see final results, propose features, highlight mistakes. Furthermore, it allowed them to specify what format at what scale the final results would be most useful for them.
+We developed an interactive web app that displays the entire ground truth morphometric classification for Central Europe - [HiMOC](https://uscuni.org/himoc/). The web app make possible the sharing of the Central European data with an even wider audience, than the original specified stakeholders, regardless of their technical expertise. Furthermore, it allowed stakeholders to visually explore the geospatial data, zoom in and out, pan across areas, and overlay different layers. It was the focus of multiple stakeholder consultations and enabled them to see final results, propose features, highlight mistakes. Furthermore, it allowed them to specify what format at what scale the final results would be most useful for them.
 
 ### Morphometric characterisation pipeline for Microsoft Building footprints
-The entire morphometric characterisation pipeline for the processing of micorsoft Building Footpritns, including reproducible notebooks and an enviroment is open-sourced and available on the [Eurofab GitHub](https://github.com/eurofab-project/morphometrics/tree/main). 
+The entire morphometric characterisation pipeline for the processing of Microsoft Building Footprints, including reproducible notebooks and an environment is open-sourced and available on the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 
 ### Morphometric characterisation pipeline for OvertureMaps Building footprints
 
-The above reproducible pipeline was further adapted to process OvertureMaps data and is also available at the [Eurofab GitHub](https://github.com/eurofab-project/morphometrics/tree/main). 
+The above reproducible pipeline was further adapted to process OvertureMaps data and is also available at the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 
 ## EO
 
@@ -45,7 +94,7 @@ All EO analyses presented are supported by openly accessible software hosted on 
 
 ## Software: AI Method for Urban Fabric classification and morphometric characterization
 
-All the work supporting this analysis can be found on GitHub. The main prediction pipeline, which includes data preprocessing, embedding creation, and spatial signature prediction, can be used as follows: 
+All the work supporting this analysis can be found on GitHub. The main prediction pipeline, which includes data preprocessing, embedding creation, and spatial signature prediction, can be used as follows:
 
 ```
 # Run the pipeline
@@ -66,7 +115,7 @@ More details and documentation on how to run the pipeline can be found in the ex
 
 ## Morphometric model
 
-The final morphometric model is around 40GB and takes around 10 hours to train. The full script and notebooks, including a reproducible enviroment is available at the project [GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
+The final morphometric model is around 40GB and takes around 10 hours to train. The full script and notebooks, including a reproducible environment is available at the project [GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 A non-interactive version of the notebooks used in the pipeline is available on the [EuroFab Project Website](https://eurofab.org/morphometrics/) .
 
 ![Example Level 4 predictions for the areas around Vienna (Austria), Munich (Germany), Wroclaw (Poland) and Brno (Czechia)](../figures/results/examples.png){.nostretch fig-align="center" #fig-examples}
@@ -74,7 +123,7 @@ A non-interactive version of the notebooks used in the pipeline is available on 
 
 ## AI model
 
-The final datacube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the [GitHub repository](https://github.com/eurofab-project/eo/tree/main).
+The final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the [GitHub repository](https://github.com/eurofab-project/eo/tree/main).
 
 
 ## Example datasets generated during Verification Exercises
