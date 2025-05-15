@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Martin Fleischmann">
+
+<title>Large scale inference and Operationalisation – Technical notes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-4d1042b5f0b8d93047f4f930119f21bf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#european-morphometric-classification-strategy" id="toc-european-morphometric-classification-strategy" class="nav-link" data-scroll-target="#european-morphometric-classification-strategy">European Morphometric Classification Strategy</a>
+  <ul class="collapse">
+  <li><a href="#data-readiness" id="toc-data-readiness" class="nav-link" data-scroll-target="#data-readiness">Data-readiness</a></li>
+  <li><a href="#risk-assessment" id="toc-risk-assessment" class="nav-link" data-scroll-target="#risk-assessment">Risk assessment</a></li>
+  <li><a href="#europe-wide-classification-strategy" id="toc-europe-wide-classification-strategy" class="nav-link" data-scroll-target="#europe-wide-classification-strategy">Europe-wide classification strategy</a></li>
+  </ul></li>
+  <li><a href="#european-space-time-urban-fabric-strategy" id="toc-european-space-time-urban-fabric-strategy" class="nav-link" data-scroll-target="#european-space-time-urban-fabric-strategy">European Space-Time Urban Fabric Strategy</a>
+  <ul class="collapse">
+  <li><a href="#infrastructural-technical-and-methodological-aspects-involved-in-scaling" id="toc-infrastructural-technical-and-methodological-aspects-involved-in-scaling" class="nav-link" data-scroll-target="#infrastructural-technical-and-methodological-aspects-involved-in-scaling">Infrastructural, technical and methodological aspects involved in scaling</a></li>
+  <li><a href="#risk-assessment-1" id="toc-risk-assessment-1" class="nav-link" data-scroll-target="#risk-assessment-1">Risk assessment</a></li>
+  <li><a href="#europe-wide-deployment-strategy" id="toc-europe-wide-deployment-strategy" class="nav-link" data-scroll-target="#europe-wide-deployment-strategy">Europe-wide deployment strategy</a></li>
+  <li><a href="#roadmap-to-large-scale-inference" id="toc-roadmap-to-large-scale-inference" class="nav-link" data-scroll-target="#roadmap-to-large-scale-inference">Roadmap to Large-Scale Inference</a></li>
+  <li><a href="#operationalization-framework-for-eurofab-services" id="toc-operationalization-framework-for-eurofab-services" class="nav-link" data-scroll-target="#operationalization-framework-for-eurofab-services">Operationalization Framework for EuroFab Services</a></li>
+  <li><a href="#ensuring-quality-calibration-validation-and-continuous-monitoring" id="toc-ensuring-quality-calibration-validation-and-continuous-monitoring" class="nav-link" data-scroll-target="#ensuring-quality-calibration-validation-and-continuous-monitoring">Ensuring Quality: Calibration, Validation, and Continuous Monitoring</a></li>
+  <li><a href="#key-considerations-and-proactive-risk-mitigation" id="toc-key-considerations-and-proactive-risk-mitigation" class="nav-link" data-scroll-target="#key-considerations-and-proactive-risk-mitigation">Key Considerations and Proactive Risk Mitigation</a></li>
+  </ul></li>
+  <li><a href="#scaled-up-stakeholder-engagement" id="toc-scaled-up-stakeholder-engagement" class="nav-link" data-scroll-target="#scaled-up-stakeholder-engagement">Scaled up stakeholder engagement</a>
+  <ul class="collapse">
+  <li><a href="#current-state" id="toc-current-state" class="nav-link" data-scroll-target="#current-state">Current state</a></li>
+  <li><a href="#suitability-of-the-data-product-for-the-definition-of-derived-indicators" id="toc-suitability-of-the-data-product-for-the-definition-of-derived-indicators" class="nav-link" data-scroll-target="#suitability-of-the-data-product-for-the-definition-of-derived-indicators">Suitability of the data product for the definition of derived indicators</a></li>
+  <li><a href="#application-potential" id="toc-application-potential" class="nav-link" data-scroll-target="#application-potential">Application potential</a></li>
+  </ul></li>
+  </ul>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="large-scale-inference.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Large scale inference and Operationalisation</h1>
+<p class="subtitle lead">Technical Note D7</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Martin Fleischmann </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            CU
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- - Introduction
+- European Morphometric Classification Strategy
+    - Data-readiness
+    - Risk assessment
+    - Europe-wide classification strategy
+
+
+- European Space-Time Urban Fabric Strategy
+    - Infrastructural, technical and methodological aspects involved in scaling
+    - Risk assessment
+    - Europe-wide deployment strategy
+
+
+- Scaled up stakeholder engagement
+    - Current state
+        - achievements, outstanding gaps, possible solutions
+    - Suitability of the data product for the definition of derived indicators
+    - Application potential
+        - examples of how to use the data products for the development of derived indicators, for different policy areas. -->
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This Technical Note presents a strategic roadmap for advancing the EuroFab project’s Artificial Intelligence (AI)-driven urban fabric classification system from its current capabilities to a pan-European operational capacity. The document outlines the necessary technological advancements, infrastructural requirements, and operational frameworks for achieving large-scale inference, ensuring the long-term sustainability and relevance of the EuroFab service. It provides actionable recommendations for the European Space Agency (ESA) to guide this transition.</p>
+<p>The EuroFab project is designed to perform a comprehensive assessment of every building and street segment, providing a rich, multiscale description of the built environment. This foundational analysis supports a hierarchical classification of urban fabric patterns, yielding easily interpretable types whose distribution can be mapped across extensive areas. The project aims to deliver detailed, comparable, and dynamic information on urban fabric. This information is crucial for understanding how cities are constantly evolving, what these changes mean for their sustainability, and how effective policies can be designed to steer development in desirable directions. Ultimately, EuroFab seeks to “pave the road for a world where stakeholders, from local authorities to supranational organisations, are able to track and monitor the pattern of urban development in detail directly relevant for planning and at scale”. This involves linking information on neighbourhood structures to local expertise and communities, facilitating regional and international comparisons using consistent data and perspectives.</p>
+<p>Transitioning the EuroFab system from a successful research project with a functional processing pipeline to a robust, reliable, and continuously updated operational service presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires a significant upscaling of data processing capabilities, the establishment of a sustainable operational framework, and a commitment to continuous improvement and user engagement. This roadmap addresses these multifaceted challenges, providing a structured approach to achieve large-scale inference and full operationalization.</p>
+</section>
+<section id="european-morphometric-classification-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="european-morphometric-classification-strategy">European Morphometric Classification Strategy</h2>
+<section id="data-readiness" class="level3">
+<h3 class="anchored" data-anchor-id="data-readiness">Data-readiness</h3>
+</section>
+<section id="risk-assessment" class="level3">
+<h3 class="anchored" data-anchor-id="risk-assessment">Risk assessment</h3>
+</section>
+<section id="europe-wide-classification-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="europe-wide-classification-strategy">Europe-wide classification strategy</h3>
+</section>
+</section>
+<section id="european-space-time-urban-fabric-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="european-space-time-urban-fabric-strategy">European Space-Time Urban Fabric Strategy</h2>
+<section id="infrastructural-technical-and-methodological-aspects-involved-in-scaling" class="level3">
+<h3 class="anchored" data-anchor-id="infrastructural-technical-and-methodological-aspects-involved-in-scaling">Infrastructural, technical and methodological aspects involved in scaling</h3>
+</section>
+<section id="risk-assessment-1" class="level3">
+<h3 class="anchored" data-anchor-id="risk-assessment-1">Risk assessment</h3>
+</section>
+<section id="europe-wide-deployment-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="europe-wide-deployment-strategy">Europe-wide deployment strategy</h3>
+<p>The core of EuroFab’s current Earth Observation analytical capability is the Spatial Signatures Pipeline, detailed in the eurofab-project/eo GitHub repository. This pipeline is engineered to generate spatial signature predictions using satellite imagery as its primary input. However, spatial signatures are restricted to the extent of Great Britain. The future development will therefore use hierarchical morphotope classification.</p>
+<p>The pipeline integrates computer vision models to create feature embeddings from satellite imagery. These embeddings are subsequently processed by an XGBoost model, which performs the classification of individual image chips into predefined urban fabric classes. This establishes the baseline processing chain that needs to be scaled.</p>
+<p>Current Classification Capabilities and Outputs:</p>
+<ul>
+<li><strong>Classification Labels:</strong> The current XGBoost model assigns each grid cell to one of twelve predefined spatial classes and their aggregations. These classes include: ‘Accessible suburbia’, ‘Connected residential neighbourhoods’, ‘Countryside agriculture’, ‘Dense residential neighbourhoods’, ‘Dense urban neighbourhoods’, ‘Disconnected suburbia’, ‘Gridded residential quarters’, ‘Open sprawl’, ‘Urban buffer’, ‘Urbanity’, ‘Warehouse/Park land’, and ‘Wild countryside’. This typology provides a foundational characterization of diverse urban and peri-urban environments. These classes will change to purely morphological classification derived from morphometric analysis.</li>
+<li><strong>Current Processing Capacity:</strong> The current inference pipeline and its training is not heavily computationally demanding as it was trained on a single high-end GPU. However, the training times were not optimal and for a scaled-up pipeline, the computational demands will grow significantly. Therefore, it is expected that training and inference will require a small cluster of high-end GPUs, with the inference ran on a yearly basis.</li>
+</ul>
+</section>
+<section id="roadmap-to-large-scale-inference" class="level3">
+<h3 class="anchored" data-anchor-id="roadmap-to-large-scale-inference">Roadmap to Large-Scale Inference</h3>
+<p>Transitioning the EuroFab inference engine to operate at a pan-European scale requires strategic advancements in data sourcing, computational infrastructure, and AI model capabilities.</p>
+<section id="data-sourcing-and-management-for-pan-european-coverage" class="level4">
+<h4 class="anchored" data-anchor-id="data-sourcing-and-management-for-pan-european-coverage">Data Sourcing and Management for Pan-European Coverage</h4>
+<p>A robust and scalable data foundation is paramount for a pan-European urban fabric monitoring service. This involves leveraging existing European assets and integrating diverse data sources.</p>
+<ul>
+<li><p><strong>Leveraging Copernicus Services:</strong> The Copernicus programme, with its commitment to free, full, and open data access, is the cornerstone for sourcing satellite imagery. Primarily, data from the Sentinel-2 (multispectral optical) mission will provide consistent, systematic, and frequently updated coverage of the entire European continent. These datasets are fundamental inputs for the raster-based analysis performed by the EuroFab pipeline. The consistent provision of such data by Copernicus is essential for the cost-effective scaling and long-term operational viability of EuroFab.</p></li>
+<li><p><strong>Strategies for Large-Volume Geospatial Data Management:</strong> Processing pan-European datasets involves managing terabytes of information. Efficient data handling is therefore crucial.</p>
+<ul>
+<li><em>Cloud-Optimized Formats:</em> Utilizing cloud-optimized geospatial formats such as Cloud-Optimized GeoTIFFs (COGs) for raster data and formats like Parquet or GeoParquet for vector/tabular data is essential. These formats enable efficient streaming and partial access, which is critical in cloud or distributed computing environments. SpatioTemporal Asset Catalogs (STAC) should be used to index and discover these assets.</li>
+<li><em>Metadata Standards and FAIR Principles:</em> Comprehensive metadata is fundamental for data discovery, understanding, and use. All datasets should adhere to relevant standards, notably of the Open Geospatial Consortium (OGC). This ensures that data is Findable, Accessible, Interoperable, and Reusable (FAIR), which is a core principle for European data initiatives like <a href="http://data.europa.eu">data.europa.eu</a>.</li>
+<li><em>Sustainable Data Storage:</em> The data storage allowing full support of cloud-optimized file formats (notably partial streaming), like S3 or other object-oriented systems is crucial for processing capabilities of the pan-European pipeline. However, this needs to secure a long-term financial security to minimise the breakage in data delivery.</li>
+</ul></li>
+</ul>
+</section>
+<section id="evolving-ai-models-for-robustness-and-efficiency-at-scale" class="level4">
+<h4 class="anchored" data-anchor-id="evolving-ai-models-for-robustness-and-efficiency-at-scale">Evolving AI Models for Robustness and Efficiency at Scale</h4>
+<p>A static AI model will not suffice for a dynamic, pan-European service. Continuous evolution is key.</p>
+<p>Continuous Learning and Domain Adaptation:</p>
+<ul>
+<li><em>Strategies:</em> The operational system must incorporate mechanisms for ongoing model updates as new satellite imagery, improved vector data, and additional ground truth become available.</li>
+<li><em>Techniques:</em> Several machine learning techniques are relevant here:
+<ul>
+<li><em>Transfer Learning:</em> Leverage knowledge learned from one domain (e.g., a well-mapped city) to improve performance in another related but different domain (e.g., a city with a slightly different architectural style or sensor data acquired under different atmospheric conditions).</li>
+<li><em>Domain Adaptation:</em> These techniques specifically aim to reduce the performance gap when applying a model trained on a source domain to a target domain with different data characteristics. This is crucial for ensuring consistent performance across diverse European cities.</li>
+<li><em>Active Learning:</em> To make the retraining process more efficient, active learning strategies can be employed to identify and select the most informative new samples for labeling and inclusion in the training set, thereby minimizing manual annotation effort.</li>
+</ul></li>
+<li>For a truly pan-European system, the AI models must become “culturally aware” of the diverse urban morphologies encountered across the continent—from the dense historic cores of Mediterranean cities to the sprawling suburbs of Northern Europe or the distinct layouts of Eastern European cities. Generic domain adaptation techniques might not fully capture these deep structural and contextual differences. Therefore, a core, ongoing research and development activity within the operational EuroFab service must focus on advanced domain adaptation. This should involve close collaboration with local urban planning experts and geographers from different European regions to provide nuanced ground truth, validate regional model performance, and incorporate localized knowledge into the model refinement process.</li>
+</ul>
+<p>Model Retraining and Update Cadence - A clear strategy for model retraining is needed. Triggers for retraining could include:</p>
+<ul>
+<li>Detection of performance degradation through continuous monitoring and validation.</li>
+<li>Availability of significant new volumes of high-quality training data.</li>
+<li>Major changes in sensor characteristics (e.g., launch of new Sentinel versions).</li>
+<li>Systematic introduction of new urban development patterns. A defined schedule (e.g., annual or biennial full retraining) or an event-based approach should be established for rolling out updated models to the operational system, ensuring minimal disruption and clear version control.</li>
+</ul>
+<p>Incorporating Higher-Resolution Data and Advanced Models: The roadmap should anticipate the future integration of Very High-Resolution (VHR) satellite imagery, whether from commercial providers or future Copernicus missions. VHR data can enable more detailed and precise urban fabric analysis. Furthermore, research and development should explore advanced AI architectures beyond the current Satlas+XGBoost combination. This could include Vision Transformers (ViTs) for enhanced image feature extraction, or Graph Neural Networks (GNNs) for effectively integrating the topological and relational information inherent in vector data (e.g., building adjacency, road network connectivity) to create more holistic urban fabric characterizations.</p>
+</section>
+</section>
+<section id="operationalization-framework-for-eurofab-services" class="level3">
+<h3 class="anchored" data-anchor-id="operationalization-framework-for-eurofab-services">Operationalization Framework for EuroFab Services</h3>
+<p>Moving EuroFab from a research project to an operational service requires a well-defined framework covering deployment, service delivery, quality assurance, and iterative development based on user needs.</p>
+<section id="deployment-architecture-and-service-delivery-models" class="level4">
+<h4 class="anchored" data-anchor-id="deployment-architecture-and-service-delivery-models">Deployment Architecture and Service Delivery Models</h4>
+<ul>
+<li><strong>Defining Operational Service Levels and Output Products:</strong> A tiered approach to service delivery can cater to diverse user needs and ensure sustainability.
+<ul>
+<li><em>Baseline Products:</em> These would include pan-European urban fabric maps based on the core classification scheme, updated regularly (e.g., annually or biennially). These products should be openly accessible.</li>
+<li><em>Derived Indicators:</em> Offer services to generate higher-level indicators from the base urban fabric data. Examples include metrics related to green space accessibility, urban sprawl patterns, impervious surface percentage, building density, or indicators supporting SDG11 monitoring. Many examples of urban indicators exist which could be adapted or inspired by, such as those related to sustainable urban development, quality of life, or environmental performance.</li>
+</ul></li>
+<li><strong>Potential Integration with Existing European EO Platforms:</strong> To maximize impact and avoid creating isolated systems, EuroFab services should be integrated with or exposed through relevant existing European platforms.</li>
+</ul>
+</section>
+</section>
+<section id="ensuring-quality-calibration-validation-and-continuous-monitoring" class="level3">
+<h3 class="anchored" data-anchor-id="ensuring-quality-calibration-validation-and-continuous-monitoring">Ensuring Quality: Calibration, Validation, and Continuous Monitoring</h3>
+<p>The credibility and utility of an operational EuroFab service depend entirely on the quality and reliability of its products.</p>
+<p>Establishing Robust Cal/Val Procedures:</p>
+<ul>
+<li>A comprehensive Calibration/Validation (Cal/Val) plan must be developed and implemented. This involves standardized methodologies for assessing the accuracy of the AI models and the thematic correctness of the urban fabric products across diverse European geographical and urban contexts.</li>
+</ul>
+<p>Mechanisms for Performance Monitoring and Quality Assurance:</p>
+<ul>
+<li>Automated checks for input data quality, processing pipeline integrity, and output product consistency must be implemented throughout the operational workflow.</li>
+<li>Key Performance Indicators (KPIs) related to model accuracy (e.g., overall accuracy, class-specific F1-scores, confusion matrices), product timeliness (time from data acquisition to product delivery), and service availability (uptime) must be continuously tracked and reported.</li>
+</ul>
+</section>
+<section id="key-considerations-and-proactive-risk-mitigation" class="level3">
+<h3 class="anchored" data-anchor-id="key-considerations-and-proactive-risk-mitigation">Key Considerations and Proactive Risk Mitigation</h3>
+<p>Anticipating and mitigating potential risks is crucial for the successful large-scale operationalization and long-term viability of the EuroFab service.</p>
+<p>Identifying Potential Technical, Operational, and Adoption Risks:</p>
+<ul>
+<li><em>Model Generalization and Bias:</em> AI models may fail to generalize effectively to diverse and unseen urban environments across Europe, or they may exhibit biases learned from non-representative training data. This can lead to inaccurate, unfair, or inequitable classifications, potentially impacting downstream policy decisions.31</li>
+<li><em>Scalability and Performance Bottlenecks:</em> The chosen infrastructure or algorithms may not scale efficiently to handle the processing load required for pan-European coverage or for frequent updates, leading to delays or service degradation.</li>
+<li><em>Infrastructure Dependency and Cost:</em> Over-reliance on specific HPC facilities or commercial cloud platforms could lead to vendor lock-in, unexpected cost escalations, or limitations in flexibility.31</li>
+<li><em>Complexity of Integration:</em> Technical and semantic challenges in seamlessly integrating EuroFab services with other major European platforms due to differing standards, APIs, or data models.</li>
+<li><em>User Adoption and Trust:</em> Potential reluctance from stakeholders (urban planners, policymakers) to adopt new, AI-derived products without clear, transparent validation, demonstrable benefits over existing methods, and adequate explainability of the AI’s reasoning.31</li>
+<li><em>Workforce Readiness:</em> A lack of sufficiently skilled personnel within user organizations to effectively utilize, interpret, and integrate geospatial AI products like those from EuroFab into their workflows.31 This risk also extends to the operational team managing EuroFab itself; sustaining such a service requires a highly skilled team with expertise in EO, AI/ML, data engineering, HPC/cloud operations, and stakeholder liaison. Attracting and retaining such talent will be an ongoing challenge.</li>
+<li><em>Maintaining Open Source Viability:</em> Difficulty in ensuring long-term maintenance, active community engagement, and consistent development for the open-source software and algorithm components.</li>
+</ul>
+<p>Strategies for Mitigating These Risks:</p>
+<ul>
+<li><em>Model Generalization and Bias:</em> Implement rigorous bias detection and mitigation techniques throughout the AI model development lifecycle; ensure training datasets are as diverse and representative as possible of European urban typologies; conduct thorough Cal/Val across a wide range of geographical and socio-economic contexts. Critically, mitigating AI model bias and ensuring fairness, especially if EuroFab data informs resource allocation or policies impacting diverse populations, has significant ethical implications. This requires moving beyond purely technical validation to include socio-technical audits, fairness assessments, and continuous dialogue with ethicists, social scientists, and representatives of potentially affected communities. This aligns with the principles of trustworthy AI as promoted by European initiatives.</li>
+<li><em>Scalability and Performance Bottlenecks:</em> Design the system architecture for scalability from the outset; conduct rigorous performance testing and optimization under realistic load conditions; adopt distributed and parallel processing architectures.</li>
+<li><em>Infrastructure Dependency and Cost:</em> Opt for open standards and portable solutions (e.g., containerization) to minimize vendor lock-in; conduct thorough cost-benefit analyses of different platform choices; explore multi-provider or hybrid strategies where appropriate.</li>
+<li><em>Complexity of Integration:</em> Engage early and continuously with the teams responsible for target European platforms; actively participate in standardization efforts; prioritize adherence to common interoperability standards and APIs.</li>
+<li><em>User Adoption and Trust:</em> Implement transparent and publicly accessible Cal/Val procedures and results; integrate XAI techniques to make model outputs understandable; invest heavily in stakeholder engagement, co-design processes 3, training, and clear documentation.</li>
+<li><em>Workforce Readiness:</em> Develop comprehensive training materials, user guides, online tutorials, and capacity-building workshops tailored to different user groups.31 For the internal operational team, invest in continuous professional development and knowledge sharing.</li>
+<li><em>Maintaining Open Source Viability:</em> Establish clear governance for open-source components; allocate dedicated resources for maintenance and community management; actively foster a contributor community.</li>
+</ul>
+</section>
+</section>
+<section id="scaled-up-stakeholder-engagement" class="level2">
+<h2 class="anchored" data-anchor-id="scaled-up-stakeholder-engagement">Scaled up stakeholder engagement</h2>
+<section id="current-state" class="level3">
+<h3 class="anchored" data-anchor-id="current-state">Current state</h3>
+<pre><code>    - achievements, outstanding gaps, possible solutions</code></pre>
+</section>
+<section id="suitability-of-the-data-product-for-the-definition-of-derived-indicators" class="level3">
+<h3 class="anchored" data-anchor-id="suitability-of-the-data-product-for-the-definition-of-derived-indicators">Suitability of the data product for the definition of derived indicators</h3>
+</section>
+<section id="application-potential" class="level3">
+<h3 class="anchored" data-anchor-id="application-potential">Application potential</h3>
+<pre><code>    - examples of how to use the data products for the development of derived indicators, for different policy areas.</code></pre>
+<ul>
+<li><strong>4.1 Stakeholder Engagement and Co-development Ecosystem</strong>
+<ul>
+<li><strong>Long-term Strategies for Engaging Diverse User Communities:</strong>
+<ul>
+<li>Develop and implement targeted, ongoing engagement plans for key stakeholder groups. These include local, regional, and national public authorities responsible for urban planning and environmental management, research institutions, environmental agencies, and potentially private sector users developing value-added services.</li>
+<li>Engagement activities should include regular workshops (virtual and in-person), user forums, dedicated training sessions on EuroFab data and tools, and collaborative pilot projects to demonstrate applicability and gather in-depth feedback. The event described in, aimed at gathering stakeholder perspectives to define user needs and affect project outcomes, serves as a good model for ongoing interaction.</li>
+<li>Effective stakeholder engagement for sustainability involves defining what sustainability means for each specific application or project, continuously soliciting feedback to understand what is relevant to users, critically checking assumptions, actively including a wider range of perspectives, and establishing processes to reconcile competing views. Stakeholders should be prioritized based on their level of influence and interest in the project’s outcomes.</li>
+<li>True co-development in an operational context means evolving beyond simple feedback collection. It involves establishing formal partnerships where stakeholders actively contribute resources – such as local datasets for training/validation, domain expertise, or personnel for joint validation campaigns – and, in return, share in the benefits and responsibilities of the service. This could involve Memoranda of Understanding with national mapping agencies, urban planning institutes, or research consortia, thereby deeply embedding the EuroFab service into their operational workflows and decision-making processes.</li>
+</ul></li>
+<li><strong>Fostering Partnerships for Data Provision, Validation, and Application Development:</strong>
+<ul>
+<li>Collaborate closely with national mapping and cadastral agencies for access to authoritative local geospatial data, which can be invaluable for training AI models and validating EuroFab products.</li>
+<li>Partner with university research groups and specialized institutes to explore novel applications of EuroFab data, advance AI methodologies for urban analysis, and develop new derived indicators.</li>
+<li>Engage with commercial entities and SMEs to encourage the development of value-added services and applications built upon EuroFab’s foundational data products.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>3.3 Iterative Development and User Feedback Integration An operational service cannot remain static; it must evolve based on user needs and technological advancements.</p>
+<ul>
+<li><p>Formal and informal channels for collecting feedback from the diverse EuroFab end-user community (including ESA internal users, urban planners, researchers, local to national authorities, and policymakers) must be established. This could include online feedback forms, dedicated user support channels, periodic surveys, and user workshops.</p></li>
+<li><p>ESA’s Global Development Assistance (GDA) programme provides a valuable precedent, incorporating extended user requirements gathering phases and iterative development cycles that actively integrate user feedback. Similarly, the Destination Earth initiative emphasizes a co-design methodology to tailor solutions for specific stakeholder needs and integrate their feedback. EuroFab should adopt similar user-centric principles. The goal is to define user needs for a novel data product that is “truly applicable and sustainable”.</p></li>
+<li><p><strong>4.2 Open Source Strategy and Knowledge Dissemination</strong></p></li>
+</ul>
+<p>EuroFab’s commitment to openness is a key asset for its long-term impact and sustainability.</p>
+<ul>
+<li><p><strong>Maximizing Impact through Open Resources:</strong></p>
+<ul>
+<li>The project’s commitment to “open-source software, algorithms and open datasets” [2] must be continued and expanded. This includes maintaining public GitHub repositories (e.g., <code>eurofab-project/morphometrics</code>, <code>eurofab-project/eo</code>) [4, 30] for all relevant code, tools, and documentation.</li>
+<li>All open-source components must be well-documented, with clear installation instructions, usage examples, and contribution guidelines. They should be maintained to ensure compatibility with evolving software environments.</li>
+<li>Scientific methodologies, validation results, and key findings should be published in open-access peer-reviewed journals and presented at international conferences and workshops to ensure transparency and facilitate scientific scrutiny. This aligns with European open science principles and promotes trust.[31]</li>
+</ul></li>
+<li><p><strong>Building a Community around EuroFab Tools and Data:</strong></p>
+<ul>
+<li>Establish and maintain online forums, mailing lists, and developer channels (e.g., Slack, Discord) to provide support to users and foster a collaborative environment for contributors.</li>
+<li>Organize events such as hackathons, data challenges, or summer schools to stimulate innovative uses of EuroFab data and tools, and to attract new users and developers.</li>
+<li>The model of the openEO platform, which fosters an “inspirational development environment” with shared repositories, discussion forums, and mechanisms for community engagement [17], offers valuable lessons.</li>
+</ul></li>
+<li><p><strong>4.3 Governance, Maintenance, and Long-Term Resourcing</strong></p></li>
+</ul>
+<p>Sustainable operation requires a clear governance structure, a proactive maintenance plan, and a stable funding model.</p>
+<ul>
+<li><p><strong>Potential Funding Models and Resource Requirements:</strong></p>
+<ul>
+<li>Sustainable funding models that extend beyond initial project-based financing are critical. Given EuroFab’s nature, a hybrid model is likely most appropriate.</li>
+<li>Core funding from ESA and the European Union could support the provision of baseline pan-European products and services that serve as a public good, similar to the funding mechanisms for Copernicus services.[32, 33] These services directly support European policy objectives and SDG monitoring.</li>
+<li>Contributions from Member States could support specific national-level applications or enhancements.</li>
+<li>Fee-based access or subscription models could be considered for specialized, value-added services, on-demand high-volume processing, or commercial use cases, helping to cover operational costs and fund further development.</li>
+<li>Defining this balance between publicly funded core services and potentially cost-recovery mechanisms for advanced or specialized applications early in the operational planning is crucial for ensuring the long-term financial health and sustainability of the EuroFab service.</li>
+</ul></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
