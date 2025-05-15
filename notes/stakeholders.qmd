@@ -31,18 +31,18 @@ format:
     coverpage-bg-image: "../figures/himoc.png"
     coverpage-theme:
       page-html-color: "000000"
-      title-fontsize: 40
+      title-fontsize: 35
       title-color: "white"
       title-align: "right"
       title-bottom: "10in"
-      title-fontfamily: "Helvetica"
+      title-fontfamily: ""QTHelvet-Black.otf""
       header-style: "none"
       author-style: "none"
       footer-fontsize: 20
       footer-color: "white"
       footer-align: "right"
       footer-bottom: "7in"
-      footer-fontfamily: "Helvetica"
+      footer-fontfamily: ""QTHelvet-Black.otf""
       date-style: "none"
       bg-image-fading: "north"
     titlepage-footer: |
