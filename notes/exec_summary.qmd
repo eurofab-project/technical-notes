@@ -43,14 +43,14 @@ format:
       title-color: "white"
       title-align: "right"
       title-bottom: "10in"
-      title-fontfamily: "Open Sans"
+      title-fontfamily: "Helvetica"
       header-style: "none"
       author-style: "none"
       footer-fontsize: 20
       footer-color: "white"
       footer-align: "right"
       footer-bottom: "7in"
-      footer-fontfamily: "Open Sans"
+      footer-fontfamily: "Helvetica"
       date-style: "none"
       bg-image-fading: "north"
     titlepage-footer: |
