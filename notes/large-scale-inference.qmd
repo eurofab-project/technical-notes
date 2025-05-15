@@ -1,0 +1,210 @@
+---
+title: "Large scale inference and Operationalisation"
+subtitle: "Technical Note D7"
+author: "Martin Fleischmann"
+institute: "CU"
+format:
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
+  html:
+    toc: true
+    css: styles.css
+bibliography: ../references.bib
+
+---
+
+
+<!-- - Introduction
+- European Morphometric Classification Strategy
+	- Data-readiness
+	- Risk assessment
+	- Europe-wide classification strategy
+
+
+- European Space-Time Urban Fabric Strategy
+	- Infrastructural, technical and methodological aspects involved in scaling
+	- Risk assessment
+	- Europe-wide deployment strategy
+
+
+- Scaled up stakeholder engagement
+	- Current state
+		- achievements, outstanding gaps, possible solutions
+	- Suitability of the data product for the definition of derived indicators
+	- Application potential
+		- examples of how to use the data products for the development of derived indicators, for different policy areas. -->
+
+## Introduction
+
+This Technical Note presents a strategic roadmap for advancing the EuroFab project's Artificial Intelligence (AI)-driven urban fabric classification system from its current capabilities to a pan-European operational capacity. The document outlines the necessary technological advancements, infrastructural requirements, and operational frameworks for achieving large-scale inference, ensuring the long-term sustainability and relevance of the EuroFab service. It provides actionable recommendations for the European Space Agency (ESA) to guide this transition.
+
+The EuroFab project is designed to perform a comprehensive assessment of every building and street segment, providing a rich, multiscale description of the built environment. This foundational analysis supports a hierarchical classification of urban fabric patterns, yielding easily interpretable types whose distribution can be mapped across extensive areas. The project aims to deliver detailed, comparable, and dynamic information on urban fabric. This information is crucial for understanding how cities are constantly evolving, what these changes mean for their sustainability, and how effective policies can be designed to steer development in desirable directions. Ultimately, EuroFab seeks to "pave the road for a world where stakeholders, from local authorities to supranational organisations, are able to track and monitor the pattern of urban development in detail directly relevant for planning and at scale". This involves linking information on neighbourhood structures to local expertise and communities, facilitating regional and international comparisons using consistent data and perspectives.
+
+Transitioning the EuroFab system from a successful research project with a functional processing pipeline to a robust, reliable, and continuously updated operational service presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires a significant upscaling of data processing capabilities, the establishment of a sustainable operational framework, and a commitment to continuous improvement and user engagement. This roadmap addresses these multifaceted challenges, providing a structured approach to achieve large-scale inference and full operationalization.
+
+## European Morphometric Classification Strategy
+
+### Data-readiness
+### Risk assessment
+### Europe-wide classification strategy
+
+
+## European Space-Time Urban Fabric Strategy
+### Infrastructural, technical and methodological aspects involved in scaling
+### Risk assessment
+### Europe-wide deployment strategy
+
+The core of EuroFab's current Earth Observation analytical capability is the Spatial Signatures Pipeline, detailed in the eurofab-project/eo GitHub repository. This pipeline is engineered to generate spatial signature predictions using satellite imagery as its primary input. However, spatial signatures are restricted to the extent of Great Britain. The future development will therefore use hierarchical morphotope classification.
+
+The pipeline integrates computer vision models to create feature embeddings from satellite imagery. These embeddings are subsequently processed by an XGBoost model, which performs the classification of individual image chips into predefined urban fabric classes. This establishes the baseline processing chain that needs to be scaled.
+
+Current Classification Capabilities and Outputs:
+
+* **Classification Labels:** The current XGBoost model assigns each grid cell to one of twelve predefined spatial classes and their aggregations. These classes include: 'Accessible suburbia', 'Connected residential neighbourhoods', 'Countryside agriculture', 'Dense residential neighbourhoods', 'Dense urban neighbourhoods', 'Disconnected suburbia', 'Gridded residential quarters', 'Open sprawl', 'Urban buffer', 'Urbanity', 'Warehouse/Park land', and 'Wild countryside'. This typology provides a foundational characterization of diverse urban and peri-urban environments. These classes will change to purely morphological classification derived from morphometric analysis.
+* **Current Processing Capacity:** The current inference pipeline and its training is not heavily computationally demanding as it was trained on a single high-end GPU. However, the training times were not optimal and for a scaled-up pipeline, the computational demands will grow significantly. Therefore, it is expected that training and inference will require a small cluster of high-end GPUs, with the inference ran on a yearly basis.
+
+
+### Roadmap to Large-Scale Inference
+Transitioning the EuroFab inference engine to operate at a pan-European scale requires strategic advancements in data sourcing, computational infrastructure, and AI model capabilities.
+
+#### Data Sourcing and Management for Pan-European Coverage
+
+A robust and scalable data foundation is paramount for a pan-European urban fabric monitoring service. This involves leveraging existing European assets and integrating diverse data sources.
+
+* **Leveraging Copernicus Services:** The Copernicus programme, with its commitment to free, full, and open data access, is the cornerstone for sourcing satellite imagery. Primarily, data from the Sentinel-2 (multispectral optical) mission will provide consistent, systematic, and frequently updated coverage of the entire European continent. These datasets are fundamental inputs for the raster-based analysis performed by the EuroFab pipeline. The consistent provision of such data by Copernicus is essential for the cost-effective scaling and long-term operational viability of EuroFab.
+
+* **Strategies for Large-Volume Geospatial Data Management:** Processing pan-European datasets involves managing terabytes of information. Efficient data handling is therefore crucial.
+
+  * *Cloud-Optimized Formats:* Utilizing cloud-optimized geospatial formats such as Cloud-Optimized GeoTIFFs (COGs) for raster data and formats like Parquet or GeoParquet for vector/tabular data is essential. These formats enable efficient streaming and partial access, which is critical in cloud or distributed computing environments. SpatioTemporal Asset Catalogs (STAC) should be used to index and discover these assets.
+  * *Metadata Standards and FAIR Principles:* Comprehensive metadata is fundamental for data discovery, understanding, and use. All datasets should adhere to relevant standards, notably of the Open Geospatial Consortium (OGC). This ensures that data is Findable, Accessible, Interoperable, and Reusable (FAIR), which is a core principle for European data initiatives like [data.europa.eu](http://data.europa.eu).
+  * *Sustainable Data Storage:* The data storage allowing full support of cloud-optimized file formats (notably partial streaming), like S3 or other object-oriented systems is crucial for processing capabilities of the pan-European pipeline. However, this needs to secure a long-term financial security to minimise the breakage in data delivery.
+
+#### Evolving AI Models for Robustness and Efficiency at Scale
+
+A static AI model will not suffice for a dynamic, pan-European service. Continuous evolution is key.
+
+Continuous Learning and Domain Adaptation:
+
+  * *Strategies:* The operational system must incorporate mechanisms for ongoing model updates as new satellite imagery, improved vector data, and additional ground truth become available.
+  * *Techniques:* Several machine learning techniques are relevant here:
+    * *Transfer Learning:* Leverage knowledge learned from one domain (e.g., a well-mapped city) to improve performance in another related but different domain (e.g., a city with a slightly different architectural style or sensor data acquired under different atmospheric conditions).
+    * *Domain Adaptation:* These techniques specifically aim to reduce the performance gap when applying a model trained on a source domain to a target domain with different data characteristics. This is crucial for ensuring consistent performance across diverse European cities.
+    * *Active Learning:* To make the retraining process more efficient, active learning strategies can be employed to identify and select the most informative new samples for labeling and inclusion in the training set, thereby minimizing manual annotation effort.
+
+  * For a truly pan-European system, the AI models must become "culturally aware" of the diverse urban morphologies encountered across the continent—from the dense historic cores of Mediterranean cities to the sprawling suburbs of Northern Europe or the distinct layouts of Eastern European cities. Generic domain adaptation techniques might not fully capture these deep structural and contextual differences. Therefore, a core, ongoing research and development activity within the operational EuroFab service must focus on advanced domain adaptation. This should involve close collaboration with local urban planning experts and geographers from different European regions to provide nuanced ground truth, validate regional model performance, and incorporate localized knowledge into the model refinement process.
+
+
+Model Retraining and Update Cadence - A clear strategy for model retraining is needed. Triggers for retraining could include:
+
+  * Detection of performance degradation through continuous monitoring and validation.
+  * Availability of significant new volumes of high-quality training data.
+  * Major changes in sensor characteristics (e.g., launch of new Sentinel versions).
+  * Systematic introduction of new urban development patterns. A defined schedule (e.g., annual or biennial full retraining) or an event-based approach should be established for rolling out updated models to the operational system, ensuring minimal disruption and clear version control.
+
+
+Incorporating Higher-Resolution Data and Advanced Models: The roadmap should anticipate the future integration of Very High-Resolution (VHR) satellite imagery, whether from commercial providers or future Copernicus missions. VHR data can enable more detailed and precise urban fabric analysis. Furthermore, research and development should explore advanced AI architectures beyond the current Satlas+XGBoost combination. This could include Vision Transformers (ViTs) for enhanced image feature extraction, or Graph Neural Networks (GNNs) for effectively integrating the topological and relational information inherent in vector data (e.g., building adjacency, road network connectivity) to create more holistic urban fabric characterizations.
+
+### Operationalization Framework for EuroFab Services
+Moving EuroFab from a research project to an operational service requires a well-defined framework covering deployment, service delivery, quality assurance, and iterative development based on user needs.
+
+#### Deployment Architecture and Service Delivery Models
+
+  * **Defining Operational Service Levels and Output Products:** A tiered approach to service delivery can cater to diverse user needs and ensure sustainability.
+    * *Baseline Products:* These would include pan-European urban fabric maps based on the core classification scheme, updated regularly (e.g., annually or biennially). These products should be openly accessible.
+    * *Derived Indicators:* Offer services to generate higher-level indicators from the base urban fabric data. Examples include metrics related to green space accessibility, urban sprawl patterns, impervious surface percentage, building density, or indicators supporting SDG11 monitoring. Many examples of urban indicators exist which could be adapted or inspired by, such as those related to sustainable urban development, quality of life, or environmental performance.
+  * **Potential Integration with Existing European EO Platforms:** To maximize impact and avoid creating isolated systems, EuroFab services should be integrated with or exposed through relevant existing European platforms.
+
+### Ensuring Quality: Calibration, Validation, and Continuous Monitoring
+
+The credibility and utility of an operational EuroFab service depend entirely on the quality and reliability of its products.
+
+Establishing Robust Cal/Val Procedures:
+
+  * A comprehensive Calibration/Validation (Cal/Val) plan must be developed and implemented. This involves standardized methodologies for assessing the accuracy of the AI models and the thematic correctness of the urban fabric products across diverse European geographical and urban contexts.
+
+Mechanisms for Performance Monitoring and Quality Assurance:
+
+  * Automated checks for input data quality, processing pipeline integrity, and output product consistency must be implemented throughout the operational workflow.
+  * Key Performance Indicators (KPIs) related to model accuracy (e.g., overall accuracy, class-specific F1-scores, confusion matrices), product timeliness (time from data acquisition to product delivery), and service availability (uptime) must be continuously tracked and reported.
+
+### Key Considerations and Proactive Risk Mitigation
+Anticipating and mitigating potential risks is crucial for the successful large-scale operationalization and long-term viability of the EuroFab service.
+
+Identifying Potential Technical, Operational, and Adoption Risks:
+
+* *Model Generalization and Bias:* AI models may fail to generalize effectively to diverse and unseen urban environments across Europe, or they may exhibit biases learned from non-representative training data. This can lead to inaccurate, unfair, or inequitable classifications, potentially impacting downstream policy decisions.31
+* *Scalability and Performance Bottlenecks:* The chosen infrastructure or algorithms may not scale efficiently to handle the processing load required for pan-European coverage or for frequent updates, leading to delays or service degradation.
+* *Infrastructure Dependency and Cost:* Over-reliance on specific HPC facilities or commercial cloud platforms could lead to vendor lock-in, unexpected cost escalations, or limitations in flexibility.31
+* *Complexity of Integration:* Technical and semantic challenges in seamlessly integrating EuroFab services with other major European platforms due to differing standards, APIs, or data models.
+* *User Adoption and Trust:* Potential reluctance from stakeholders (urban planners, policymakers) to adopt new, AI-derived products without clear, transparent validation, demonstrable benefits over existing methods, and adequate explainability of the AI's reasoning.31
+* *Workforce Readiness:* A lack of sufficiently skilled personnel within user organizations to effectively utilize, interpret, and integrate geospatial AI products like those from EuroFab into their workflows.31 This risk also extends to the operational team managing EuroFab itself; sustaining such a service requires a highly skilled team with expertise in EO, AI/ML, data engineering, HPC/cloud operations, and stakeholder liaison. Attracting and retaining such talent will be an ongoing challenge.
+* *Maintaining Open Source Viability:* Difficulty in ensuring long-term maintenance, active community engagement, and consistent development for the open-source software and algorithm components.
+
+Strategies for Mitigating These Risks:
+
+* *Model Generalization and Bias:* Implement rigorous bias detection and mitigation techniques throughout the AI model development lifecycle; ensure training datasets are as diverse and representative as possible of European urban typologies; conduct thorough Cal/Val across a wide range of geographical and socio-economic contexts. Critically, mitigating AI model bias and ensuring fairness, especially if EuroFab data informs resource allocation or policies impacting diverse populations, has significant ethical implications. This requires moving beyond purely technical validation to include socio-technical audits, fairness assessments, and continuous dialogue with ethicists, social scientists, and representatives of potentially affected communities. This aligns with the principles of trustworthy AI as promoted by European initiatives.
+* *Scalability and Performance Bottlenecks:* Design the system architecture for scalability from the outset; conduct rigorous performance testing and optimization under realistic load conditions; adopt distributed and parallel processing architectures.
+* *Infrastructure Dependency and Cost:* Opt for open standards and portable solutions (e.g., containerization) to minimize vendor lock-in; conduct thorough cost-benefit analyses of different platform choices; explore multi-provider or hybrid strategies where appropriate.
+* *Complexity of Integration:* Engage early and continuously with the teams responsible for target European platforms; actively participate in standardization efforts; prioritize adherence to common interoperability standards and APIs.
+* *User Adoption and Trust:* Implement transparent and publicly accessible Cal/Val procedures and results; integrate XAI techniques to make model outputs understandable; invest heavily in stakeholder engagement, co-design processes 3, training, and clear documentation.
+* *Workforce Readiness:* Develop comprehensive training materials, user guides, online tutorials, and capacity-building workshops tailored to different user groups.31 For the internal operational team, invest in continuous professional development and knowledge sharing.
+* *Maintaining Open Source Viability:* Establish clear governance for open-source components; allocate dedicated resources for maintenance and community management; actively foster a contributor community.
+
+
+## Scaled up stakeholder engagement
+### Current state
+		- achievements, outstanding gaps, possible solutions
+### Suitability of the data product for the definition of derived indicators
+### Application potential
+		- examples of how to use the data products for the development of derived indicators, for different policy areas.
+
+
+* **4.1 Stakeholder Engagement and Co-development Ecosystem**
+  * **Long-term Strategies for Engaging Diverse User Communities:**
+    * Develop and implement targeted, ongoing engagement plans for key stakeholder groups. These include local, regional, and national public authorities responsible for urban planning and environmental management, research institutions, environmental agencies, and potentially private sector users developing value-added services.
+    * Engagement activities should include regular workshops (virtual and in-person), user forums, dedicated training sessions on EuroFab data and tools, and collaborative pilot projects to demonstrate applicability and gather in-depth feedback. The event described in, aimed at gathering stakeholder perspectives to define user needs and affect project outcomes, serves as a good model for ongoing interaction.
+    * Effective stakeholder engagement for sustainability involves defining what sustainability means for each specific application or project, continuously soliciting feedback to understand what is relevant to users, critically checking assumptions, actively including a wider range of perspectives, and establishing processes to reconcile competing views. Stakeholders should be prioritized based on their level of influence and interest in the project's outcomes.
+    * True co-development in an operational context means evolving beyond simple feedback collection. It involves establishing formal partnerships where stakeholders actively contribute resources – such as local datasets for training/validation, domain expertise, or personnel for joint validation campaigns – and, in return, share in the benefits and responsibilities of the service. This could involve Memoranda of Understanding with national mapping agencies, urban planning institutes, or research consortia, thereby deeply embedding the EuroFab service into their operational workflows and decision-making processes.
+  * **Fostering Partnerships for Data Provision, Validation, and Application Development:**
+    * Collaborate closely with national mapping and cadastral agencies for access to authoritative local geospatial data, which can be invaluable for training AI models and validating EuroFab products.
+    * Partner with university research groups and specialized institutes to explore novel applications of EuroFab data, advance AI methodologies for urban analysis, and develop new derived indicators.
+    * Engage with commercial entities and SMEs to encourage the development of value-added services and applications built upon EuroFab's foundational data products.
+
+
+
+3.3 Iterative Development and User Feedback Integration An operational service cannot remain static; it must evolve based on user needs and technological advancements.
+
+* Formal and informal channels for collecting feedback from the diverse EuroFab end-user community (including ESA internal users, urban planners, researchers, local to national authorities, and policymakers) must be established. This could include online feedback forms, dedicated user support channels, periodic surveys, and user workshops.
+* ESA's Global Development Assistance (GDA) programme provides a valuable precedent, incorporating extended user requirements gathering phases and iterative development cycles that actively integrate user feedback. Similarly, the Destination Earth initiative emphasizes a co-design methodology to tailor solutions for specific stakeholder needs and integrate their feedback. EuroFab should adopt similar user-centric principles. The goal is to define user needs for a novel data product that is "truly applicable and sustainable".
+
+
+* **4.2 Open Source Strategy and Knowledge Dissemination**
+
+EuroFab's commitment to openness is a key asset for its long-term impact and sustainability.
+
+* **Maximizing Impact through Open Resources:**
+
+  * The project's commitment to "open-source software, algorithms and open datasets" \[2\] must be continued and expanded. This includes maintaining public GitHub repositories (e.g., `eurofab-project/morphometrics`, `eurofab-project/eo`) \[4, 30\] for all relevant code, tools, and documentation.
+  * All open-source components must be well-documented, with clear installation instructions, usage examples, and contribution guidelines. They should be maintained to ensure compatibility with evolving software environments.
+  * Scientific methodologies, validation results, and key findings should be published in open-access peer-reviewed journals and presented at international conferences and workshops to ensure transparency and facilitate scientific scrutiny. This aligns with European open science principles and promotes trust.\[31\]
+
+
+* **Building a Community around EuroFab Tools and Data:**
+
+  * Establish and maintain online forums, mailing lists, and developer channels (e.g., Slack, Discord) to provide support to users and foster a collaborative environment for contributors.
+  * Organize events such as hackathons, data challenges, or summer schools to stimulate innovative uses of EuroFab data and tools, and to attract new users and developers.
+  * The model of the openEO platform, which fosters an "inspirational development environment" with shared repositories, discussion forums, and mechanisms for community engagement \[17\], offers valuable lessons.
+
+* **4.3 Governance, Maintenance, and Long-Term Resourcing**
+
+Sustainable operation requires a clear governance structure, a proactive maintenance plan, and a stable funding model.
+
+* **Potential Funding Models and Resource Requirements:**
+
+  * Sustainable funding models that extend beyond initial project-based financing are critical. Given EuroFab's nature, a hybrid model is likely most appropriate.
+  * Core funding from ESA and the European Union could support the provision of baseline pan-European products and services that serve as a public good, similar to the funding mechanisms for Copernicus services.\[32, 33\] These services directly support European policy objectives and SDG monitoring.
+  * Contributions from Member States could support specific national-level applications or enhancements.
+  * Fee-based access or subscription models could be considered for specialized, value-added services, on-demand high-volume processing, or commercial use cases, helping to cover operational costs and fund further development.
+  * Defining this balance between publicly funded core services and potentially cost-recovery mechanisms for advanced or specialized applications early in the operational planning is crucial for ensuring the long-term financial health and sustainability of the EuroFab service.
