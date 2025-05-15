@@ -31,8 +31,8 @@ We use different input classifications for the morphological and the AI componen
 
 The main aim of this project is to create a predictive model that is capable of classifying urban fabric.
 To achieve this we need to use existing urban fabric classifications as ground truth data for model training.
-We have chosen the [@primus] classification to act as the ground truth, since it a classification that is detailed (using the resolution of individual buildings), consistent and scalable, while being fully data-driven, meaning there is no set of conceptual classes involved, providing closer representation of the nature of urban fabric in various diverse places around Central Europe. At the same time, it is is based on the highest quality data available - building cadastre data from official sources.
-Since [@primus] is upcoming work we describe its methodology and results in detail in this and in the Technical Note D2: Algorithm Design and Theoretical Basis Description.
+We have chosen the [@primus] classification to act as the ground truth, since it a classification that is detailed (using the resolution of individual buildings), consistent and scalable, while being fully data-driven, meaning there is no set of conceptual classes involved, providing closer representation of the nature of urban fabric in various diverse places around Central Europe. At the same time, it is based on the highest quality data available - building cadastre data from official sources.
+Since @primus is upcoming work we describe its methodology and results in detail in this and in the Technical Note D2: Algorithm Design and Theoretical Basis Description.
 
 The new classification [@primus] extends the work of [@fleischmann2022methodological], which has been used in numerous subsequent studies and official planning documents [@calafiore2023inequalities ; @arribas2022spatial; @samardzhiev2022functional] .
 It uses a combination of buildings and streets to generate Enclosed Tessellation Cells (ETCs), which are spatial units that are centred around buildings, and encapsulate the surrounding space that is nearest to them, rather than other buildings.
@@ -60,14 +60,14 @@ Even though all the data comes from official cadastre sources there is regional 
 
 One limitation of the classification's underlying data is that building unit boundaries are not recorded in a consistent manner.
 For example, a modernist housing block is sometimes represented as a single polygon, other times as multiple adjacent polygons, each of which representing a physical entrance to the unified building.
-This discrepency adverse affects the calculation of some morphotopes related to adjacency, shape and size.
-In many cases this means that modernist housing estates are split based on these polygon boundaries deliniations.
+This discrepancy adverse affects the calculation of some morphotopes related to adjacency, shape and size.
+In many cases this means that modernist housing estates are split based on these polygon boundaries delineations.
 In other cases, some modernist housing estates are treated by the algorithm as industrial areas, due to the sheer size of its units and the layout of the street network.
-To account for this, two preprocessing steps are carryed out in the classification.
-First, auxilary data is used in Czechia to combine all adjacent units into single, unified polygons for consistency.
+To account for this, two preprocessing steps are carried out in the classification.
+First, auxiliary data is used in Czechia to combine all adjacent units into single, unified polygons for consistency.
 Second, an extra variable - indicating elongation and a low area to perimeter ratio is added to the hierarchy calculations.
-The motivation behind this variable is that non-industrial buildings are typically thin and elongated, layed out in complex patterns to maximuse sunlight exposure.
-No extra information was used to calculate this indicator, only the morphometric characteristcs already available.
+The motivation behind this variable is that non-industrial buildings are typically thin and elongated, laid out in complex patterns to maximise sunlight exposure.
+No extra information was used to calculate this indicator, only the morphometric characteristics already available.
 
 Another limitation is that the definition of buildings is different in different regions in Central Europe.
 Hamburg and Berlin include train and tram lines, parking lots and parts of motorways as buildings in their official cadastre data.
@@ -78,7 +78,7 @@ To limit the adverse effects of these additions, we drop any buildings that inte
 Building footprints are one of the two core elements needed to generate morphometric classifications.
 Measurements of aspects of buildings provide the bulk of the information about the morphological character of a place.
 Many characters in the literature [@fleischmann2021measuring], for example the ratio of perimeter shared with other connected buildings, require very high quality building footprints to accurately reflect the reality of the underlying topology.
-There are numerous available source of building footprints - official cadastre polygons; volunteer made OpenStreetMap data; Satellite-derived building footprints; or combinations of all of these such as Overture or EUBUCCO.
+There are numerous available source of building footprints - official cadastre polygons; volunteer made OpenStreetMap data; Satellite-derived building footprints; or combinations of all of these such as Overture Maps or EUBUCCO.
 Each of these data sources come with their own drawbacks and advantages.
 
 ### Available sources
@@ -93,7 +93,7 @@ Furthermore, the data is not always comparable between countries reflective of t
 Another common source is OpenStreetMap (OSM) map, which is free and open geographical database generated by volunteers.
 In many cases the cadastre data is processed and put into OpenStreetMap, alongside volunteer contributions where official data is missing.
 The issues with OSM data are similar to cadastre data where the cadastre data is used as the basis and is even harder to process since the schema used for buildings is more generic.
-Furthermore, the quality is unequal - for example the data in Germany is very high quality, but in not in other countries like Italy or Bulgaria. The similar heterogeneity can be observed not only between countries but often within individual cities, with some districts being of a very high quality, other being more generalised and other completely missing.
+Furthermore, the quality is unequal - for example the data in Germany is very high quality, but in not in other countries like Italy or Bulgaria. The similar heterogeneity can be observed not only between countries but often within individual cities, with some districts being of a very high quality, others being more generalised and other completely missing.
 
 Another available data source is satellite-derived building footprints, which are becoming more widely adopted due to advances in satellite technology and computer vision algorithms.
 They have successfully been used in applications for city boundary delineation, desegregating population and others [@samardzhiev2023characterising].
@@ -139,7 +139,7 @@ There are numerous sources for street network data, however the major one is Ope
 
 The street network used in this study is a direct download from Overture maps, a processed subset of data from OpenStreetMap with some additions.
 OpenStreetMap has global coverage and high quality data, especially for vehicular roads, on actual physical layouts of the roads, as well as additional information on street type.
-We use Overture directly due to the fact that its more accessible and easier to process, however the underlying geometry and information of the two data sources is identical.
+We use Overture directly due to the fact that it is more accessible and easier to process, however the underlying geometry and information of the two data sources is identical.
 
 The types of street segments used in the analysis are limited to the ones listed in Table 1.
 
