@@ -1,21 +1,71 @@
 ---
 title: "Test and Verification Results"
 subtitle: "Technical Note D4"
-author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Daniel Arribas-Bel"
+author:
+  - name: Krasen Samardzhiev
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Barbara Metzler
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
+  - name: Martin Fleischmann
+    email: martin.fleischmann@natur.cuni.cz
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Daniel Arribas-Bel
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
 format:
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
   html:
     toc: true
     css: styles.css
+  titlepage-pdf:
+    documentclass: scrbook
+    classoption: ["oneside", "open=any"]
+    toc: true
+    number-sections: true
+    colorlinks: true
+    coverpage: true
+    coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
+    coverpage-footer: |
+      Technical Note D4\
+      Test and Verification Results
+    coverpage-bg-image: "../figures/himoc.png"
+    coverpage-theme:
+      page-html-color: "000000"
+      title-fontsize: 40
+      title-color: "white"
+      title-align: "right"
+      title-bottom: "10in"
+      title-fontfamily: "Open Sans"
+      header-style: "none"
+      author-style: "none"
+      footer-fontsize: 20
+      footer-color: "white"
+      footer-align: "right"
+      footer-bottom: "7in"
+      footer-fontfamily: "Open Sans"
+      date-style: "none"
+      bg-image-fading: "north"
+    titlepage-footer: |
+      The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
+      \
+      eurofab.org
+    titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 ---
 
 # Executive summary
 
-This technical note presents the results from the modelling work specified in technical note "Technical Note D2 - Algorithm Design and Theoretical Basis Description" for both the morphometric and AI models. The first section "Morphometric classification" focuses on the morphometric prediction pipeline, its results accuracies and examples and introduces two extensions to the experiment design - an additional dataset and two new models that are evaluated. Similarly, the second section "Test and Verification Results: AI Model" describes the extensions and changes from the design specification and the results of the space-time modelling. This note ends with a conclusion section that brings together the two sets of results and discusses the limitations of the project. In summary, we are able to achieve high accuracy at multiple resolutions - at the building level for the morphometric model, and at the 250 metre grid cell resolution for the AI model. And that these results show that it is possible to use alternative data sources to characterize urban fort at scale, while preserving detail that is currently not captured by other large urban descriptors. 
+This technical note presents the results from the modelling work specified in technical note "Technical Note D2 - Algorithm Design and Theoretical Basis Description" for both the morphometric and AI models. The first section "Morphometric classification" focuses on the morphometric prediction pipeline, its results accuracies and examples and introduces two extensions to the experiment design - an additional dataset and two new models that are evaluated. Similarly, the second section "Test and Verification Results: AI Model" describes the extensions and changes from the design specification and the results of the space-time modelling. This note ends with a conclusion section that brings together the two sets of results and discusses the limitations of the project. In summary, we are able to achieve high accuracy at multiple resolutions - at the building level for the morphometric model, and at the 250 metre grid cell resolution for the AI model. And that these results show that it is possible to use alternative data sources to characterize urban fort at scale, while preserving detail that is currently not captured by other large urban descriptors.
 
 # Morphometric classification
 
@@ -135,9 +185,9 @@ Overall F1 scores at level 3
 
 @tbl-f1agg shows the aggregate F1 scores for the level 3 models trained on the Microsoft Building footprint and Overture Maps building footprints data. The Random, column shows the F1 scores for the model tested on randomly selected stratified data; Spatial - on the spatially aware split; OoS - stands for "Out of Sample" and is the average of the models, tested on each individual country and trained on the rest; the other columns are the specific F1 scores for each country, that make up the OoS. There are three main patterns present in the reported results.
 
-First, overall the aggregate scores between the models trained on the two datasets are almost equal. with the Overture Maps models being very slightly higher. This suggests that at this level of disaggregation of urban form, detailed characteristics of building footprints and their interactions with each other and the street network matter less. For example, the Overture data has more accurate information of building corners, adjacency, orientation and others but that does not significantly improve the overall F1 scores. 
+First, overall the aggregate scores between the models trained on the two datasets are almost equal. with the Overture Maps models being very slightly higher. This suggests that at this level of disaggregation of urban form, detailed characteristics of building footprints and their interactions with each other and the street network matter less. For example, the Overture data has more accurate information of building corners, adjacency, orientation and others but that does not significantly improve the overall F1 scores.
 
-Second, more complex and reflective of the underlying phenomena testing splits result in more realistic model evaluations for both sub-tables. The Random split has the highest score, the spatial split is always lower and the OoS average lower still. OoS is the closest score to a realistic real-world application of the model - using it to predict unseen urban fabric types. The fact that the Spatial score is closer to it, shows that randomly splitting your modelling data leads to spatial leakage and spatially aware-splits result in more realistic evaluations. Nevertheless, the Out of Sample score is lower still, which suggests that even testing the model accuracy on spatially split data overestimates model performance.   
+Second, more complex and reflective of the underlying phenomena testing splits result in more realistic model evaluations for both sub-tables. The Random split has the highest score, the spatial split is always lower and the OoS average lower still. OoS is the closest score to a realistic real-world application of the model - using it to predict unseen urban fabric types. The fact that the Spatial score is closer to it, shows that randomly splitting your modelling data leads to spatial leakage and spatially aware-splits result in more realistic evaluations. Nevertheless, the Out of Sample score is lower still, which suggests that even testing the model accuracy on spatially split data overestimates model performance.
 
 Third, even at this high level of aggregation urban form shows signs of heterogeneity. The F1 scores for the individual countries vary both Overture and Microsoft trained models, but especially in @tbl-f1aggms. The scores for Slovakia are especially lower suggesting that it represents a more distinct type of morphology, whereas the scores for Austria are the highest suggesting that it is more similar on average to Central Europe as a whole.
 
@@ -204,9 +254,9 @@ The patterns in the individual classes between sub-tables @tbl-f1classms and @tb
 Overall F1 scores at Level 4
 :::
 
-@tbl-f1agg4 shows the overall F1 scores for the Level 4 prediction models. 
+@tbl-f1agg4 shows the overall F1 scores for the Level 4 prediction models.
 
-First, overall the scores in @tbl-f1agg4 are lower than the scores in @tbl-f1agg across all models. This shows that the prediction task becomes more difficult as we move down the ground truth taxonomy. 
+First, overall the scores in @tbl-f1agg4 are lower than the scores in @tbl-f1agg across all models. This shows that the prediction task becomes more difficult as we move down the ground truth taxonomy.
 
 Second, @tbl-f1aggov4 mostly has higher values than @tbl-f1aggms4 across all models, suggesting that as the detail of the target clusters increases, so does the importance of the building footprints quality.
 
@@ -258,14 +308,14 @@ Individual F1 scores for  level 4 clusters
 
 @tbl-f1class4 shows the breakdown of f1 scores across Level 4 individual clusters and models. The same patterns with regard to spatial leakage and urban heterogeneity hold as in @tbl-f1agg4, @tbl-f1agg and @tbl-f1agg. However, there is a more pronounced difference in the data sources.
 
-@tbl-f1classov4 has consistently higher values than @tbl-f1classms4, in contrast to the pattern at Level 3, reported in @tbl-f1class, where only the **Central Urban Developments** class showed a significant difference. 
+@tbl-f1classov4 has consistently higher values than @tbl-f1classms4, in contrast to the pattern at Level 3, reported in @tbl-f1class, where only the **Central Urban Developments** class showed a significant difference.
 @tbl-f1classov4 has higher values of al teast .05 for **Dense Connected Developments** , **Large Interconnected Blocks**, **Large Utilitarian Development**, **Sparse Open Layout**.
 The one exception to the overall pattern is Slovakia, where the @tbl-f1classms4 is higher.
 
 
 ### Overture Spatial model
 
-We provide the confusion matrix and example predictions for the Level 4 model, trained using a spatial split on Overture data. We picked this model to provide example predictions across multiple counties and urban areas of different sizes. 
+We provide the confusion matrix and example predictions for the Level 4 model, trained using a spatial split on Overture data. We picked this model to provide example predictions across multiple counties and urban areas of different sizes.
 
 #### Confusion matrix
 
@@ -289,7 +339,7 @@ The results from the study pertain to three areas – urban morphology, spatial 
 With regard to urban morphology, the results show that modelling urban morphology is possible. However, morphological types are heterogeneous, and the characteristics and factors that are important vary across scales of dissimilarity.
 
 The modelling results show that a lot of useful information can be learned morphologically from one country and transferred to new contexts.
-@tbl-f1agg shows that at Level 3, the out-of-sample (OoS) averages are close to the spatial split F1 score of approximately 0.6. This is comparable to other land use prediction models, with two caveats. First, we are making predictions at a much higher level of detail—the individual building level—than typical land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out-of-sample scores. Furthermore, the higher scores in @tbl-f1agg, as well as the confusion matrix in @fig-cm, also suggest that we make reasonable misclassifications—one class at Level 4 is often misclassified as another Level 4 class within the same Level 3 category, i.e., part of the same branch in the ground truth taxonomy. If this were not the case, the @tbl-f1agg F1 scores would be equal to or lower than the @tbl-f1agg4 scores. 
+@tbl-f1agg shows that at Level 3, the out-of-sample (OoS) averages are close to the spatial split F1 score of approximately 0.6. This is comparable to other land use prediction models, with two caveats. First, we are making predictions at a much higher level of detail—the individual building level—than typical land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out-of-sample scores. Furthermore, the higher scores in @tbl-f1agg, as well as the confusion matrix in @fig-cm, also suggest that we make reasonable misclassifications—one class at Level 4 is often misclassified as another Level 4 class within the same Level 3 category, i.e., part of the same branch in the ground truth taxonomy. If this were not the case, the @tbl-f1agg F1 scores would be equal to or lower than the @tbl-f1agg4 scores.
 
 Nevertheless, in spite of these results, urban morphology remains highly heterogeneous. The differences between the country-specific models reflect the ability to use information from the analysed urban forms of several countries to infer the urban form type in an unseen country. If the results across these models were similar, it would imply that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. While this in itself is not a new finding, it has not been quantitatively demonstrated before, especially based on tens of morphological characteristics calculated using tens of millions of urban geometries across several countries.
 
@@ -428,7 +478,7 @@ The table below summarises classifier performance for two classification schemes
 
 Including spatial context (H3 resolution) notably improved classification accuracy and F1 scores. This improvement shows the importance of spatial context in predicting urban fabric classes. Similarily, and as anticipated, the model with a lower number of classes performed better compared to the one with 12 classes.
 
-#### Per Class Performance 
+#### Per Class Performance
 
 Examining the 12-class model with spatial context (H3 resolution 5) in greater detail reveals that some classes consistently performed better than others. Specifically, classes such as *Wild countryside*, *Countryside agriculture* and *Urbanity* achieved relatively high accuracy, reflecting their visual distinctiveness in satellite imagery. In contrast, classes like *Dense residential neighbourhoods* and *Connected residential neighbourhoods* showed lower accuracy scores. These urban classes heavily depend on road connectivity patterns, which the limited patch size (250×250 metres) does not adequately capture. This limitation might likely contributed to their poorer performance.
 
@@ -532,7 +582,7 @@ A key insight from the modelling work is that increasing the amount of training 
 
 The modelling work also highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalization, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.
 
-Lastly, the interest and various feature requests from the stakeholders confirm the need for a detailed urban classification at a granular level. Such a dataset can act as the foundation for multiple derived data products adapted to particular use cases. Examples included comparisons between countries at different scales - neighbourhoods, cities and regions. 
+Lastly, the interest and various feature requests from the stakeholders confirm the need for a detailed urban classification at a granular level. Such a dataset can act as the foundation for multiple derived data products adapted to particular use cases. Examples included comparisons between countries at different scales - neighbourhoods, cities and regions.
 
 ## Limitations
 While the presented methods demonstrate strong potential for scalable urban classification, several limitations should be acknowledged:

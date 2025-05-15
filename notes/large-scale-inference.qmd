@@ -1,15 +1,65 @@
 ---
 title: "Large scale inference and Operationalisation"
 subtitle: "Technical Note D7"
-author: "Martin Fleischmann"
+author:
+  - name: Krasen Samardzhiev
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Barbara Metzler
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
+  - name: Martin Fleischmann
+    email: martin.fleischmann@natur.cuni.cz
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Daniel Arribas-Bel
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
 format:
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
   html:
     toc: true
     css: styles.css
+  titlepage-pdf:
+    documentclass: scrbook
+    classoption: ["oneside", "open=any"]
+    toc: true
+    number-sections: true
+    colorlinks: true
+    coverpage: true
+    coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
+    coverpage-footer: |
+      Technical Note D7\
+      Large scale inference and Operationalisation
+    coverpage-bg-image: "../figures/himoc.png"
+    coverpage-theme:
+      page-html-color: "000000"
+      title-fontsize: 40
+      title-color: "white"
+      title-align: "right"
+      title-bottom: "10in"
+      title-fontfamily: "Open Sans"
+      header-style: "none"
+      author-style: "none"
+      footer-fontsize: 20
+      footer-color: "white"
+      footer-align: "right"
+      footer-bottom: "7in"
+      footer-fontfamily: "Open Sans"
+      date-style: "none"
+      bg-image-fading: "north"
+    titlepage-footer: |
+      The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
+      \
+      eurofab.org
+    titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 
 ---
@@ -33,22 +83,22 @@ bibliography: ../references.bib
 		- achievements, outstanding gaps, possible solutions
 	- Suitability of the data product for the definition of derived indicators
 	- Application potential
-		- examples of how to use the data products for the development of derived indicators, for different policy areas. 
-    
-    
+		- examples of how to use the data products for the development of derived indicators, for different policy areas.
+
+
 - Productionalisation strategy:
 
     -->
 
 ## Introduction
 
-This Technical Note presents a strategic roadmap for advancing the EuroFab project's urban fabric classification system from its current capabilities to a pan-European operational capacity. 
+This Technical Note presents a strategic roadmap for advancing the EuroFab project's urban fabric classification system from its current capabilities to a pan-European operational capacity.
 
-Ultimately, EuroFab seeks to pave the road for a world where stakeholders, from local authorities to supernational organisations, are able to track and monitor the pattern of urban development across time, in detail directly relevant for planning, and at scale. The pilot study in Central Europe and the UK consisted of three related parts - two machine learning and AI data processing pipelines, and a stakeholder engagement component. The current pilot study demonstrated the viability of using alternative data sources to produce multiscale descriptions of the built environment, based on analysis of individual buildings, street segments and their interactions. Furthermore, the stakeholder engagement part highlighted the multiple applications which stakeholders see for such a dataset. 
+Ultimately, EuroFab seeks to pave the road for a world where stakeholders, from local authorities to supernational organisations, are able to track and monitor the pattern of urban development across time, in detail directly relevant for planning, and at scale. The pilot study in Central Europe and the UK consisted of three related parts - two machine learning and AI data processing pipelines, and a stakeholder engagement component. The current pilot study demonstrated the viability of using alternative data sources to produce multiscale descriptions of the built environment, based on analysis of individual buildings, street segments and their interactions. Furthermore, the stakeholder engagement part highlighted the multiple applications which stakeholders see for such a dataset.
 
 The overall strategy can be summarised as consisting of three steps. First, using the first pipeline to generate detailed training data, at a large scale. Second, training the AI vision model on the outputs from step one, to fill data gaps and produce a temporal dimension for the European urban fabric classification. Third, to productise the results and expand the stakeholder engament in order to drive adoption and derive secondary indicators and datasets for specific applications.
 
-Transitioning the EuroFab system from a successful research project with functional processing pipelines to a robust, reliable, and continuously updated data product presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires improvement and upscaling of data processing capabilities, the establishment of a sustainable operational framework that covers potential risks, and a commitment to continuous improvement and user engagement. 
+Transitioning the EuroFab system from a successful research project with functional processing pipelines to a robust, reliable, and continuously updated data product presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires improvement and upscaling of data processing capabilities, the establishment of a sustainable operational framework that covers potential risks, and a commitment to continuous improvement and user engagement.
 
 The roadmap in this technical note addresses these multifaceted challenges, providing a structured approach to achieve full operationalization.
 

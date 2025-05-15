@@ -1,17 +1,65 @@
 ---
 title: "Algorithm Design and Theoretical Basis Description"
 subtitle: "Technical Note D2"
-author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
-institute: "Charles University; The Alan Turing Institute"
+author:
+  - name: Krasen Samardzhiev
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Barbara Metzler
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
+  - name: Martin Fleischmann
+    email: martin.fleischmann@natur.cuni.cz
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Daniel Arribas-Bel
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
 format:
-  pdf:
-    toc: true
-    number-sections: true
-    colorlinks: true
   html:
     toc: true
     css: styles.css
-
+  titlepage-pdf:
+    documentclass: scrbook
+    classoption: ["oneside", "open=any"]
+    toc: true
+    number-sections: true
+    colorlinks: true
+    coverpage: true
+    coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
+    coverpage-footer: |
+      Technical Note D2\
+      Algorithm Design and Theoretical Basis Description
+    coverpage-bg-image: "../figures/himoc.png"
+    coverpage-theme:
+      page-html-color: "000000"
+      title-fontsize: 40
+      title-color: "white"
+      title-align: "right"
+      title-bottom: "10in"
+      title-fontfamily: "Open Sans"
+      header-style: "none"
+      author-style: "none"
+      footer-fontsize: 20
+      footer-color: "white"
+      footer-align: "right"
+      footer-bottom: "7in"
+      footer-fontfamily: "Open Sans"
+      date-style: "none"
+      bg-image-fading: "north"
+    titlepage-footer: |
+      The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
+      \
+      eurofab.org
+    titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 ---
 
