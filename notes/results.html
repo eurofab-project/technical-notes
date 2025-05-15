@@ -6,7 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel">
+<meta name="author" content="Krasen Samardzhiev">
+<meta name="author" content="Barbara Metzler">
+<meta name="author" content="Martin Fleischmann">
+<meta name="author" content="Daniel Arribas-Bel">
 
 <title>Test and Verification Results – Technical notes</title>
 <style>
@@ -201,7 +204,7 @@ window.Quarto = {
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="results.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="results.pdf"><i class="bi bi-file-pdf"></i>PDF (titlepage)</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -214,15 +217,39 @@ window.Quarto = {
 
 
 <div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Author</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author">Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel </p>
+    <p class="author">Krasen Samardzhiev </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            Charles University; The Alan Turing Institute
+            Faculty of Science, Charles University
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Barbara Metzler </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            The Alan Turing Institute
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Martin Fleischmann <a href="mailto:martin.fleischmann@natur.cuni.cz" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Faculty of Science, Charles University
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Daniel Arribas-Bel </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            The Alan Turing Institute
           </p>
       </div>
   </div>
@@ -241,7 +268,7 @@ window.Quarto = {
 
 <section id="executive-summary" class="level1">
 <h1>Executive summary</h1>
-<p>This technical note presents the results from the modelling work specified in technical note “Technical Note D2 - Algorithm Design and Theoretical Basis Description” for both the morphometric and AI models. The first section “Morphometric classification” focuses on the morphometric prediction pipeline, its results accuracies and examples and introduces two extensions to the experiment design - an additional dataset and two new models that are evaluated. Similarly, the second section “Test and Verification Results: AI Model” describes the extensions and changes from the design specification and the results of the space-time modelling. This note ends with a conclusion section that brings together the two sets of results and discusses the limitations of the project. In summary, we are able to achieve high acuracies at multiple resolutions - at the building level for the morphometric model, and at the 250 metre grid cell resolution for the AI model. And that these results show that it is possible to use alternative data sources to characterize urban fort at scale, while preserving detail that is currently not captured by other large urban descriptors.</p>
+<p>This technical note presents the results from the modelling work specified in technical note “Technical Note D2 - Algorithm Design and Theoretical Basis Description” for both the morphometric and AI models. The first section “Morphometric classification” focuses on the morphometric prediction pipeline, its results accuracies and examples and introduces two extensions to the experiment design - an additional dataset and two new models that are evaluated. Similarly, the second section “Test and Verification Results: AI Model” describes the extensions and changes from the design specification and the results of the space-time modelling. This note ends with a conclusion section that brings together the two sets of results and discusses the limitations of the project. In summary, we are able to achieve high accuracy at multiple resolutions - at the building level for the morphometric model, and at the 250 metre grid cell resolution for the AI model. And that these results show that it is possible to use alternative data sources to characterize urban fort at scale, while preserving detail that is currently not captured by other large urban descriptors.</p>
 </section>
 <section id="morphometric-classification" class="level1">
 <h1>Morphometric classification</h1>
@@ -744,9 +771,9 @@ Table&nbsp;2: Distribution of test classes across the different models. The repo
 </div>
 </figure>
 </div>
-<p>Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture Models - less volumous, much less detailed and overall different in character. Table <a href="#tbl-testcounts" class="quarto-xref">Table&nbsp;2</a> shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4.</p>
-<p>The differences in <em>Large Interconnected Blocks</em> and <em>Dense Connected Developments</em> between <a href="#tbl-testcountsov" class="quarto-xref">Table&nbsp;2 (b)</a> and <a href="#tbl-testcountsms" class="quarto-xref">Table&nbsp;2 (a)</a> highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat adresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro F1 score weights the classes equially, so better performance in a class that doesnt appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the microsoft buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.</p>
-<p>Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class f1 scores highlight what is possible to detect with a specific datasets. Therefore, a high score means that a correct classification is more likely given all of the issues with the underlying data.</p>
+<p>Since the different test cases are derived from different underlying data, the results are interpreted with that in mind. The test data distribution and source in the MS models is different than the test data in Overture models - less volumnous, much less detailed and overall different in character. Table <a href="#tbl-testcounts" class="quarto-xref">Table&nbsp;2</a> shows the differences in distribution per Level 4 cluster with the table values reporting the thousands of instances of a particular class. The distribution will be similar for level 3 clusters, as they are aggregates of Level 4.</p>
+<p>The differences in <em>Large Interconnected Blocks</em> and <em>Dense Connected Developments</em> between <a href="#tbl-testcountsov" class="quarto-xref">Table&nbsp;2 (b)</a> and <a href="#tbl-testcountsms" class="quarto-xref">Table&nbsp;2 (a)</a> highlight that there are a lot less instances of buildings in dense central urban areas, since the extraction method in the MS case groups many of them together or completely discards them. However, in all cases, apart from Germany, as a percentage of the total test cases, these classes are low and therefore even high improvements in predicting these specific classes affect the overall reported accuracy relatively little. The weighted macro F1 score reported in the results in subsequent sections somewhat addresses the issue, but it accounts better for poor performance, rather than highlighting improvements. If the models perform poorly on a class that appears few times in the test data, then the weighted F1 score weights its specific score less than other classes that appear more frequently. The macro F1 score weights the classes equally, so better performance in a class that does not appear often increases the overall score relatively more. However, poorer performance for another class due to the test case distribution or problems with the Microsoft Buildings extraction algorithm counters this. For these reasons we extend our analysis to the individual classes and do not just look at the aggregate F1 scores.</p>
+<p>Nevertheless, the attached target labels come from the same source for both types of models and reflects a ground truth independent of these data issues. The detailed class by class F1 scores highlight what is possible to detect with a specific datasets. Therefore, a high score means that a correct classification is more likely given all of the issues with the underlying data.</p>
 <section id="level-3" class="level3">
 <h3 class="anchored" data-anchor-id="level-3">Level 3</h3>
 <section id="aggregate-scores" class="level4">
@@ -908,9 +935,9 @@ Table&nbsp;3: Overall F1 scores at level 3
 </div>
 </figure>
 </div>
-<p><a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> shows the aggregate F1 scores for the level 3 models trained on the Microsoft Building footprint and Overturemaps building footprints data. The Random, column shows the F1 scores for the model tested on randomly selected stratified data; Spatial - on the spatially aware split; OoS - stands for “Out of Sample” and is the average of the models, tested on each individual country and trained on the rest; the other columns are the specific F1 scores for each country, that make up the OoS. There are three main patterns present in the reported results.</p>
-<p>First, overall the aggregate scores between the models trained on the two datasets are almost equal. with the Overturemaps models being very slightly higher. This suggests that at this level of disagregation of urban form, detailed characteristics of building footprints and their interactions with each other and the street network matter less. For example, the Overture data has more accurate information of building corners, adjacency, orientation and others but that does not significantly improve the overall F1 scores.</p>
-<p>Second, more complex and relfective of the underlying phenomena testing splits result in more realistic model evaluations for both sub-tables. The Random split has the highest score, the spatial split is always lower and the OoS average lower still. OoS is the closest score to a realistic real-world application of the model - using it to predict unseen urban fabric types. The fact that the Spatial score is closer to it, shows that randomly spliting your modelling data leads to spatial leakage and spatially aware-splits result in more realistic evaluations. Nevertheless, the Out of Sample score is lower still, which suggests that even testing the model accuracy on spatially split data overestimates model performance.</p>
+<p><a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> shows the aggregate F1 scores for the level 3 models trained on the Microsoft Building footprint and Overture Maps building footprints data. The Random, column shows the F1 scores for the model tested on randomly selected stratified data; Spatial - on the spatially aware split; OoS - stands for “Out of Sample” and is the average of the models, tested on each individual country and trained on the rest; the other columns are the specific F1 scores for each country, that make up the OoS. There are three main patterns present in the reported results.</p>
+<p>First, overall the aggregate scores between the models trained on the two datasets are almost equal. with the Overture Maps models being very slightly higher. This suggests that at this level of disaggregation of urban form, detailed characteristics of building footprints and their interactions with each other and the street network matter less. For example, the Overture data has more accurate information of building corners, adjacency, orientation and others but that does not significantly improve the overall F1 scores.</p>
+<p>Second, more complex and reflective of the underlying phenomena testing splits result in more realistic model evaluations for both sub-tables. The Random split has the highest score, the spatial split is always lower and the OoS average lower still. OoS is the closest score to a realistic real-world application of the model - using it to predict unseen urban fabric types. The fact that the Spatial score is closer to it, shows that randomly splitting your modelling data leads to spatial leakage and spatially aware-splits result in more realistic evaluations. Nevertheless, the Out of Sample score is lower still, which suggests that even testing the model accuracy on spatially split data overestimates model performance.</p>
 <p>Third, even at this high level of aggregation urban form shows signs of heterogeneity. The F1 scores for the individual countries vary both Overture and Microsoft trained models, but especially in <a href="#tbl-f1aggms" class="quarto-xref">Table&nbsp;3 (a)</a>. The scores for Slovakia are especially lower suggesting that it represents a more distinct type of morphology, whereas the scores for Austria are the highest suggesting that it is more similar on average to Central Europe as a whole.</p>
 </section>
 <section id="class-scores" class="level4">
@@ -1329,8 +1356,8 @@ Table&nbsp;5: Overall F1 scores at Level 4
 <p><a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> shows the overall F1 scores for the Level 4 prediction models.</p>
 <p>First, overall the scores in <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> are lower than the scores in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> across all models. This shows that the prediction task becomes more difficult as we move down the ground truth taxonomy.</p>
 <p>Second, <a href="#tbl-f1aggov4" class="quarto-xref">Table&nbsp;5 (b)</a> mostly has higher values than <a href="#tbl-f1aggms4" class="quarto-xref">Table&nbsp;5 (a)</a> across all models, suggesting that as the detail of the target clusters increases, so does the importance of the building footprints quality.</p>
-<p>Third, heterogeinety of urban form is more prominent as evidenced by the relatively larger differences in f1 scores between the country specific models.</p>
-<p>Fourth, the same pattern of spatial leakege is present as in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>. As the complexity of the spatial splitting schemes increase to match the underlying phenomena, the f1 scores decrease.</p>
+<p>Third, heterogeneity of urban form is more prominent as evidenced by the relatively larger differences in f1 scores between the country specific models.</p>
+<p>Fourth, the same pattern of spatial leakage is present as in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>. As the complexity of the spatial splitting schemes increase to match the underlying phenomena, the f1 scores decrease.</p>
 </section>
 <section id="class-scores-1" class="level4">
 <h4 class="anchored" data-anchor-id="class-scores-1">Class scores</h4>
@@ -1711,8 +1738,8 @@ Table&nbsp;6: Individual F1 scores for level 4 clusters
 </div>
 </figure>
 </div>
-<p><a href="#tbl-f1class4" class="quarto-xref">Table&nbsp;6</a> shows the breakdown of f1 scores across Level 4 individual clusters and models. The same patterns with regard to spatial leakeage and urban heterogeneity hold as in <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a>, <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> and <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>. However, there is a more pronounced difference in the data sources.</p>
-<p><a href="#tbl-f1classov4" class="quarto-xref">Table&nbsp;6 (b)</a> has consistenly higher values than <a href="#tbl-f1classms4" class="quarto-xref">Table&nbsp;6 (a)</a>, in contrast to the pattern at Level 3, reported in <a href="#tbl-f1class" class="quarto-xref">Table&nbsp;4</a>, where only the <strong>Central Urban Developments</strong> class showed a significant difference. <a href="#tbl-f1classov4" class="quarto-xref">Table&nbsp;6 (b)</a> has higher values of alteast .05 for <strong>Dense Connected Developments</strong> , <strong>Large Interconnected Blocks</strong>, <strong>Large Utilitarian Development</strong>, <strong>Sparse Open Layout</strong>. The one exception to the overall pattern is Slovakia, where the <a href="#tbl-f1classms4" class="quarto-xref">Table&nbsp;6 (a)</a> is higher.</p>
+<p><a href="#tbl-f1class4" class="quarto-xref">Table&nbsp;6</a> shows the breakdown of f1 scores across Level 4 individual clusters and models. The same patterns with regard to spatial leakage and urban heterogeneity hold as in <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a>, <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> and <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>. However, there is a more pronounced difference in the data sources.</p>
+<p><a href="#tbl-f1classov4" class="quarto-xref">Table&nbsp;6 (b)</a> has consistently higher values than <a href="#tbl-f1classms4" class="quarto-xref">Table&nbsp;6 (a)</a>, in contrast to the pattern at Level 3, reported in <a href="#tbl-f1class" class="quarto-xref">Table&nbsp;4</a>, where only the <strong>Central Urban Developments</strong> class showed a significant difference. <a href="#tbl-f1classov4" class="quarto-xref">Table&nbsp;6 (b)</a> has higher values of al teast .05 for <strong>Dense Connected Developments</strong> , <strong>Large Interconnected Blocks</strong>, <strong>Large Utilitarian Development</strong>, <strong>Sparse Open Layout</strong>. The one exception to the overall pattern is Slovakia, where the <a href="#tbl-f1classms4" class="quarto-xref">Table&nbsp;6 (a)</a> is higher.</p>
 </section>
 </section>
 <section id="overture-spatial-model" class="level3">
@@ -1726,12 +1753,12 @@ Table&nbsp;6: Individual F1 scores for level 4 clusters
 <img src="../figures/results/cm.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (rowwise)
+Figure&nbsp;3: Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (row-wise)
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-cm" class="quarto-xref">Figure&nbsp;3</a> shows the confusion matrix for the model. The Classes are ordered to reflect the hierarchical releationships. The first row, <strong>Dense Connected Developments</strong> and the second, <strong>Large Interconnected Blocks</strong>, form one branch, <strong>Central Urban Developments</strong>,one levep up in the taxonomy. Similarly the <span class="math inline">\(n\)</span> and <span class="math inline">\(n+1\)</span> row form one branch. The first four classes form one branch two levels up, and so on.</p>
-<p>The results show that misclasified classes are generally misclassified within one or two cophereic distances in the taxonomy. In other words, if an ETC is misclassified there is a high chance, it will be labeled as a related class in the full taxonomy.</p>
+<p><a href="#fig-cm" class="quarto-xref">Figure&nbsp;3</a> shows the confusion matrix for the model. The Classes are ordered to reflect the hierarchical relationships. The first row, <strong>Dense Connected Developments</strong> and the second, <strong>Large Interconnected Blocks</strong>, form one branch, <strong>Central Urban Developments</strong>,one level up in the taxonomy. Similarly the <span class="math inline">\(n\)</span> and <span class="math inline">\(n+1\)</span> row form one branch. The first four classes form one branch two levels up, and so on.</p>
+<p>The results show that misclassified classes are generally misclassified within one or two cophenetic distances in the taxonomy. In other words, if an ETC is misclassified there is a high chance, it will be labeled as a related class in the full taxonomy.</p>
 </section>
 <section id="level-4-model-example-predictions" class="level4">
 <h4 class="anchored" data-anchor-id="level-4-model-example-predictions">Level 4 model example predictions</h4>
@@ -1756,7 +1783,7 @@ Figure&nbsp;4: Example Level 4 predictions for the areas around Vienna (Austria)
 <p>With regard to urban morphology, the results show that modelling urban morphology is possible. However, morphological types are heterogeneous, and the characteristics and factors that are important vary across scales of dissimilarity.</p>
 <p>The modelling results show that a lot of useful information can be learned morphologically from one country and transferred to new contexts. <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> shows that at Level 3, the out-of-sample (OoS) averages are close to the spatial split F1 score of approximately 0.6. This is comparable to other land use prediction models, with two caveats. First, we are making predictions at a much higher level of detail—the individual building level—than typical land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out-of-sample scores. Furthermore, the higher scores in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>, as well as the confusion matrix in <a href="#fig-cm" class="quarto-xref">Figure&nbsp;3</a>, also suggest that we make reasonable misclassifications—one class at Level 4 is often misclassified as another Level 4 class within the same Level 3 category, i.e., part of the same branch in the ground truth taxonomy. If this were not the case, the <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> F1 scores would be equal to or lower than the <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> scores.</p>
 <p>Nevertheless, in spite of these results, urban morphology remains highly heterogeneous. The differences between the country-specific models reflect the ability to use information from the analysed urban forms of several countries to infer the urban form type in an unseen country. If the results across these models were similar, it would imply that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. While this in itself is not a new finding, it has not been quantitatively demonstrated before, especially based on tens of morphological characteristics calculated using tens of millions of urban geometries across several countries.</p>
-<p>This heterogeneity, however, varies. Austria has, on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomometric tree the results across countries are relatively more similar than at Level 4. Furthermore, <strong>Dense Standalone Buildings</strong> , <strong>Large Interconnected Blocks</strong> , <strong>Large Utilitarian Development</strong>, are more predictable across all the country models than other classes.</p>
+<p>This heterogeneity, however, varies. Austria has, on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomic tree the results across countries are relatively more similar than at Level 4. Furthermore, <strong>Dense Standalone Buildings</strong> , <strong>Large Interconnected Blocks</strong> , <strong>Large Utilitarian Development</strong>, are more predictable across all the country models than other classes.</p>
 <p>Identifying different types of urban form also requires specific types of characteristics and data quality. The relative overall similarity between the scores in <a href="#tbl-f1aggms" class="quarto-xref">Table&nbsp;3 (a)</a> and <a href="#tbl-f1aggov" class="quarto-xref">Table&nbsp;3 (b)</a> suggests that, except in the case of <strong>Central Urban Developments</strong>, building polygon quality is not that important. Conversely, since the street network is shared, the results show the importance of the street network and how it can compensate for poor-quality building footprint data. As the required level of detail increases, however (see <a href="#tbl-f1aggms4" class="quarto-xref">Table&nbsp;5 (a)</a> and <a href="#tbl-f1aggov4" class="quarto-xref">Table&nbsp;5 (b)</a>), data quality and aspects of building morphology such as adjacency, configuration, and shape become more important.</p>
 </section>
 <section id="morphological-data" class="level3">
@@ -1768,7 +1795,7 @@ Figure&nbsp;4: Example Level 4 predictions for the areas around Vienna (Austria)
 <section id="spatial-modelling-in-general" class="level3">
 <h3 class="anchored" data-anchor-id="spatial-modelling-in-general">Spatial modelling in general</h3>
 <p>The results from the comparisons highlight the need for complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores, many land use prediction models do not take into account spatial autocorrelation. As consistently shown in the F1 score tables in this work, this results in artificially higher scores. Even worse, in the case of more complex models, they may not be learning the weights necessary to perform inference, but rather overfitting and memorising the training data. This work further shows that, for urban morphological predictions and analysis specifically, spatial leakage is ubiquitous.</p>
-<p>There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other apporaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.</p>
+<p>There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other approaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.</p>
 <p>In the specific case of urban morphology, there are also other possible scales to consider, such as regional or city-level, which could also affect predictions. We focused specifically on the national scale, since data quality from OpenStreetMap varies widely at that level. Furthermore, the most common use case for the model would be to predict morphological classes for an entire country that is not part of the training data. Nevertheless, the implications of our results are that when modelling spatial phenomena using machine learning models, train/test splits should account for the specific properties of the phenomenon under analysis. Works that do not explicitly do this risk reporting artificially high accuracies that do not reflect real model use cases.</p>
 </section>
 </section>
@@ -1788,7 +1815,7 @@ Figure&nbsp;4: Example Level 4 predictions for the areas around Vienna (Austria)
 </section>
 <section id="urban-fabric-classes-outcome" class="level3">
 <h3 class="anchored" data-anchor-id="urban-fabric-classes-outcome">Urban Fabric Classes (Outcome)</h3>
-<p>We employed labels from the Spatial Signatures Framework<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, a typology classifying British urban environments based on form (physical appearance) and function (usage). Although our project specifically targets urban fabric classification based primarily on visible form — which might be sipler to predict — the form-specific classification scheme remains under development (as detailed in the Sections on <em>Morphometric Classification</em>). Consequently, the comprehensive Spatial Signatures Framework currently serves as a proxy aligning closely with our project’s urban characterisation objectives.</p>
+<p>We employed labels from the Spatial Signatures Framework<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, a typology classifying British urban environments based on form (physical appearance) and function (usage). Although our project specifically targets urban fabric classification based primarily on visible form — which might be simpler to predict — the form-specific classification scheme remains under development (as detailed in the Sections on <em>Morphometric Classification</em>). Consequently, the comprehensive Spatial Signatures Framework currently serves as a proxy aligning closely with our project’s urban characterisation objectives.</p>
 <p>We used two versions of this dataset: one with 12 classes and another simplified version with 7 classes. The 12-class scheme combines the various urbanity categories into a single class, maintaining all other Spatial Signatures classes:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>class_labels <span class="op">=</span> {</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Accessible suburbia'</span>: <span class="dv">0</span>,</span>
@@ -2089,7 +2116,7 @@ Figure&nbsp;4: Example Level 4 predictions for the areas around Vienna (Austria)
 <h1>Discussion</h1>
 <section id="key-findings" class="level3">
 <h3 class="anchored" data-anchor-id="key-findings">Key Findings</h3>
-<p>The analysis shows that urban fabric classifications exhibit distinct temporal and spatial dynamics, reflecting varying levels of stability and diversity over time. Notably, urban classes such as <em>Dense urban neighbourhoods</em>, and <em>Connected residential neighbourhoods</em> displayed higher probabilities of transition, indicating active urban transformation. Similarily, suburban classes, such as <em>Accessible suburbia</em>, <em>Disconnected suburbia</em> and <em>Urban buffer</em>, also show a higher probability of change between said classes. Conversely, rural classes showed significant stability. This is most probably related to the uncertainty in the classifier than connected to actual changes of the environment.</p>
+<p>The analysis shows that urban fabric classifications exhibit distinct temporal and spatial dynamics, reflecting varying levels of stability and diversity over time. Notably, urban classes such as <em>Dense urban neighbourhoods</em>, and <em>Connected residential neighbourhoods</em> displayed higher probabilities of transition, indicating active urban transformation. Similarly, suburban classes, such as <em>Accessible suburbia</em>, <em>Disconnected suburbia</em> and <em>Urban buffer</em>, also show a higher probability of change between said classes. Conversely, rural classes showed significant stability. This is most probably related to the uncertainty in the classifier than connected to actual changes of the environment.</p>
 <section id="lessons-learned" class="level4">
 <h4 class="anchored" data-anchor-id="lessons-learned">Lessons Learned</h4>
 <ul>

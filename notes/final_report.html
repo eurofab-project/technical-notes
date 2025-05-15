@@ -6,11 +6,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="K. Samardzhiev, M. Fleischmann">
-<meta name="author" content="B. Metzler, D. Arribas-Bel">
-<meta name="author" content="C. Baranzelli, A. Banquet">
+<meta name="author" content="Krasen Samardzhiev">
+<meta name="author" content="Martin Fleischmann">
+<meta name="author" content="Barbara Metzler">
+<meta name="author" content="Daniel Arribas-Bel">
 
-<title>EUROFAB: EUROPEAN URBAN FABRIC CLASSIFICATION USING ARTIFICIAL INTELLIGENCE – Technical notes</title>
+<title>EuroFab: European Urban Fabric Classification Using Artificial Intelligence – Technical notes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -152,7 +153,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#morphological-data-pipeline" id="toc-morphological-data-pipeline" class="nav-link" data-scroll-target="#morphological-data-pipeline">Morphological data pipeline</a></li>
   <li><a href="#ground-truth-classes" id="toc-ground-truth-classes" class="nav-link" data-scroll-target="#ground-truth-classes">Ground truth classes</a></li>
-  <li><a href="#modeling-scenarios" id="toc-modeling-scenarios" class="nav-link" data-scroll-target="#modeling-scenarios">Modeling scenarios</a></li>
+  <li><a href="#modelling-scenarios" id="toc-modelling-scenarios" class="nav-link" data-scroll-target="#modelling-scenarios">Modelling scenarios</a></li>
   </ul></li>
   <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
   <ul class="collapse">
@@ -202,7 +203,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#morphometrics" id="toc-morphometrics" class="nav-link" data-scroll-target="#morphometrics">Morphometrics</a></li>
   <li><a href="#eo" id="toc-eo" class="nav-link" data-scroll-target="#eo">EO</a></li>
-  <li><a href="#software-ai-method-for-urban-fabric-classification-and-morphometric-characterization" id="toc-software-ai-method-for-urban-fabric-classification-and-morphometric-characterization" class="nav-link" data-scroll-target="#software-ai-method-for-urban-fabric-classification-and-morphometric-characterization">Software: AI Method for Urban Fabric classification and morphometric characterization</a></li>
+  <li><a href="#software-ai-method-for-urban-fabric-classification-and-morphometric-characterisation" id="toc-software-ai-method-for-urban-fabric-classification-and-morphometric-characterisation" class="nav-link" data-scroll-target="#software-ai-method-for-urban-fabric-classification-and-morphometric-characterisation">Software: AI Method for Urban Fabric classification and morphometric characterisation</a></li>
   </ul></li>
   <li><a href="#example-datasets" id="toc-example-datasets" class="nav-link" data-scroll-target="#example-datasets">Example datasets</a>
   <ul class="collapse">
@@ -213,39 +214,53 @@ div.csl-indent {
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="final_report.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="final_report.pdf"><i class="bi bi-file-pdf"></i>PDF (titlepage)</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">EUROFAB: EUROPEAN URBAN FABRIC CLASSIFICATION USING ARTIFICIAL INTELLIGENCE</h1>
-<p class="subtitle lead">Final Report</p>
+<h1 class="title">EuroFab: European Urban Fabric Classification Using Artificial Intelligence</h1>
+<p class="subtitle lead">Final report</p>
 </div>
 
 
 <div class="quarto-title-meta-author">
   <div class="quarto-title-meta-heading">Authors</div>
-  <div class="quarto-title-meta-heading">Affiliation</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author">K. Samardzhiev, M. Fleischmann </p>
+    <p class="author">Krasen Samardzhiev </p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
-            Charles University; The Alan Turing Institute, OECD
+            Faculty of Science, Charles University
           </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author">B. Metzler, D. Arribas-Bel </p>
+    <p class="author">Martin Fleischmann <a href="mailto:martin.fleischmann@natur.cuni.cz" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
   </div>
   <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Faculty of Science, Charles University
+          </p>
       </div>
     <div class="quarto-title-meta-contents">
-    <p class="author">C. Baranzelli, A. Banquet </p>
+    <p class="author">Barbara Metzler </p>
   </div>
   <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            The Alan Turing Institute
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Daniel Arribas-Bel </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            The Alan Turing Institute
+          </p>
       </div>
   </div>
 
@@ -263,21 +278,20 @@ div.csl-indent {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessability <span class="citation" data-cites="calafiore2023inequalities">(<a href="#ref-calafiore2023inequalities" role="doc-biblioref">Calafiore et al. 2023</a>)</span>, subjective experience of the city and cost of housing <span class="citation" data-cites="QIU2022104358">(<a href="#ref-QIU2022104358" role="doc-biblioref">Qiu et al. 2022</a>)</span>, as well as energy effeciency <span class="citation" data-cites="ZHU2022104576">(<a href="#ref-ZHU2022104576" role="doc-biblioref">Zhu et al. 2022</a>)</span> are some of the application areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The derived classes vary depending on the application. Example coarse groups are continuous, discontinious and non-urban land <span class="citation" data-cites="europeanenvironmentagency1990">(<a href="#ref-europeanenvironmentagency1990" role="doc-biblioref">European Environment Agency 1990</a>)</span>. More detailed groupings capture the characteristics of streets and buildings, for example organic and gridiron streets <span class="citation" data-cites="araldi:hal-04774886">(<a href="#ref-araldi:hal-04774886" role="doc-biblioref">Araldi and Fusco 2024</a>)</span>. These resulting classifications of urban form provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.</p>
-<p>However, detailed, scalable, and consistent classifications that reflecting the nature of the local data all at the same time are scarcely available. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. <span class="citation" data-cites="europeanenvironmentagency1990">Stewart and Oke (<a href="#ref-stewart2012" role="doc-biblioref">2012</a>)</span>. The classifications developed by key members of the EuroFab project team overcome these limitations <span class="citation" data-cites="primus fleischmann2022geographical fleischmann2022methodological">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>; <a href="#ref-fleischmann2022geographical" role="doc-biblioref">Fleischmann and Arribas-Bel 2022</a>; <a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span>, but are dependent on the availability of high quality data capturing urban form, e.g.&nbsp;individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.</p>
-<!--Aims-->
-<p>Therefore, there is a need to: one, derive detailed classifications at scale from suboptimal data that does not have the same qualities as, for example, cadastre would have; and two, add a temporal dimension to the classification which shows how it evolves over time. Such a novel classification can improve urban-form related research and policy applications, by providing researchers, policy makers and practicioners with unprecedented detail and temporal information on urban form. Existing work can be extended using the new detailed classes, while new avenues of research can be established using the temporal dimension.</p>
+<p>The spatial layout of the physical elements of cities affects most activities their residents undertake. Accessibility <span class="citation" data-cites="calafiore2023inequalities">(<a href="#ref-calafiore2023inequalities" role="doc-biblioref">Calafiore et al. 2023</a>)</span>, subjective experience of the city and cost of housing <span class="citation" data-cites="QIU2022104358">(<a href="#ref-QIU2022104358" role="doc-biblioref">Qiu et al. 2022</a>)</span>, as well as energy efficiency <span class="citation" data-cites="ZHU2022104576">(<a href="#ref-ZHU2022104576" role="doc-biblioref">Zhu et al. 2022</a>)</span> are some of the application areas where urban form is used to guide research, applications and policy. Due to the numerous patterns, scales and manifestations of urban form, researchers turn to classification as a method to reduce complexity and group the variations in urban form into classes. The derived classes vary depending on the application. Example coarse groups are continuous, discontinuous and non-urban land <span class="citation" data-cites="europeanenvironmentagency1990">(<a href="#ref-europeanenvironmentagency1990" role="doc-biblioref">European Environment Agency 1990</a>)</span>. More detailed groupings capture the characteristics of streets and buildings, for example organic and gridiron streets <span class="citation" data-cites="araldi:hal-04774886">(<a href="#ref-araldi:hal-04774886" role="doc-biblioref">Araldi and Fusco 2024</a>)</span>. These resulting classifications of urban form provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning.</p>
+<p>However, detailed, scalable, and consistent classifications that reflect the nature of the local data all at the same time are scarcely available. We often see conceptual classification, which has a tendency to oversimplify the structure when “zooming in”, loosing the interest of planners and policy-makers, i.e. <span class="citation" data-cites="europeanenvironmentagency1990">Stewart and Oke (<a href="#ref-stewart2012" role="doc-biblioref">2012</a>)</span>. The classifications developed by key members of the EuroFab project team overcome these limitations <span class="citation" data-cites="primus fleischmann2022geographical fleischmann2022methodological">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>; <a href="#ref-fleischmann2022geographical" role="doc-biblioref">Fleischmann and Arribas-Bel 2022</a>; <a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span>, but are dependent on the availability of high quality data capturing urban form - individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Furthermore, even if countries have high quality building data, they are typically missing information on the temporal evolution of the elements.</p>
+<p>Therefore, there is a need to: one, derive detailed classifications at scale from suboptimal data that does not have the same qualities as, for example, cadastre would have; and two, add a temporal dimension to the classification which shows how it evolves over time. Such a novel classification can improve urban-form related research and policy applications, by providing researchers, policy makers and practitioners with unprecedented detail and temporal information on urban form. Existing work can be extended using the new detailed classes, while new avenues of research can be established using the temporal dimension.</p>
+<p>The strategic goal of the project is to be the basis for subsequent work that will deliver a practically useful, detailed classification of all European urban fabric across time. The specific immediate aim of the current work is to develop a methodology capable of achieving the two objectives and verify its validity through a pilot study in Central Europe and the United Kingdom.</p>
 <!--Approach-->
-<p>The goal of this project is to develop a methodology capable of achieving these two objectives and verify its validity through a pilot study in Central Europe and the United Kingdom. The basis for our work are two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The overall approach is to use the first machine learning model to produce training data at scale for the second AI model, since currently such datasets do not exist, and to finally use the AI model to derive a detailed temporal classification of urban form in Europe. To further verify the validity of our approach and the usefulness of the results, we further carry out consultations with stakeholders from the private sector, local planning departments and government organisations. This work will give us insights into how to adapt the methodology and data for practical use cases.</p>
-<p>The strategic goal of the project is to be the basis for subseqent work that will deliver a practically useful, detailed classification of European urban fabric across time.</p>
-<p>The next three sections of the report describe in more detail the methodological approaches and results of the three workstreams - the first machine learning morphological model, the second AI vision model, and the stakeholder engagement. The conclusion section interprets these findings and proposes how to scale the methodology for the whole of Europe, while highlighting potential limitations. The last Open Science section highlights the open source software and datasets developed during the project.</p>
+<p>The basis for our work are two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The overall approach is to use the first machine learning model to produce training data at scale for the second AI model, since currently such datasets do not exist, and to finally use the AI model to derive a detailed temporal classification of urban form in Europe. To further verify the validity of our approach and the usefulness of the results, we further carry out consultations with stakeholders from the private sector, local planning departments and government organisations. This work will give us insights into how to adapt the methodology and data for practical use cases.</p>
+<p>The next three sections of the report describe in more detail the methodological approaches and results of the three work streams - the first machine learning morphological model, the second AI vision model, and the stakeholder engagement. The conclusion section interprets these findings and proposes how to scale the methodology for the whole of Europe, while highlighting potential limitations. The last Open Science section highlights the open source software and datasets developed during the project.</p>
 <p>More details about the methodology, background and results of each stage of the project are available in the respective technical notes. The methodology and results from the report are being prepared for scientific publication in leading urban analytics journals.</p>
 </section>
 <section id="morphological-machine-learning-model" class="level1">
 <h1>Morphological machine learning model</h1>
 <section id="methodology" class="level2">
 <h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
-<p>The main aim of the morphological machine learning model is to show that the <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> urban fabric classification, built on cadastre data, can be reproduced using more widely available data sources - building footprints derived from satellite imary, volunatarily contributed building footrints, i.e.&nbsp;Openstreetmap building footprints, or combinations of both - OvertureMap. This model can be later used to expand the cadastral taxonomy and generate training data for the AI vision model.</p>
+<p>The main aim of the morphological machine learning model is to show that the <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> urban fabric classification, built on cadastre data, can be reproduced using more widely available data sources - building footprints derived from satellite imagery, voluntarily contributed building footprints, i.e.&nbsp;OpenStreetMap building footprints, or combinations of both - Overture Map. This model can be later used to expand the cadastral taxonomy and generate training data for the AI vision model.</p>
 <p>The study area covers five countries in Central Europe - Germany, Poland, Slovakia, Austria, Czechia. These countries were chosen as they cover a large area demonstrating the ability of the methodology to scale and have a rich variety of urban form types, developed under different planning regimes.</p>
 <p>The bulk of the morphological work can be summarised as:</p>
 <ol type="1">
@@ -305,23 +319,23 @@ Figure&nbsp;1: Example unprocessed and processed street network.
 <img src="../figures/results/building_comparison.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Comparison between buiding footprint data sources.
+Figure&nbsp;2: Comparison between building footprint data sources.
 </figcaption>
 </figure>
 </div>
-<p>The core datasets used in the analysis are two types of buidling footprints - Microsoft Satelite Building footprints and OvertureMap building footprints - and street geometries from OvertuMaps. The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. And example for Prague is shown in <a href="#fig-street" class="quarto-xref">Figure&nbsp;1</a>.</p>
-<p><a href="#fig-data" class="quarto-xref">Figure&nbsp;2</a> shows a comparison between the cadastral data, Microsoft building footprints and Overtumap building footprints. Both types of datasets have issues compared to cadastral information, however they generally have larger coverage. Microsoft building footprints have almost global coverage and are heterogenous - they come from the same source. OvertureMaps data is more detailed and a combination of datasets, it even includes some Microsoft footprints. But this heterogeneity can make statistics calculated in different areas within the whole dataset incomparable to each other.</p>
+<p>The core datasets used in the analysis are two types of building footprints - Microsoft Satellite Building footprints and Overture Maps building footprints - and street geometries from Overture Maps. The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. An example for Prague is shown in <a href="#fig-street" class="quarto-xref">Figure&nbsp;1</a>.</p>
+<p><a href="#fig-data" class="quarto-xref">Figure&nbsp;2</a> shows a comparison between the cadastral data, Microsoft building footprints and Overture Maps building footprints. Both types of datasets have issues compared to cadastral information, however they generally have larger coverage. Microsoft building footprints have almost global coverage and are heterogenous - they come from the same source. Overture Maps data is more detailed and a combination of datasets, it even includes some Microsoft footprints. But this heterogeneity can make statistics calculated in different areas within the whole dataset incomparable to each other.</p>
 </section>
 <section id="morphological-pipeline" class="level4">
 <h4 class="anchored" data-anchor-id="morphological-pipeline">Morphological pipeline</h4>
-<p>The morphometric characterisation is directly derived from the method of <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> to ensure that we minimise conceptual differences between the methodological backbone used to derive the target classification and the the data used within our model. Therefore, we focus the morphological charactarisation around the concept of Enclosed Tessellation Cells <span class="citation" data-cites="fleischmann2022methodological">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span> - “the portion of space that results from growing a morphological tessellation within an enclosure delineated by a series of natural or built barriers identified from the literature on urban form, function and perception”. In this definition, the morphological tessellation is a delineation of the space based on Voronoi polygons centred around buildings and an enclosure is any area enclosed by streets. The boundaries of ETCs also represent the closest area of land to each building, than to any other building within an enclosure, and therefore can act as the unit that combines aspects of building and street morphological characteristics.</p>
+<p>The morphometric characterisation is directly derived from the method of <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> to ensure that we minimise conceptual differences between the methodological backbone used to derive the target classification and the data used within our model. Therefore, we focus the morphological characterisation around the concept of Enclosed Tessellation Cells <span class="citation" data-cites="fleischmann2022methodological">(<a href="#ref-fleischmann2022methodological" role="doc-biblioref">Fleischmann et al. 2022</a>)</span> - “the portion of space that results from growing a morphological tessellation within an enclosure delineated by a series of natural or built barriers identified from the literature on urban form, function and perception”. In this definition, the morphological tessellation is a delineation of the space based on Voronoi polygons centred around buildings and an enclosure is any area enclosed by streets. The boundaries of ETCs also represent the closest area of land to each building, than to any other building within an enclosure, and therefore can act as the unit that combines aspects of building and street morphological characteristics.</p>
 <p>Broadly the pipeline can be summarised as:</p>
 <ol type="1">
 <li>Street &amp; building preprocessing. This includes downloading the streets and buildings, simplifying the street network, and fixing topological issues with the building footprints.</li>
 <li>Generating derived morphological elements - street nodes, street enclosures, Enclosed Tessellation cells.</li>
-<li>Calculating 52 morphological characteristics which capture aspects of all individual elements (i.e.&nbsp;building area or perimenter), as well as their interactions - for example, buildings per street or number of reachable ETCs within five topological steps of the street network.</li>
+<li>Calculating 52 morphological characteristics which capture aspects of all individual elements (i.e.&nbsp;building area or perimeter), as well as their interactions - for example, buildings per street or number of reachable ETCs within five topological steps of the street network.</li>
 </ol>
-<p>This pipeline results in around 62 million ETCs with 52 morpholgical characteristics for the Microsoft data, and around 88 million ETCs with 52 morpholgical characteristics for the OvertureMaps data.</p>
+<p>This pipeline results in around 62 million ETCs with 52 morphological characteristics for the Microsoft data, and around 88 million ETCs with 52 morphological characteristics for the Overture Maps data.</p>
 </section>
 </section>
 <section id="ground-truth-classes" class="level3">
@@ -390,7 +404,7 @@ Table&nbsp;1: Cluster descriptions
 </tr>
 <tr class="even">
 <td>Large Utilitarian Development</td>
-<td>This cluster consists of the largest buildings with notable variations in size and shape, as well as low to moderate street connectivity and wide streets. The design does not emphasize sunlight exposure, creating broad but less refined configurations, typical of industrial and other service areas.</td>
+<td>This cluster consists of the largest buildings with notable variations in size and shape, as well as low to moderate street connectivity and wide streets. The design does not emphasise sunlight exposure, creating broad but less refined configurations, typical of industrial and other service areas.</td>
 </tr>
 <tr class="odd">
 <td>Extensive Wide-Spaced Developments</td>
@@ -405,7 +419,7 @@ Table&nbsp;1: Cluster descriptions
 <div id="tbl-taxonomy" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-taxonomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;2: Taxonometric tree
+Table&nbsp;2: Taxonomic tree
 </figcaption>
 <div aria-describedby="tbl-taxonomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -462,7 +476,7 @@ Table&nbsp;2: Taxonometric tree
 </tr>
 <tr class="odd">
 <td>Utilitarian Street Network</td>
-<td>Utalitarian street network</td>
+<td>Utilitarian street network</td>
 <td>Large Scale Developments</td>
 <td>Large Utilitarian Development</td>
 </tr>
@@ -509,8 +523,8 @@ Table&nbsp;2: Taxonometric tree
 </div>
 <p>The taxonomy of ground truth classes from <span class="citation" data-cites="primus">(<a href="#ref-primus" role="doc-biblioref">Fleischmann and Samardzhiev Forthcoming</a>)</span> and available as an interactive map online at <a href="https://uscuni.org/himoc/">HiMOC</a> is presented in <a href="#tbl-taxonomy" class="quarto-xref">Table&nbsp;2</a>. The descriptions for the level 4 classes are available in <a href="#tbl-level4names" class="quarto-xref">Table&nbsp;1</a>. All subsequent analysis focuses on Levels 3 and 4. The target labels from this are assigned to each building from the morphological pipeline based on spatial intersections.</p>
 </section>
-<section id="modeling-scenarios" class="level3">
-<h3 class="anchored" data-anchor-id="modeling-scenarios">Modeling scenarios</h3>
+<section id="modelling-scenarios" class="level3">
+<h3 class="anchored" data-anchor-id="modelling-scenarios">Modelling scenarios</h3>
 <div id="fig-traintest" class="nostretch quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-traintest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -521,7 +535,7 @@ Figure&nbsp;3: Train/test data splits for different models.
 </figcaption>
 </figure>
 </div>
-<p><a href="#fig-traintest" class="quarto-xref">Figure&nbsp;3</a> shows the all experiments that will be performed for each dataset. The main goal with so many training / testing configurations is to get detailed statistics about the expected model performance in realistic scenarios - predicting urban form in various types of new environemnts. Two models - a global random model and a global spatially explicit model - are trained to highlight the effects of spatial lag in model training and testing, while the country specific models are trained to evaluate the ability of the models to generalise outside of the training data scope. The train / test configuration for the spatially explicit model first deliniates the study area into h3 level second hexagon cells with an area of around 500 sq.m.. The dataset is then split into train and test subsets randomly, but ensuring that all buildings within a hexagon are either part of the train or test subset.</p>
+<p><a href="#fig-traintest" class="quarto-xref">Figure&nbsp;3</a> shows the all experiments that will be performed for each dataset. The main goal with so many training / testing configurations is to get detailed statistics about the expected model performance in realistic scenarios - predicting urban form in various types of new environments. Two models - a global random model and a global spatially explicit model - are trained to highlight the effects of spatial lag in model training and testing, while the country specific models are trained to evaluate the ability of the models to generalise outside of the training data scope. The train / test configuration for the spatially explicit model first delineates the study area into h3 level second hexagon cells with an area of around 500 sqm. The dataset is then split into train and test subsets randomly, but ensuring that all buildings within a hexagon are either part of the train or test subset.</p>
 <p>In total we test 24 models to gain information about the predictability of detailed urban form classes. All experiments are repeated independently for each dataset - once for the Overture and once for the Microsoft building footprints - and for each of Level 3 and Level 4 of the taxonomy. This is done to verify in which cases, what data can be used to derive detailed urban form classifications. The models for each experiment are HistogramGradientBoostingClassifier and share the same parameters - no max depth, no max leaf nodes, max_features = 0.5, learning_rate = .03 .</p>
 </section>
 </section>
@@ -1473,14 +1487,14 @@ Table&nbsp;6: Individual F1 scores for level 4 clusters
 <img src="../figures/results/cm.png" class="nostretch img-fluid quarto-figure quarto-figure-center figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (rowwise)
+Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Normalised by the True Label (row-wise)
 </figcaption>
 </figure>
 </div>
 <p>With regard to urban morphology, the results show that deriving detailed urban morphology classes from alternative data sources is possible. However, morphological types are heterogeneous, and the characteristics and factors that are important vary across scales of dissimilarity.</p>
 <p>The modelling results show that a lot of useful information can be learned morphologically from one country and transferred to new contexts. <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> shows that at Level 3, the out-of-sample (OoS) averages are close to the spatial split F1 score of approximately 0.6. This is comparable to other land use prediction models, with two caveats. First, we are making predictions at a much higher level of detail—the individual building level—than typical land use models. Second, we test the models in a more difficult but more realistic scenario and report the possible out-of-sample scores. Furthermore, the higher scores in <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a>, as well as the confusion matrix in <a href="#fig-cm" class="quarto-xref">Figure&nbsp;4</a>, also suggest that we make reasonable misclassifications—one class at Level 4 is often misclassified as another Level 4 class within the same Level 3 category, i.e., part of the same branch in the ground truth taxonomy. If this were not the case, the <a href="#tbl-f1agg" class="quarto-xref">Table&nbsp;3</a> F1 scores would be equal to or lower than the <a href="#tbl-f1agg4" class="quarto-xref">Table&nbsp;5</a> scores.</p>
 <p>Nevertheless, in spite of these results, urban morphology remains highly heterogeneous. The differences between the country-specific models reflect the ability to use information from the analysed urban forms of several countries to infer the urban form type in an unseen country. If the results across these models were similar, it would imply that urban form is similar across countries. The large differences suggest that underlying national phenomena affect morphology. While this in itself is not a new finding, it has not been quantitatively demonstrated before, especially based on tens of morphological characteristics calculated using tens of millions of urban geometries across several countries.</p>
-<p>This heterogeneity, however, varies. Austria has, on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomometric tree the results across countries are relatively more similar than at Level 4. Furthermore, <strong>Dense Standalone Buildings</strong> , <strong>Large Interconnected Blocks</strong> , <strong>Large Utilitarian Development</strong>, are more predictable across all the country models than other classes.</p>
+<p>This heterogeneity, however, varies. Austria has, on average, the most similar morphology to the other four Central European countries, whereas Czechia and Slovakia are the most different. The level of morphological detail at which the analysis is carried out also has an effect. At Level 3 of the morphological taxonomic tree the results across countries are relatively more similar than at Level 4. Furthermore, <strong>Dense Standalone Buildings</strong> , <strong>Large Interconnected Blocks</strong> , <strong>Large Utilitarian Development</strong>, are more predictable across all the country models than other classes.</p>
 <p>Identifying different types of urban form also requires specific types of characteristics and data quality. The relative overall similarity between the scores in <a href="#tbl-f1aggms" class="quarto-xref">Table&nbsp;3 (a)</a> and <a href="#tbl-f1aggov" class="quarto-xref">Table&nbsp;3 (b)</a> suggests that, except in the case of <strong>Central Urban Developments</strong>, building polygon quality is not that important. Conversely, since the street network is shared, the results show the importance of the street network and how it can compensate for poor-quality building footprint data. As the required level of detail increases, however (see <a href="#tbl-f1aggms4" class="quarto-xref">Table&nbsp;5 (a)</a> and <a href="#tbl-f1aggov4" class="quarto-xref">Table&nbsp;5 (b)</a>), data quality and aspects of building morphology such as adjacency, configuration, and shape become more important.</p>
 </section>
 <section id="morphological-data" class="level4">
@@ -1492,7 +1506,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <section id="spatial-modelling" class="level4">
 <h4 class="anchored" data-anchor-id="spatial-modelling">Spatial modelling</h4>
 <p>The results from the comparisons highlight the need for complex train/testing dataset splits when training models in the presence of spatial autocorrelation. When reporting accuracy scores, many land use prediction models do not take into account spatial autocorrelation. As consistently shown in the F1 score tables in this work, this results in artificially higher scores. Even worse, in the case of more complex models, they may not be learning the weights necessary to perform inference, but rather overfitting and memorising the training data. This work further shows that, for urban morphological predictions and analysis specifically, spatial leakage is ubiquitous.</p>
-<p>There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other apporaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.</p>
+<p>There are other works and papers that have highlighted the need for spatially stratified training of models. They suggest various schemes to split the data spatially - predefined grids or locally derived boundaries or other approaches all together. What this paper further highlights is the need to consider not just the specific type of spatial stratification, but the scale of stratification as well. The consistently lower scores for the spatial split and the individual countries models highlight the fact that there is spatial autocorrelation of morphological features at multiple scales - local, as defined in this work based on h3 level 7 grid cells, and national as defined by national boundaries.</p>
 <p>In the specific case of urban morphology, there are also other possible scales to consider, such as regional or city-level, which could also affect predictions. We focused specifically on the national scale, since data quality from OpenStreetMap varies widely at that level. Furthermore, the most common use case for the model would be to predict morphological classes for an entire country that is not part of the training data. Nevertheless, the implications of our results are that when modelling spatial phenomena using machine learning models, train/test splits should account for the specific properties of the phenomenon under analysis. Works that do not explicitly do this risk reporting artificially high accuracies that do not reflect real model use cases.</p>
 </section>
 </section>
@@ -1500,12 +1514,12 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </section>
 <section id="ai-based-urban-fabric-classification-using-satellite-imagery" class="level1">
 <h1>AI-Based Urban Fabric Classification using Satellite Imagery</h1>
-<p>Urban areas represent complex and dynamic environments, making traditional analysis challenging due to their diverse characteristics. Remote sensing technologies, particularly satellite imagery, provide powerful tools for understanding and characterizing urban areas at scale. As part of the EuroFab project, we employed AI modeling techniques using Sentinel-2 satellite imagery to classify and analyze urban fabric across Great Britain. The aim was to generate detailed insights into urban spatial structures and track temporal changes spanning from 2016 to 2021.</p>
+<p>Urban areas represent complex and dynamic environments, making traditional analysis challenging due to their diverse characteristics. Remote sensing technologies, particularly satellite imagery, provide powerful tools for understanding and characterising urban areas at scale. As part of the EuroFab project, we employed AI modelling techniques using Sentinel-2 satellite imagery to classify and analyse urban fabric across Great Britain. The aim was to generate detailed insights into urban spatial structures and track temporal changes spanning from 2016 to 2021.</p>
 <section id="data-and-methods" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-methods">Data and Methods</h2>
 <section id="satellite-imagery" class="level3">
 <h3 class="anchored" data-anchor-id="satellite-imagery">Satellite Imagery</h3>
-<p>We utilized two different sets of satellite images derived from Sentinel-2 imagery:</p>
+<p>We utilised two different sets of satellite images derived from Sentinel-2 imagery:</p>
 <ol type="1">
 <li><p><strong>GHS-composite-S2 R2020A dataset</strong> <span class="citation" data-cites="corbane2020global">(<a href="#ref-corbane2020global" role="doc-biblioref">Corbane et al. 2020</a>)</span>: Covering January 2017 to December 2018, this dataset offers cloud-free, consistent, high-quality RGB (red, green, blue band) composite imagery at a resolution of 10 meters per pixel. We used these images of Great Britain (GB) to train our prediction model.</p></li>
 <li><p><strong>Annual Sentinel-2 composites</strong>: Created for each year from 2016 to 2021, these composites include only cloud-free RGB images from their specific year. We acquired these using the Google Earth Engine API through automated Python scripts (as described in <a href="https://github.com/urbangrammarai/gee_pipeline">GEE pipeline</a>).</p></li>
@@ -1514,14 +1528,14 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <ul>
 <li>Consistent and openly available global coverage, ideal for cross-regional comparisons</li>
 <li>Temporal flexibility through composites from multiple time points, allowing analysis of urban patterns over time</li>
-<li>Resolution of 10 meters per pixel, providing sufficient detail to distinguish urban features at the neighborhood scale</li>
+<li>Resolution of 10 meters per pixel, providing sufficient detail to distinguish urban features at the neighbourhood scale</li>
 <li>Compatibility with many pre-trained geospatial AI models, facilitating transfer learning</li>
 </ul>
 </section>
 <section id="urban-fabric-classes" class="level3">
 <h3 class="anchored" data-anchor-id="urban-fabric-classes">Urban Fabric Classes</h3>
-<p>The urban fabric predictions from our AI model are based on labels from the Spatial Signatures Framework <span class="citation" data-cites="arribas2022spatial fleischmann2022geographical">(<a href="#ref-arribas2022spatial" role="doc-biblioref">Arribas-Bel and Fleischmann 2022</a>; <a href="#ref-fleischmann2022geographical" role="doc-biblioref">Fleischmann and Arribas-Bel 2022</a>)</span>, which provides a typology of British urban environments characterized by both form (physical structure) and function (usage). This framework captures the complexity of urban areas, offering insights into how different spaces look and operate.</p>
-<p>While our primary focus is on urban fabric classification centered on form—an approach that may be simpler since form is visible in imagery—we currently use the Spatial Signatures Framework as a proxy due to its conceptual alignment with our goals for urban characterization. This decision was influenced by the limited project duration and the fact that the morphotope-based classification only became available in Q4 2024.</p>
+<p>The urban fabric predictions from our AI model are based on labels from the Spatial Signatures Framework <span class="citation" data-cites="arribas2022spatial fleischmann2022geographical">(<a href="#ref-arribas2022spatial" role="doc-biblioref">Arribas-Bel and Fleischmann 2022</a>; <a href="#ref-fleischmann2022geographical" role="doc-biblioref">Fleischmann and Arribas-Bel 2022</a>)</span>, which provides a typology of British urban environments characterised by both form (physical structure) and function (usage). This framework captures the complexity of urban areas, offering insights into how different spaces look and operate.</p>
+<p>While our primary focus is on urban fabric classification centred on form—an approach that may be simpler since form is visible in imagery—we currently use the Spatial Signatures Framework as a proxy due to its conceptual alignment with our goals for urban characterisation. This decision was influenced by the limited project duration and the fact that the morphotope-based classification only became available in Q4 2024.</p>
 <p>To ensure progress in developing the AI model, we use separate input classifications for the morphological and AI components of the project. The expectation is that the two classifications are conceptually similar, allowing the model architecture developed for Spatial Signatures to later support building an equally or more precise predictive model for the morphotope-based classification.</p>
 </section>
 </section>
@@ -1529,12 +1543,12 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <h2 class="anchored" data-anchor-id="model-design">Model Design</h2>
 <section id="classification-vs.-segmentation" class="level3">
 <h3 class="anchored" data-anchor-id="classification-vs.-segmentation">Classification vs.&nbsp;Segmentation</h3>
-<p>In satellite image analysis, classification and segmentation address spatial labeling at different levels of granularity:</p>
+<p>In satellite image analysis, classification and segmentation address spatial labelling at different levels of granularity:</p>
 <ul>
-<li><strong>Classification</strong>: Assigns a single urban fabric type to an image tile, offering generalized insights into dominant urban characteristics without the need for pixel-perfect alignment.</li>
+<li><strong>Classification</strong>: Assigns a single urban fabric type to an image tile, offering generalised insights into dominant urban characteristics without the need for pixel-perfect alignment.</li>
 <li><strong>Segmentation</strong>: Assigns urban fabric types at a pixel level, providing detailed boundary-specific mapping but facing challenges due to ambiguous class boundaries in urban environments.</li>
 </ul>
-<p>In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalizes each tile’s dominant land cover type without requiring exact pixel alignment. However, we explored both approaches to evaluate how each method performs given the scale and nature of the dataset.</p>
+<p>In our study, the label dataset does not always correspond directly to identifiable features in the imagery, making classification a potentially more suitable approach as it generalises each tile’s dominant land cover type without requiring exact pixel alignment. However, we explored both approaches to evaluate how each method performs given the scale and nature of the dataset.</p>
 </section>
 <section id="scale" class="level3">
 <h3 class="anchored" data-anchor-id="scale">Scale</h3>
@@ -1542,16 +1556,16 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </section>
 <section id="sampling" class="level3">
 <h3 class="anchored" data-anchor-id="sampling">Sampling</h3>
-<p>We evaluated two sampling approaches to assess their impact on spatial generalization and F1-score performance:</p>
+<p>We evaluated two sampling approaches to assess their impact on spatial generalisation and F1-score performance:</p>
 <ol type="1">
-<li><strong>Random sampling</strong>: Ensures diversity and captures localized patterns, but risks spatial leakage, potentially inflating performance metrics.</li>
-<li><strong>H3 resolution 3 regional sampling</strong>: Reduces spatial leakage and offers a more realistic evaluation of generalization but can suffer from unfair penalization due to the heterogeneity of regions.</li>
+<li><strong>Random sampling</strong>: Ensures diversity and captures localised patterns, but risks spatial leakage, potentially inflating performance metrics.</li>
+<li><strong>H3 resolution 3 regional sampling</strong>: Reduces spatial leakage and offers a more realistic evaluation of generalisation but can suffer from unfair penalisation due to the heterogeneity of regions.</li>
 </ol>
 </section>
 </section>
 <section id="experimental-approaches" class="level2">
 <h2 class="anchored" data-anchor-id="experimental-approaches">Experimental Approaches</h2>
-<p>We structured experiments around three distinct modeling approaches:</p>
+<p>We structured experiments around three distinct modelling approaches:</p>
 <ul>
 <li><strong>Approach A</strong>: Baseline model employing SatlasPretrain embeddings coupled with an XGBoost classifier.</li>
 <li><strong>Approach B</strong>: Fine-tuned three geospatial foundation models (Satlas, Clay, Prithvi) specifically for segmentation tasks.</li>
@@ -1560,7 +1574,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </section>
 <section id="model-evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="model-evaluation">Model Evaluation</h2>
-<p>Multiple metrics were utilized to comprehensively evaluate model performance:</p>
+<p>Multiple metrics were utilised to comprehensively evaluate model performance:</p>
 <ul>
 <li><strong>Weighted Accuracy (Macro)</strong>: Reflects overall predictive accuracy adjusted for class frequency.</li>
 <li><strong>Weighted F1 Score</strong>: Balances precision and recall, particularly crucial for handling imbalanced datasets.</li>
@@ -1746,13 +1760,13 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </tr>
 </tbody>
 </table>
-<p>Based on these insights, our final model implements a Satlas embedding architecture operating at the 25×25 pixel scale (250×250m resolution) with integrated H3 resolution 5 regional context, optimizing the balance between spatial detail and classification accuracy while ensuring robust generalization to diverse urban environments.</p>
+<p>Based on these insights, our final model implements a Satlas embedding architecture operating at the 25×25 pixel scale (250×250m resolution) with integrated H3 resolution 5 regional context, optimising the balance between spatial detail and classification accuracy while ensuring robust generalisation to diverse urban environments.</p>
 </section>
 <section id="final-model" class="level2">
 <h2 class="anchored" data-anchor-id="final-model">Final Model</h2>
 <section id="addressing-class-imbalance" class="level3">
 <h3 class="anchored" data-anchor-id="addressing-class-imbalance">Addressing Class Imbalance</h3>
-<p>Significant class imbalance, particularly for urban classes, posed a considerable challenge in our modeling. To mitigate this, we implemented a sliding-window augmentation strategy for classes comprising less than 10% of the dataset (all classes except <em>Countryside agriculture</em> and <em>Wild countryside</em>).</p>
+<p>Significant class imbalance, particularly for urban classes, posed a considerable challenge in our modelling. To mitigate this, we implemented a sliding-window augmentation strategy for classes comprising less than 10% of the dataset (all classes except <em>Countryside agriculture</em> and <em>Wild countryside</em>).</p>
 <p>This sliding-window approach systematically shifted the sampling window horizontally and vertically by increments of 50, 100, 150, and 200 meters, significantly increasing the volume of available training data for underrepresented classes.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1762,7 +1776,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </div>
 <p>The images below show class distributions before (left) and after (right) augmentation:</p>
 <p><img src="../figures/results/type_clean_encode.png" class="nostretch quarto-figure quarto-figure-left" height="200" alt="Before Augmentation"> <img src="../figures/results/type_clean_encode_augmented.png" class="nostretch quarto-figure quarto-figure-right" height="200" alt="After Augmentation"></p>
-<p>The following table summarizes augmentation results, highlighting the substantial increase in training samples for previously underrepresented classes:</p>
+<p>The following table summarises augmentation results, highlighting the substantial increase in training samples for previously underrepresented classes:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 48%">
@@ -1861,7 +1875,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Wild countryside'</span>: <span class="dv">11</span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol start="2" type="1">
-<li><strong>Simplified 7-class scheme</strong>: Created by reclustering underlying data from the Spatial Signatures Framework using K-means clustering (K=7):</li>
+<li><strong>Simplified 7-class scheme</strong>: Created by re-clustering underlying data from the Spatial Signatures Framework using K-means clustering (K=7):</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>class_labels_k7 <span class="op">=</span> {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Countryside agriculture'</span>: <span class="dv">0</span>,</span>
@@ -1876,7 +1890,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <section id="model-performance" class="level3">
 <h3 class="anchored" data-anchor-id="model-performance">Model Performance</h3>
 <p>The final XGBoost classifier was trained using the augmented dataset and evaluated using three metrics: micro accuracy, macro accuracy (where every class has the same weighting), and macro F1 score. We validated the model using 5-fold spatial cross-validation at H3 resolution 6, ensuring an 80/20 training-testing split.</p>
-<p>The table below summarizes classifier performance for both classification schemes (7 and 12 classes) and two spatial context scenarios (with and without H3 resolution):</p>
+<p>The table below summarises classifier performance for both classification schemes (7 and 12 classes) and two spatial context scenarios (with and without H3 resolution):</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 18%">
@@ -1941,7 +1955,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </ul>
 <section id="diversity-analysis-shannon-index" class="level3">
 <h3 class="anchored" data-anchor-id="diversity-analysis-shannon-index">Diversity Analysis (Shannon Index)</h3>
-<p>We assessed changes in urban fabric diversity using the Shannon Index across the studied years. The results are summarized in the table below, indicating slight fluctuations, with the most notable increase in diversity occurring in 2019:</p>
+<p>We assessed changes in urban fabric diversity using the Shannon Index across the studied years. The results are summarised in the table below, indicating slight fluctuations, with the most notable increase in diversity occurring in 2019:</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1980,8 +1994,8 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 </section>
 <section id="spatial-patterns-of-change" class="level3">
 <h3 class="anchored" data-anchor-id="spatial-patterns-of-change">Spatial Patterns of Change</h3>
-<p>To make predictions across years, we used the trained model and fed in all GB tiles to get predictions for the 12 cleasses.</p>
-<p>Spatial analysis identified areas across England with frequent class transitions (map below), particularly around major urban centers and suburban zones. These frequent transitions may either represent genuine urban transformations or result from classifier uncertainty, especially in ambiguous zones between visually similar Spatial Signatures classes.</p>
+<p>To make predictions across years, we used the trained model and fed in all GB tiles to get predictions for the 12 classes.</p>
+<p>Spatial analysis identified areas across England with frequent class transitions (map below), particularly around major urban centres and suburban zones. These frequent transitions may either represent genuine urban transformations or result from classifier uncertainty, especially in ambiguous zones between visually similar Spatial Signatures classes.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://eurofab.org/talks/figures/202502_progress_turing/frequency_map.png" class="nostretch figure-img" height="420"></p>
@@ -1995,14 +2009,14 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <figcaption>Class Transitions</figcaption>
 </figure>
 </div>
-<p>To better interpret these transitions, we calculated transition probabilities and organized them into a structured confusion matrix. This matrix clearly shows the urban fabric classes most likely to interchange over the studied period:</p>
+<p>To better interpret these transitions, we calculated transition probabilities and organised them into a structured confusion matrix. This matrix clearly shows the urban fabric classes most likely to interchange over the studied period:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://eurofab.org/talks/figures/202502_progress_turing/class_transitions_reasonable.png" class="nostretch figure-img" height="420"></p>
 <figcaption>‘Reasonable’ confusion matrix</figcaption>
 </figure>
 </div>
-<p>Lastly, we analyzed the inverse-probability-based distances of urban fabric classes over time. Shorter distances represent a higher likelihood of transitioning or changing classes from year to year, whereas longer distances indicate greater stability:</p>
+<p>Lastly, we analysed the inverse-probability-based distances of urban fabric classes over time. Shorter distances represent a higher likelihood of transitioning or changing classes from year to year, whereas longer distances indicate greater stability:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://eurofab.org/talks/figures/202502_progress_turing/1d_transitions.png" class="img-fluid figure-img"></p>
@@ -2032,20 +2046,20 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <h2 class="anchored" data-anchor-id="potential-research-directions">Potential Research Directions</h2>
 <p>There are several promising directions for future research:</p>
 <ul>
-<li><p><strong>Handling Misclassifications</strong>: Misclassifications typically occur between visually similar urban fabric classes, indicating inherent uncertainty in predictions. Incorporating prediction probabilities into a secondary model could help address this issue. By explicitly using probability scores from the initial classification as input for a refinement model — as previously shown by Fleischmann and Arribas-Bel<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> — we could better distinguish between ambiguous cases. This approach may “smooth” predictions, reducing noise and improving overall classification accuracy. Future work should explore how prediction confidence scores can be systematically utilized, either by employing spatial smoothing algorithms or by applying secondary machine learning models trained specifically to correct uncertain predictions.</p></li>
-<li><p><strong>Generalizability Testing</strong>: Evaluating the generalizability of this methodological framework is crucial for its wider applicability. Future research should test this modeling approach in different European regions, assessing whether the chosen methods, including data preprocessing, augmentation strategies, spatial embeddings, and classifier architectures, perform consistently outside Great Britain. This would involve exploring variations in urban form and regional urban planning contexts across Europe. Understanding these factors will help identify potential adjustments needed to ensure reliable predictions when extending the model beyond the original study area.</p></li>
+<li><p><strong>Handling Misclassifications</strong>: Misclassifications typically occur between visually similar urban fabric classes, indicating inherent uncertainty in predictions. Incorporating prediction probabilities into a secondary model could help address this issue. By explicitly using probability scores from the initial classification as input for a refinement model — as previously shown by Fleischmann and Arribas-Bel<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> — we could better distinguish between ambiguous cases. This approach may “smooth” predictions, reducing noise and improving overall classification accuracy. Future work should explore how prediction confidence scores can be systematically utilised, either by employing spatial smoothing algorithms or by applying secondary machine learning models trained specifically to correct uncertain predictions.</p></li>
+<li><p><strong>Generalisability Testing</strong>: Evaluating the generalisability of this methodological framework is crucial for its wider applicability. Future research should test this modelling approach in different European regions, assessing whether the chosen methods, including data preprocessing, augmentation strategies, spatial embeddings, and classifier architectures, perform consistently outside Great Britain. This would involve exploring variations in urban form and regional urban planning contexts across Europe. Understanding these factors will help identify potential adjustments needed to ensure reliable predictions when extending the model beyond the original study area.</p></li>
 </ul>
 </section>
 </section>
 <section id="stakeholder-engagement" class="level1">
 <h1>Stakeholder engagement</h1>
-<p>We have presented the Eurofab project and related products at various events and sessions. At Urbis 24, the project sparked interest in fulfilling unmet data requirements for energy and climate applications, leading to a potential engagement with Covenant of Mayors members via interviews or surveys. The World Urban Forum facilitated the establishment of new stakeholder relationships, including productive sessions with the SSVA (Construction Sector Development Agency of the Ministry of Environment, Lithuania). Furthermore, we held numerous sessions with the Prague Institute of Planning and Development (IPR) and 4ct.</p>
+<p>We have presented the EuroFab project and related products at various events and sessions. At Urbis 24, the project sparked interest in fulfilling unmet data requirements for energy and climate applications, leading to a potential engagement with Covenant of Mayors members via interviews or surveys. The World Urban Forum facilitated the establishment of new stakeholder relationships, including productive sessions with the SSVA (Construction Sector Development Agency of the Ministry of Environment, Lithuania). Furthermore, we held numerous sessions with the Prague Institute of Planning and Development (IPR) and 4ct.</p>
 <p>We have gathered multiple insights from the sessions, related to these areas: - Data Integration - Taxonomy Description and Naming - Comparative Urban Analysis: - Expanding Data Coverage - Reducing Manual Effort in Land Use Analysis - Geographical Scale of Results - Taxonomic Tree &amp; Evaluation - Input data quality</p>
 <p>A significant finding from the stakeholder engagements is the strong interest in integrating the EuroFab data with land use, geodemographic, land value and other spatial datasets. However, stakeholders differed in their technical ability to make such a merger themselves. This led to discussions about multiple potential derived data products such as classifications that incorporate both morphological and land use or other functional information.</p>
 <p>The stakeholders showed significant interest in the taxonomic tree, discussing both its advantages and disadvantages. Potential use cases included, identifying the relationships between different urban forms, as well as comparisons at different scales between regions and cities. SSVA, in particular, conducted a detailed evaluation of the hierarchy within the Lithuanian context and proposed several modifications so it fits better the local context.</p>
 <p>Significant time was spend discussing the issues of how to describe and name the taxonomic tree and the clusters. Different applications required different names, and even the same application (for example, for land use planning), but in different countries required different names and descriptions. One discussed approach to this was to give clusters and the taxonomy abstract names that focus only on the morphology. This would later make it easier for users to adapt and refine the classification names and descriptions according to their specific needs and application contexts.</p>
 <p>A key application identified through discussions with 4ct, IPR, and SSVA is the use of EuroFab data for comparative urban analysis - stakeholders expressed a strong interest in leveraging the data to compare cities, regions, and even cross-border areas. This capability is seen as valuable for guiding planning decisions, facilitating knowledge transfer between local planning authorities and land developers, and understanding the factors that shape urban development patterns. This emphases on comparisons also underscored the need to expand the geographic coverage of the data.</p>
-<p>We have already taken steps to address this requirement. Due to the new stakeholders from Lithuania, we had to process the urban fabric of the whole country. This required adjustments to the processing pipeline, which improved its scalability and performance and currently, its easier to include new countries in the analysis. We also note that even though Lithuania is excluded from the final modeling results with Microsoft and OvertureMaps data, it is present in the interactive web application.</p>
+<p>We have already taken steps to address this requirement. Due to the new stakeholders from Lithuania, we had to process the urban fabric of the whole country. This required adjustments to the processing pipeline, which improved its scalability and performance and currently, its easier to include new countries in the analysis. We also note that even though Lithuania is excluded from the final modelling results with Microsoft and Overture Maps data, it is present in the interactive web application.</p>
 <p>There were also multiple discussions with stakeholders about the geographical scale of the results. IPR expressed interest in both fine-grained units, such as morphotopes (local contiguous areas of similar urban morphology), and coarser aggregations, such as the hexagon-based aggregation featured in the web application. Conversely, 4ct and SSVA indicated a need for building-level information, as well as access to the raw data.</p>
 <p>Related discussions covered input data quality and additional morphological variables to be included in the classification. The issues with the quality and inconsistencies of building footprints was raised multiple times, as well as problems with the street network. This was especially relevant for building height, which is a characteristic all stakeholders expressed interest in. However, we also discussed the unavailability of this data and the accuracy problems of existing building height data products.</p>
 <p>Lastly, The Prague Institute of Planning and Development (IPR) highlighted the potential of EuroFab outputs to help with generating the official land use plan for the city. Furthermore, they expressed interest in potentially integrating the EuroFab data into their urban analytics products for Prague.</p>
@@ -2055,7 +2069,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <p>The main finding of the modelling work is that it is possible to use alternative, non-cadastre level data for the accurate prediction of urban fabric over time. These predictions are more detailed than existing large-scale urban fabric classifications and the predicted classes are tailored to urban planners, researchers, policymakers and development companies.</p>
 <p>One of the main use cases identified by stakeholders was the ability to compare different areas or identify similar cities or regions across countries. The models support this by producing fine-grained, spatially consistent urban classifications that are tailored to comparative analysis at a highly local, regional or continental scale. In addition, the models can capture urban transitions over time, adding a valuable temporal dimension to the analysis. This enables comparisons not only across space, but also through time - making it possible to examine how urban areas evolve, diverge, or converge. The temporal insights unlocked by AI modelling enhance the overall utility of urban classifications for planners, researchers, and policymakers.</p>
 <p>A key insight from the modelling work is that increasing the amount of training data improves predictive performance - particularly in the presence of class imbalance, where underrepresented classes can otherwise lead to biased outcomes. This makes data sampling strategies especially important for ensuring balanced model learning across diverse urban forms. The morphometric classification, based on the Overture model, performs well at the building level, and can be deployed at scale to generate detailed urban classes across Europe. These outputs can serve as a rich source of training data for the AI-based model, helping to fill gaps in underrepresented regions or classes. By leveraging morphometric results across multiple countries, the AI model’s predictive accuracy can be further improved - leading to more robust and precise time-series predictions of urban change.</p>
-<p>The modelling work also highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalization, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.</p>
+<p>The modelling work also highlights the importance of spatially explicit machine learning and data science. In both cases, incorporating spatial information consistently improves model performance. Additionally, spatially explicit train/test splits provide a more realistic assessment of generalisation, ensuring that models are evaluated under conditions that reflect real-world deployment across unseen geographies.</p>
 <p>Lastly, the interest and various feature requests from the stakeholders confirm the need for a detailed urban classification at a granular level. Such a dataset can act as the foundation for multiple derived data products adapted to particular use cases. Examples included comparisons between countries at different scales - neighbourhoods, cities and regions; access to the building-level morphological data of the taxonomy; and the ability to figure out where newly-designed areas would fall within the taxonomy before they are built.</p>
 <section id="limitations" class="level2">
 <h2 class="anchored" data-anchor-id="limitations">Limitations</h2>
@@ -2063,7 +2077,7 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <ul>
 <li><p>Dependence on ground truth and input data quality While alternative datasets such as Overture or satellite-derived imagery allow broad geographic coverage, they cannot fully substitute for cadastral or on-the-ground verification data. The quality and consistency of input data - particularly building footprints - remain critical to model accuracy, especially at higher classification detail. Differences in data completeness or geometric fidelity can significantly impact performance across regions and classes.</p></li>
 <li><p>Uncertainty in temporal and spatial predictions Evaluating the accuracy of predictions over time is inherently challenging due to the absence of ground truth data for intermediate years. Although the classifier identifies plausible transitions, particularly in suburban areas, it is difficult to distinguish genuine urban change from model uncertainty or noise introduced by seasonal imagery variation, cloud cover, or sensor differences.</p></li>
-<li><p>Transferability across geographic and morphological contexts The models demonstrate strong generalization within Great Britain and across several Central European countries. However, their performance varies in regions with distinct urban morphologies, socio-economic conditions, or planning traditions not well represented in the training data. Expanding the training set to include more diverse examples of urban fabric will likely improve transferability and robustness across broader European or global contexts.</p></li>
+<li><p>Transferability across geographic and morphological contexts The models demonstrate strong generalisation within Great Britain and across several Central European countries. However, their performance varies in regions with distinct urban morphologies, socio-economic conditions, or planning traditions not well represented in the training data. Expanding the training set to include more diverse examples of urban fabric will likely improve transferability and robustness across broader European or global contexts.</p></li>
 </ul>
 </section>
 </section>
@@ -2075,23 +2089,23 @@ Figure&nbsp;4: Confusion matrix for the Spatial model Level 4 predictions. Norma
 <h3 class="anchored" data-anchor-id="morphometrics">Morphometrics</h3>
 <section id="interactive-web-application" class="level4">
 <h4 class="anchored" data-anchor-id="interactive-web-application">Interactive web application</h4>
-<p>We developed an interactive web app that displays the entire ground truth morphometric classification for Central Europe - <a href="https://uscuni.org/himoc/">HiMOC</a>. The webapp make possible the sharing of the Central European data with an even wider audience, than the original specified stakeholders, regardless of their technical expertise. Furthermore, it allowed stakeholders to to visually explore the geospatial data, zoom in and out, pan across areas, and overlay different layers. It was the focus of multiple stakeholder consultations and enabled them to see final results, propose features, highlight mistakes. Furthermore, it allowed them to specify what format at what scale the final results would be most useful for them.</p>
+<p>We developed an interactive web app that displays the entire ground truth morphometric classification for Central Europe - <a href="https://uscuni.org/himoc/">HiMoC</a>. The web app makes possible the sharing of the Central European data with an even wider audience, than the original specified stakeholders, regardless of their technical expertise. Furthermore, it allowed stakeholders to visually explore the geospatial data, zoom in and out, pan across areas, and overlay different layers. It was the focus of multiple stakeholder consultations and enabled them to see final results, propose features, highlight mistakes. Furthermore, it allowed them to specify what format at what scale the final results would be most useful for them.</p>
 </section>
 <section id="morphometric-characterisation-pipeline-for-microsoft-building-footprints" class="level4">
 <h4 class="anchored" data-anchor-id="morphometric-characterisation-pipeline-for-microsoft-building-footprints">Morphometric characterisation pipeline for Microsoft Building footprints</h4>
-<p>The entire morphometric characterisation pipeline for the processing of micorsoft Building Footpritns, including reproducible notebooks and an enviroment is open-sourced and available on the <a href="https://github.com/eurofab-project/morphometrics/tree/main">Eurofab GitHub</a>.</p>
+<p>The entire morphometric characterisation pipeline for the processing of Microsoft Building Footprints, including reproducible notebooks and an environment is open-sourced and available on the <a href="https://github.com/eurofab-project/morphometrics/tree/main">EuroFab GitHub</a>.</p>
 </section>
-<section id="morphometric-characterisation-pipeline-for-overturemaps-building-footprints" class="level4">
-<h4 class="anchored" data-anchor-id="morphometric-characterisation-pipeline-for-overturemaps-building-footprints">Morphometric characterisation pipeline for OvertureMaps Building footprints</h4>
-<p>The above reproducible pipeline was further adapted to process OvertureMaps data and is also available at the <a href="https://github.com/eurofab-project/morphometrics/tree/main">Eurofab GitHub</a>.</p>
+<section id="morphometric-characterisation-pipeline-for-overture-maps-building-footprints" class="level4">
+<h4 class="anchored" data-anchor-id="morphometric-characterisation-pipeline-for-overture-maps-building-footprints">Morphometric characterisation pipeline for Overture Maps Building footprints</h4>
+<p>The above reproducible pipeline was further adapted to process Overture Maps data and is also available at the <a href="https://github.com/eurofab-project/morphometrics/tree/main">EuroFab GitHub</a>.</p>
 </section>
 </section>
 <section id="eo" class="level3">
 <h3 class="anchored" data-anchor-id="eo">EO</h3>
 <p>All EO analyses presented are supported by openly accessible software hosted on <a href="https://github.com/eurofab-project/eo/tree/main">GitHub</a>. The AI prediction pipeline, including preprocessing, embedding generation, and prediction of spatial signatures, is fully documented and accessible at EO repository.</p>
 </section>
-<section id="software-ai-method-for-urban-fabric-classification-and-morphometric-characterization" class="level3">
-<h3 class="anchored" data-anchor-id="software-ai-method-for-urban-fabric-classification-and-morphometric-characterization">Software: AI Method for Urban Fabric classification and morphometric characterization</h3>
+<section id="software-ai-method-for-urban-fabric-classification-and-morphometric-characterisation" class="level3">
+<h3 class="anchored" data-anchor-id="software-ai-method-for-urban-fabric-classification-and-morphometric-characterisation">Software: AI Method for Urban Fabric classification and morphometric characterisation</h3>
 <p>All the work supporting this analysis can be found on GitHub. The main prediction pipeline, which includes data preprocessing, embedding creation, and spatial signature prediction, can be used as follows:</p>
 <pre><code># Run the pipeline
 pipeline.spatial_sig_prediction(
@@ -2109,7 +2123,7 @@ pipeline.spatial_sig_prediction(
 <h2 class="anchored" data-anchor-id="example-datasets">Example datasets</h2>
 <section id="morphometric-model" class="level3">
 <h3 class="anchored" data-anchor-id="morphometric-model">Morphometric model</h3>
-<p>The final morphometric model is around 40GB and takes around 10 hours to train. The full script and notebooks, including a reproducible enviroment is available at the project <a href="https://github.com/eurofab-project/morphometrics/tree/main">GitHub</a>. A non-interactive version of the notebooks used in the pipeline is available on the <a href="https://eurofab.org/morphometrics/">EuroFab Project Website</a> .</p>
+<p>The final morphometric model is around 40GB and takes around 10 hours to train. The full script and notebooks, including a reproducible environment is available at the project <a href="https://github.com/eurofab-project/morphometrics/tree/main">GitHub</a>. A non-interactive version of the notebooks used in the pipeline is available on the <a href="https://eurofab.org/morphometrics/">EuroFab Project Website</a> .</p>
 <div id="fig-examples" class="nostretch quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-examples-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -2123,7 +2137,7 @@ Figure&nbsp;5: Example Level 4 predictions for the areas around Vienna (Austria)
 </section>
 <section id="ai-model" class="level3">
 <h3 class="anchored" data-anchor-id="ai-model">AI model</h3>
-<p>The final datacube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the <a href="https://github.com/eurofab-project/eo/tree/main">GitHub repository</a>.</p>
+<p>The final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the <a href="https://github.com/eurofab-project/eo/tree/main">GitHub repository</a>.</p>
 </section>
 <section id="example-datasets-generated-during-verification-exercises" class="level3">
 <h3 class="anchored" data-anchor-id="example-datasets-generated-during-verification-exercises">Example datasets generated during Verification Exercises</h3>
