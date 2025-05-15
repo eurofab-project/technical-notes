@@ -1,8 +1,7 @@
 ---
 title: "Test and Verification Results"
 subtitle: "Technical Note D4"
-author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
-institute: "Charles University; The Alan Turing Institute"
+author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Daniel Arribas-Bel"
 format:
   pdf:
     toc: true

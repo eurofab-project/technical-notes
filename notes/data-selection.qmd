@@ -2,7 +2,6 @@
 title: "Reference Data Selection"
 subtitle: "Technical Note D3"
 author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
-institute: "Charles University; The Alan Turing Institute"
 format:
   pdf:
     toc: true

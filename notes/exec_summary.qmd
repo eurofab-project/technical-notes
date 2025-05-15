@@ -4,8 +4,6 @@ subtitle: "Executive summary"
 author: 
   - "K. Samardzhiev, M. Fleischmann"
   - "B. Metzler, D. Arribas-Bel"
-  - "C. Baranzelli, A. Banquet"
-institute: "Charles University; The Alan Turing Institute, OECD"
 format:
   pdf:
     toc: false

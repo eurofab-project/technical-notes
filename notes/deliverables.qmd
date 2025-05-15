@@ -2,7 +2,6 @@
 title: "Software and Example datasets generated during Verification Exercises"
 subtitle: "Technical Note D6"
 author: "Krasen Samardzhiev, Barbara Metzler, Martin Fleischmann, Dani Arribas-Bel"
-institute: "Charles University; The Alan Turing Institute"
 format:
   pdf:
     toc: true

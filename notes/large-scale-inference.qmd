@@ -2,7 +2,6 @@
 title: "Large scale inference and Operationalisation"
 subtitle: "Technical Note D7"
 author: "Martin Fleischmann"
-institute: "CU"
 format:
   pdf:
     toc: true
@@ -38,11 +37,13 @@ bibliography: ../references.bib
 
 ## Introduction
 
-This Technical Note presents a strategic roadmap for advancing the EuroFab project's Artificial Intelligence (AI)-driven urban fabric classification system from its current capabilities to a pan-European operational capacity. The document outlines the necessary technological advancements, infrastructural requirements, and operational frameworks for achieving large-scale inference, ensuring the long-term sustainability and relevance of the EuroFab service. It provides actionable recommendations for the European Space Agency (ESA) to guide this transition.
+This Technical Note presents a strategic roadmap for advancing the EuroFab project's urban fabric classification system from its current capabilities to a pan-European operational capacity. 
 
-The EuroFab project is designed to perform a comprehensive assessment of every building and street segment, providing a rich, multiscale description of the built environment. This foundational analysis supports a hierarchical classification of urban fabric patterns, yielding easily interpretable types whose distribution can be mapped across extensive areas. The project aims to deliver detailed, comparable, and dynamic information on urban fabric. This information is crucial for understanding how cities are constantly evolving, what these changes mean for their sustainability, and how effective policies can be designed to steer development in desirable directions. Ultimately, EuroFab seeks to "pave the road for a world where stakeholders, from local authorities to supranational organisations, are able to track and monitor the pattern of urban development in detail directly relevant for planning and at scale". This involves linking information on neighbourhood structures to local expertise and communities, facilitating regional and international comparisons using consistent data and perspectives.
+Ultimately, EuroFab seeks to "pave the road for a world where stakeholders, from local authorities to supranational organisations, are able to track and monitor the pattern of urban development in detail directly relevant for planning and at scale". It does this by providing a rich, multiscale description of the built environment, based on analysis of individual buildings, street segments and their interactions. The resulting information spans across an unprecedented scale at such detail and across time. This information is crucial for understanding how cities are constantly evolving, what these changes mean for their sustainability, and how effective policies can be designed to steer development in desirable directions.
 
-Transitioning the EuroFab system from a successful research project with a functional processing pipeline to a robust, reliable, and continuously updated operational service presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires a significant upscaling of data processing capabilities, the establishment of a sustainable operational framework, and a commitment to continuous improvement and user engagement. This roadmap addresses these multifaceted challenges, providing a structured approach to achieve large-scale inference and full operationalization.
+The core of the pilot study in Central Europe and the UK are two interacting pipelines. The first one produces detail morphological classifications, based on a substandard building data across Europe. The second, uses the former's results as training data, to expand the analysis both in scale and time. 
+
+Transitioning the EuroFab system from a successful research project with functional processing pipelines to a robust, reliable, and continuously updated data product presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires upscaling of data processing capabilities, the establishment of a sustainable operational framework, and a commitment to continuous improvement and user engagement. The roadmap in this technical note addresses these multifaceted challenges, providing a structured approach to achieve full operationalization.
 
 ## European Morphometric Classification Strategy
 
@@ -196,15 +197,3 @@ EuroFab's commitment to openness is a key asset for its long-term impact and sus
   * Establish and maintain online forums, mailing lists, and developer channels (e.g., Slack, Discord) to provide support to users and foster a collaborative environment for contributors.
   * Organize events such as hackathons, data challenges, or summer schools to stimulate innovative uses of EuroFab data and tools, and to attract new users and developers.
   * The model of the openEO platform, which fosters an "inspirational development environment" with shared repositories, discussion forums, and mechanisms for community engagement \[17\], offers valuable lessons.
-
-* **4.3 Governance, Maintenance, and Long-Term Resourcing**
-
-Sustainable operation requires a clear governance structure, a proactive maintenance plan, and a stable funding model.
-
-* **Potential Funding Models and Resource Requirements:**
-
-  * Sustainable funding models that extend beyond initial project-based financing are critical. Given EuroFab's nature, a hybrid model is likely most appropriate.
-  * Core funding from ESA and the European Union could support the provision of baseline pan-European products and services that serve as a public good, similar to the funding mechanisms for Copernicus services.\[32, 33\] These services directly support European policy objectives and SDG monitoring.
-  * Contributions from Member States could support specific national-level applications or enhancements.
-  * Fee-based access or subscription models could be considered for specialized, value-added services, on-demand high-volume processing, or commercial use cases, helping to cover operational costs and fund further development.
-  * Defining this balance between publicly funded core services and potentially cost-recovery mechanisms for advanced or specialized applications early in the operational planning is crucial for ensuring the long-term financial health and sustainability of the EuroFab service.

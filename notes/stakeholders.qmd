@@ -1,8 +1,7 @@
 ---
 title: "Consolidated Stakeholder Requirements Specification"
 subtitle: "Technical Note D1"
-author: "Claudia Baranzelli"
-institute: "OECD"
+author: "M. Fleischmann, K.Samardzhiev"
 format:
   pdf:
     toc: true
