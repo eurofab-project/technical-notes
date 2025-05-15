@@ -748,7 +748,7 @@ Following the initial analysis, which demonstrated that the embeddings-based app
 We also evaluated random sampling and H3 resolution 3 regional sampling to assess their impact on spatial generalization and F1-score performance. While random sampling ensures diversity and captures localized patterns, it risks spatial leakage, potentially inflating performance metrics. In contrast, H3-based regional sampling reduces spatial leakage and offers a more realistic evaluation of generalization but can suffer from unfair penalization due to the heterogeneity of regions.
 
 |Random | H3 split (resolution 3) |
-| -------- | -------- | 
+| -------- | -------- |
 | Ensures that the training and testing datasets include diverse samples from all regions, including smaller, localized patterns that might not appear in every larger region.| Could lead to under-sampling or over-representation of certain spatial signature types if these types are not evenly distributed across regions.|
 | Increased risk of spatial leakage: test samples may be geographically close to training samples, leading to overestimated performance because the model effectively sees similar data in training and testing.| Minimizes spatial leakage by ensuring that test regions are distinct from training regions. This gives a more realistic estimate of how the model will generalize to new, unseen regions.|
  Random sampling (diversity) benefits the training process but risks overestimating performance due to leakage.|Regional splitting (independence) gives a clearer picture of spatial generalization but could penalize the model unfairly if regions are too internally heterogeneous.|
@@ -796,9 +796,9 @@ H3 regional sampling showed slightly lower performance, hinting to some spatial 
 
 - Model constraints and generalisability
   - generalisability to other European countries
-    - final model will be fit on urban form --> hopefully improve the model 
+    - final model will be fit on urban form --> hopefully improve the model
       - more data points of classes with small number of instances
-    - sampling across different countries, the final model will not just be trained on England but on a range of sample countries, so we are not anticipating any issues with generalisability 
+    - sampling across different countries, the final model will not just be trained on England but on a range of sample countries, so we are not anticipating any issues with generalisability
 
 
 =======
@@ -806,8 +806,8 @@ H3 regional sampling showed slightly lower performance, hinting to some spatial 
 
 Class imbalance is a significant challenge in the dataset. To address this, we experimented with classification models using oversampling and undersampling techniques. Additionally, we trained a weighted XGBoost model, which applied weights based on the class distribution. However, these approaches did not result in improved performance. If class imbalance remains a persistent issue, a potential solution is to merge similar classes with smaller instance counts to improve representation.
 
- 
-**Model Constraints and generalisability** 
+
+**Model Constraints and generalisability**
 The final model will focus on urban form, a feature that is directly observable in satellite imagery and is expected to enhance predictive performance. To ensure robustness and broad applicability, the model will not be restricted to data from England but will incorporate samples from a diverse range of European countries. This approach is designed to improve the model’s ability to generalise effectively across different geographic and cultural contexts. Expanding the analysis to a broader European scope will also help address class imbalance by providing additional data points for underrepresented classes, further enhancing the model’s predictions. Consequently, we do not anticipate significant issues with generalisability.
 
 

@@ -2,17 +2,64 @@
 title: "EuroFab: European Urban Fabric Classification Using Artificial Intelligence"
 subtitle: "Executive summary"
 author:
-  - "K. Samardzhiev, M. Fleischmann"
-  - "B. Metzler, D. Arribas-Bel"
+  - name: Krasen Samardzhiev
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Martin Fleischmann
+    email: martin.fleischmann@natur.cuni.cz
+    affiliations:
+      - name: Faculty of Science, Charles University
+        department: Social Geography and Regional Development
+        address: Albertov 6, 128 00, Praha, Czechia
+  - name: Barbara Metzler
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
+  - name: Daniel Arribas-Bel
+    affiliations:
+      - name: The Alan Turing Institute
+        department: Science of Cities and Regions
+        address: British Library, 96 Euston Road, London NW1 2DB, UK
 format:
-  pdf:
-    toc: false
-    number-sections: true
-    colorlinks: true
   html:
     toc: true
     css: styles.css
+  titlepage-pdf:
+    documentclass: scrbook
+    classoption: ["oneside", "open=any"]
+    toc: false
+    number-sections: true
+    colorlinks: true
+    coverpage: true
+    coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
+    coverpage-footer: "Executive summary"
+    coverpage-bg-image: "../figures/himoc.png"
+    coverpage-theme:
+      page-html-color: "000000"
+      title-fontsize: 40
+      title-color: "white"
+      title-align: "right"
+      title-bottom: "10in"
+      title-fontfamily: "Open Sans"
+      header-style: "none"
+      author-style: "none"
+      footer-fontsize: 20
+      footer-color: "white"
+      footer-align: "right"
+      footer-bottom: "7in"
+      footer-fontfamily: "Open Sans"
+      date-style: "none"
+      bg-image-fading: "north"
+    titlepage-footer: |
+      The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
+      \
+      eurofab.org
+    titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
+
 ---
 
 This report details the outcomes of the EuroFab project, a research initiative funded by the European Space Agency (ESA) aimed at developing and implementing innovative methodologies for classifying European urban fabric using artificial intelligence (AI). The project addressed the critical need for accurate, consistent, and scalable methods for understanding and characterising the complex spatial structures of urban areas across Europe. By leveraging advanced machine learning techniques, deep learning and Earth observation data, EuroFab provides foundation for development of pan-European classification of urban fabric across time.
