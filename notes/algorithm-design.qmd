@@ -19,7 +19,7 @@ bibliography: ../references.bib
 
 # Executive summary
 
-The detailed classification of urban form can provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning. However, classification of this sort are scarcely available and even fewer are detailed, scalable, and consistent while reflecting the nature of the local data all at the same time. We often see conceptual classification, which has a tendency to oversimplify the structure when "zooming in", loosing the interest of planners and policy-makers. The classifications developed by key members of the EuroFab project team overcome these limitations, but are dependent on the availability of high quality data capturing urban form, e.g. individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Therefore, there is a need to derive such classification from suboptimal data that do not have the same qualities as, for example, cadastre would have, but have consistency and continental coverage. This Technical Note outlines the theoretical and methodological bases for two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The models aim to adress the data issues presented above, while maintaining the quality of urban classification needed by practioners.
+The detailed classification of urban form can provide valuable insights into the structure of cities and towns, guide targeted policy applications, and form the backbone of urban planning. However, classification of this sort are scarcely available and even fewer are detailed, scalable, and consistent while reflecting the nature of the local data all at the same time. We often see conceptual classification, which has a tendency to oversimplify the structure when "zooming in", loosing the interest of planners and policy-makers. The classifications developed by key members of the EuroFab project team overcome these limitations, but are dependent on the availability of high quality data capturing urban form, e.g. individual buildings and related street networks. The issue is that these are not always readily available, even within the context of generally data-rich countries of the European region. Therefore, there is a need to derive such classification from suboptimal data that do not have the same qualities as, for example, cadastre would have, but have consistency and continental coverage. This Technical Note outlines the theoretical and methodological bases for two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The models aim to address the data issues presented above, while maintaining the quality of urban classification needed by practioners.
 
 The first model, which we can call morphological, uses the Microsoft Open Buildings footprints dataset of a remote-sensing origin and predicts the classes provided by an authoritative target classification based on cadastral data. It measures morphological variables based on building footprints, linked to street network coming from the Overture Maps project and uses the measurements to predict the authoritative classification using non-linear tree-based ensemble models. The evaluated models are trained using spatially explicit splits and are extensively tested for a robustness of prediction in an out-of-sample context. We further use the results of the models as an iterative feedback loop allowing gap-filling of the original taxonomy when the model detects urban fabric it has not seen before and is therefore not able to reliably classify.
 
@@ -64,7 +64,7 @@ The model architecture consists of the two main components: 1) derivation of pre
 
 ![Project workflow](../figures/algo_design/workflow.png){.nostretch fig-align="center" height="400"}
 
-The data preparation and model training consists of four stages. The first and second stages cover the morphometric characterisation, which acts as the model's predictor variables, and the target variables generation. The third stage splits splits the whole study area into five subsets, so that every country and every combintion of the four other countries in the area, act as test and training data respectively. The final stage is the model training and evaluation, aiming to minimise spatial leakeage in the training and evaluation data, and testing the model's performance on realistic scenarios. The full model training and evaluation framework will be implemented using scikit-learn pipelines.
+The data preparation and model training consists of four stages. The first and second stages cover the morphometric characterisation, which acts as the model's predictor variables, and the target variables generation. The third stage splits the whole study area into five subsets, so that every country and every combination of the four other countries in the area, act as test and training data respectively. The final stage is the model training and evaluation, aiming to minimise spatial leakage in the training and evaluation data, and testing the model's performance on realistic scenarios. The full model training and evaluation framework will be implemented using scikit-learn pipelines.
 
 ### Data preprocessing
 
@@ -80,7 +80,7 @@ The first step in the building data processing is to split up multi-polygons and
 
 #### Overture Streets
 
-The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to ... . Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
+The street network is a direct download from Overture Maps Transportation theme, a processed subset of data from OpenStreetMap, which has global coverage and high quality data. Since the dataset includes multiple segments types, including footpaths, the types of segments used in the analysis are limited to a subset of network that reflects streets, excluding paths and service roads (among other). Another type of segment that is filtered out are tunnels - the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
 
 The second major stage of the street processing is the simplification of the entire street network for each subregion. The network coming from Overture Maps, similarly to nearly any other common source, focuses on representation of street network for transportation purposes. That means it tends to include multiple geometries for wide boulevards where each captures a single carriageway, complex representation of junctions or even the smallest artefacts of transportation-based focus. However, such a network is not directly usable for morphological analysis as it does not capture morphological perception of street network which is usually captured via street centrelines, omitting transportation detail. For this reason, we apply the simplification method based on the detection of the problematic parts of the network [@fleischmann2024Shapebased] by @sgeop. This ensures automatised algorithmic cleaning of street networks resulting in a morphological representation derived from the transportation one.
 <!--- TODO this needs more explanation-->
@@ -480,7 +480,7 @@ We use five-fold cross validation for hyper parameter tuning, based on spatial c
 To account for this, we aggregate nearby ETCs into higher granularity spatial units - level 7 H3 cells - and randomly split these units into five groups, to carry out the cross-validation training. This ensures that the majority of the ETCs and their neighbours in one set are not present in the other sets, and therefore spatial leakage is minimised. We use level 7 H3 cells, which represent a delineation of the globe into hexagons with an area of approximately 5 sq. km. , rather than enclosures or ETC contiguity, to ensure that contiguous subsets of test data cover areas of heterogenous elements and present the model with a realistic validation scenario.
 
 
-![Example iteration in a five-fold cross validation split. Only one group is highligted in blue, with its ETCs plotted in green, which will be used as a hold-out data for accuracy evaluation and hyper parameter tuning.](../figures/algo_design/train_test_prague.png){.nostretch fig-align="center" height="400"}
+![Example iteration in a five-fold cross validation split. Only one group is highlighted in blue, with its ETCs plotted in green, which will be used as a hold-out data for accuracy evaluation and hyper parameter tuning.](../figures/algo_design/train_test_prague.png){.nostretch fig-align="center" height="400"}
 
 ![Example hexagon in the validation split](../figures/algo_design/train_test_prague_zoom2.png){.nostretch fig-align="center" height="400"}
 
@@ -515,11 +515,11 @@ Second, the utility of our designed framework to account for spatial leakage and
 One limitation of the approach is its reliance on primarily European data for training and evaluation.
 Therefore, the model may struggle to provide meaningful classifications in other contexts.
 There is no equivalent in the training data for the vast urban sprawl patterns present in the United States, for example.
-Nevertheless, there are urban fabric types present in the model which are ubiqutous in a lot of non-european contexts, such as communist planned areas in Asia, historical city centres, single housing areas and others.
+Nevertheless, there are urban fabric types present in the model which are ubiquitous in a lot of non-European contexts, such as communist planned areas in Asia, historical city centres, single housing areas and others.
 
-A potential problem is class disbalance when training the model and afterwas when calculating its accuracy.
-If such an issue is present in the country split experiments, we aim to address it by undersampling the target classes.
-We can afford to undersample, rather than oversample, since our data covers a large geograpical area and each class has tens of thousands of instances at the very least.
+A potential problem is class imbalance when training the model and after was when calculating its accuracy.
+If such an issue is present in the country split experiments, we aim to address it by under-sampling the target classes.
+We can afford to under-sample, rather than oversample, since our data covers a large geographical area and each class has tens of thousands of instances at the very least.
 
 
 
@@ -655,7 +655,7 @@ The following visualisations show the varying model configurations for the three
 #### Model 3: Prithvi
 ![](../figures/algo_design/prithvi_model.png){.nostretch fig-align="center" width="600"}
 
-After fine-tuning each model for 10 epochs, we compared their performance based on weighted accuracy, Intersection over Union (IoU), and F1 score, among other metrics. The table below summarizes the results of the segementation model comparison:
+After fine-tuning each model for 10 epochs, we compared their performance based on weighted accuracy, Intersection over Union (IoU), and F1 score, among other metrics. The table below summarizes the results of the segmentation model comparison:
 
 | Metric | Satlas | Clay | Prithvi |
 |--------|---------|--------|----------|
