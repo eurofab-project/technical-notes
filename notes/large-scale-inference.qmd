@@ -104,29 +104,42 @@ The roadmap in this technical note addresses these multifaceted challenges, prov
 
 ## European Morphometric Classification Strategy
 
-### Data-readiness
+The results from the pilot study indicate that it is possble to to fill the gaps in openly available cadastral data with alternative data sources, namely OvertureMaps and Microsoft Building footprints. Broadly the work showcased the potential to deliver pan-European classification of urban fabric as a combination of morphological processing and predictive modelling.
 
-summary of approach.
 
-Applying the methodology to the full european continent needs to map data sources.
+The pan-European classification can be used by stakeholders on its own, but it will also be the training data for the expanded temporal AI models.
 
+### Infrastructural, technical and methodological aspects involved in scaling
+
+The pan-European pipeline will build on the pilot study work and will consist of four stages. First, calculating the morphological characteristics on alternative building footprints. Second, assigning labels to subsets of the data, where the cadastral classification is available. Third, training a model using the train/test schemes devised in the pilot study. And lastly, using the models to predict urban fabric types based where cadastral data is not available.
+
+There are three types of expected changes to the current methodology.
+
+First, in a technical aspect, the methodology will need to be updated to work with the latest available geographical open source packages, in order to keep as close as possible to the cadastral classification. The ground truth cadastral classification is a live product, which feeds upstream changes to open source repositories and has multiple contributors working on it. Therefore, it changes over time adapting to and contributing to the latest available morphological open source software. However, the effort required is expected to be low to medium, since the work wil be primarily of technical/software development nature and will not lead to any methodological changes.
+
+Methodologically, it is expected that the first and second stages will need only minor changes. However, there will be a significant data pre-processing effort required in mapping the available data resources and assesing their quality for the whole of Europe. The third and fourth stage may require more adaptions in order to account for the new scale and data. Potential pitfalls and solutions are discussed in the subsequent sections.
+
+There are no new infrastructual requirements, the methodology is expected to scale on the currently available computing resources.
 
 ### Risk assessment
 
+The main risks identified are:
 
-Heterogenous data sources. - already know it works, but need to handle exceptions and topological issues and possibly fix the pipeline. Works on overture - easy to use implemented.
+* **Sourcing and processing European building footprints.**  Before applying the methodology to the European continent there needs to be an extensive mapping of the available data sources. One finding from the work is the difficulty of working with even cadastral data, since every country, or even different regions within the same country have different definitions of what a building is. The data needs to be downloaded and standardised for the first two steps of the analysis. This could potentially result in data from different sources, in different parts of Europe.
 
-Complete data unavailability. - vision model will cover
+* **No available data for some regions:** It is possible that there will be regions with no available building footprint data at all. These will need to be handled in order to provide consistent coverage. 
 
-Unknown urban fabric classes. - this is the work...
-
-
-
+* **Unknown urban fabric classes:** It is possible that there are some unique urban fabric classes that the original cadastral classification has not seen, and therefore do not feature in the training data at all. This will mean that the models are unlikely to give correct predictions.
 
 ### Europe-wide classification strategy
 
+* **Heterogenous data sources:** The scope of the pilot study was already extended to test, how well the models handle heterogenous data. The results suggest that better quality data from heterogenous sources, specifically OvertureMaps data, leads to more accurate predictions and that the pipeline can already handle this heterogeneity. However, the underlying building data can have new issues, which we have not encountered in the current regions - for example topological, cover issues or issues with the street network. This might lead to more technical adaptions of the methology.
 
-## European Space-Time Urban Fabric Strategy
+* **No available data for some regions:** In cases where there are no building footprints available at all, the vision model can be used directly to fill in the gaps, since Sentinel 2 has full coverage of Europe. This means that such a region could potentially represent an unseen before urban class, and therefore needs to be analysed in more detail.
+
+* **Unknown urban fabric classes:**  The likelyhood of unseen urban classes drops as the scope of the ground truth cadastral classification grows. The current classification covers - Germany, Poland, Lithuania, Slovakia, Czechia and Austria. However, there is cadastral data available for other European Countries such as Spain, Belgium, France and the Netherlands. It is expected that these will be included in subsequent classifications and therefore increase the types of urban fabric covered.
+
+* **Tuning models:**  The current morphometric models are HistGradientBoostingClassifier with unlimited depth and number of nodes, trained on hundreads of thousands of examples per class. However, these scheme will need to change as the size of the datasets increases, or alternatively multiple models will need to be trained and tested. The detailed spatial testing schemes implemented in the pilot study will guide the development of the new models, where the main tasks will be hyper-parameter tuning and proper subseting of the training data. The data availability and data pre-processing work will also have a large impact on the model tuning and training. It is possible that only specific regions, within specific countries are problematic and therefore most of the modeling focus should go there.
 
 ### Infrastructural, technical and methodological aspects involved in scaling
 
