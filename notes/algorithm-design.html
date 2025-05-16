@@ -818,7 +818,7 @@ window.Quarto = {
 <h4 class="anchored" data-anchor-id="traintest-split">Train/test split</h4>
 <p>The dataset is divided into 80% for training and 20% for testing across both tasks. The segmentation and classification datasets share the same test samples, which helps make the results more comparable and allows us to evaluate performance across both tasks at the same time.</p>
 <p>The figures below show how the training and testing datasets sampled across the whole study area:</p>
-<p><img src="../figures/algo_design/train_df.png" class="nostretch quarto-figure quarto-figure-left" height="400"> <img src="../figures/algo_design/test_df.png" class="nostretch quarto-figure quarto-figure-right" height="400"></p>
+<p><img src="../figures/algo_design/train_df.png" class="nostretch quarto-figure quarto-figure-left" height="300"> <img src="../figures/algo_design/test_df.png" class="nostretch quarto-figure quarto-figure-right" height="300"></p>
 <p>We used standard, pre-configured neural network setups without tuning the hyperparameters, due to the constraints of the project. As a result, we did not include a validation split in these experiments.</p>
 </section>
 </section>
@@ -1394,7 +1394,7 @@ window.Quarto = {
 </ul></li>
 </ul></li>
 </ul>
-<p>======= <strong>Data Limitations</strong></p>
+<p><strong>Data Limitations</strong></p>
 <p>Class imbalance is a significant challenge in the dataset. To address this, we experimented with classification models using oversampling and undersampling techniques. Additionally, we trained a weighted XGBoost model, which applied weights based on the class distribution. However, these approaches did not result in improved performance. If class imbalance remains a persistent issue, a potential solution is to merge similar classes with smaller instance counts to improve representation.</p>
 <p><strong>Model Constraints and generalisability</strong> The final model will focus on urban form, a feature that is directly observable in satellite imagery and is expected to enhance predictive performance. To ensure robustness and broad applicability, the model will not be restricted to data from England but will incorporate samples from a diverse range of European countries. This approach is designed to improve the model’s ability to generalise effectively across different geographic and cultural contexts. Expanding the analysis to a broader European scope will also help address class imbalance by providing additional data points for underrepresented classes, further enhancing the model’s predictions. Consequently, we do not anticipate significant issues with generalisability.</p>
 </section>
