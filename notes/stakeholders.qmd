@@ -48,7 +48,9 @@ format:
     titlepage-footer: |
       The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
       \
-      eurofab.org
+      eurofab.org\
+      \
+      \footnotesize\textit{Basemaps © CARTO, © OpenStreetMap contributors.}
     titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 

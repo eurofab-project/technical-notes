@@ -56,7 +56,9 @@ format:
     titlepage-footer: |
       The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
       \
-      eurofab.org
+      eurofab.org\
+      \
+      \footnotesize\textit{Basemaps © CARTO, © OpenStreetMap contributors.}
     titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 ---
@@ -203,6 +205,9 @@ Overall F1 scores at level 3
 :::
 
 ::: {#tbl-f1class layout-nrow=2}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
+
 |                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |--------------------------------------|------------|-------------|---------|------|------|------|------|------|
 | **Central Urban Developments**       | 0.62       | 0.56        | 0.46    | 0.37 | 0.45 | 0.51 | 0.50 | 0.47 |
@@ -213,6 +218,8 @@ Overall F1 scores at level 3
 | **Sparse Rural Development**         | 0.87       | 0.71        | 0.38    | 0.31 | 0.46 | 0.18 | 0.47 | 0.47 |
 | **Street-aligned Developments**      | 0.70       | 0.63        | 0.46    | 0.56 | 0.33 | 0.59 | 0.49 | 0.32 |
 : Microsoft building footprints {#tbl-f1classms}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
 
 |                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |--------------------------------------|------------|-------------|---------|------|------|------|------|------|
@@ -248,7 +255,11 @@ Individual F1 scores for  level 3 clusters
 Overall F1 scores at Level 4
 :::
 
+\AddToHookNext{env/minipage/begin}{\footnotesize}
+
 ::: {#tbl-f1class4 layout-nrow=2}
+
+
 |                                        | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |----------------------------------------|------------|-------------|---------|------|------|------|------|------|
 | **Aligned Winding Streets**            | 0.51       | 0.45        | 0.28    | 0.35 | 0.21 | 0.36 | 0.28 | 0.18 |
@@ -265,6 +276,8 @@ Overall F1 scores at Level 4
 | **Sparse Road-Linked Development**     | 0.57       | 0.46        | 0.27    | 0.40 | 0.32 | 0.29 | 0.17 | 0.19 |
 | **Sparse Rural Development**           | 0.79       | 0.69        | 0.39    | 0.29 | 0.54 | 0.17 | 0.49 | 0.47 |
 : Microsoft building footprints {#tbl-f1classms4}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
 
 |                                        | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |----------------------------------------|------------|-------------|---------|------|------|------|------|------|

@@ -58,7 +58,9 @@ format:
     titlepage-footer: |
       The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
       \
-      eurofab.org
+      eurofab.org\
+      \
+      \footnotesize\textit{Basemaps © CARTO, © OpenStreetMap contributors.}
     titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 ---
@@ -112,6 +114,8 @@ Furthermore, the Overture data is easily accessable for numerous regions across 
 
 ::: {#tbl-testcounts layout-nrow=2}
 
+\AddToHookNext{env/minipage/begin}{\footnotesize}
+
 |                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
 |----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
 | **Aligned Winding Streets**            | 1,308      | 1,312       | 474    | 406    | 5,219  | 245    | 195    |
@@ -129,6 +133,8 @@ Furthermore, the Overture data is easily accessable for numerous regions across 
 | **Sparse Rural Development**           | 562        | 540         | 30     | 2,483  | 65     | 132    | 101    |
 | **_Total_**                            | 9,049      | 8,987       | 2,095  | 12,913 | 24,473 | 2,846  | 2,919  |
 : Microsoft building footprints {#tbl-testcountsms}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
 
 |                                        | **Random** | **Spatial** | **SK** | **PL** | **DE** | **AT** | **CZ** |
 |----------------------------------------|------------|-------------|--------|--------|--------|--------|--------|
@@ -196,6 +202,9 @@ Third, even at this high level of aggregation urban form shows signs of heteroge
 #### Class scores
 
 ::: {#tbl-f1class layout-nrow=2}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
+
 |                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |--------------------------------------|------------|-------------|---------|------|------|------|------|------|
 | **Central Urban Developments**       | 0.62       | 0.56        | 0.46    | 0.37 | 0.45 | 0.51 | 0.50 | 0.47 |
@@ -206,6 +215,8 @@ Third, even at this high level of aggregation urban form shows signs of heteroge
 | **Sparse Rural Development**         | 0.87       | 0.71        | 0.38    | 0.31 | 0.46 | 0.18 | 0.47 | 0.47 |
 | **Street-aligned Developments**      | 0.70       | 0.63        | 0.46    | 0.56 | 0.33 | 0.59 | 0.49 | 0.32 |
 : Microsoft building footprints {#tbl-f1classms}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
 
 |                                      | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |--------------------------------------|------------|-------------|---------|------|------|------|------|------|
@@ -269,6 +280,9 @@ Fourth, the same pattern of spatial leakage is present as in @tbl-f1agg. As the 
 
 
 ::: {#tbl-f1class4 layout-nrow=2}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
+
 |                                        | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |----------------------------------------|------------|-------------|---------|------|------|------|------|------|
 | **Aligned Winding Streets**            | 0.51       | 0.45        | 0.28    | 0.35 | 0.21 | 0.36 | 0.28 | 0.18 |
@@ -285,6 +299,8 @@ Fourth, the same pattern of spatial leakage is present as in @tbl-f1agg. As the 
 | **Sparse Road-Linked Development**     | 0.57       | 0.46        | 0.27    | 0.40 | 0.32 | 0.29 | 0.17 | 0.19 |
 | **Sparse Rural Development**           | 0.79       | 0.69        | 0.39    | 0.29 | 0.54 | 0.17 | 0.49 | 0.47 |
 : Microsoft building footprints {#tbl-f1classms4}
+
+\AddToHookNext{env/minipage/begin}{\footnotesize}
 
 |                                        | **Random** | **Spatial** | **OoS** | SK   | PL   | DE   | AT   | CZ   |
 |----------------------------------------|------------|-------------|---------|------|------|------|------|------|

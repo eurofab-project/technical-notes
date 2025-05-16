@@ -6,12 +6,15 @@ Technical notes produced during the EuroFab project.
 
 ## List of notes
 
-- [Consolidated Stakeholder Requirements Specification](notes/stakeholders.qmd) ([PDF](notes/stakeholders.pdf))
-- [Algorithm Design and Theoretical Basis Description](notes/algorithm-design.qmd) ([PDF](notes/algorithm-design.pdf))
-- [Reference Data Selection](notes/data-selection.qmd) ([PDF](notes/data-selection.pdf))
-- [Test and Verification Results](notes/results.qmd) ([PDF](notes/results.pdf))
-- [Software and Example datasets generated during Verification Exercises](notes/deliverables.qmd) ([PDF](notes/deliverables.pdf))
-- [Stakeholder Impact and Utility Assessment](notes/impact_and_utility.qmd) ([PDF](notes/impact_and_utility.pdf))
+- [D1: Consolidated Stakeholder Requirements Specification](notes/stakeholders.qmd) ([PDF](notes/stakeholders.pdf))
+- [D2: Algorithm Design and Theoretical Basis Description](notes/algorithm-design.qmd) ([PDF](notes/algorithm-design.pdf))
+- [D3: Reference Data Selection](notes/data-selection.qmd) ([PDF](notes/data-selection.pdf))
+- [D4: Test and Verification Results](notes/results.qmd) ([PDF](notes/results.pdf))
+- [D5: Stakeholder Impact and Utility Assessment](notes/impact_and_utility.qmd) ([PDF](notes/impact_and_utility.pdf))
+- [D6-7: Software and Example datasets generated during Verification Exercises](notes/deliverables.qmd) ([PDF](notes/deliverables.pdf))
+- [D8: Large scale inference and Operationalisation](notes/large-scale-inference.qmd) ([PDF](notes/large-scale-inference.pdf))
+- [Final report](notes/final_report.qmd) ([PDF](notes/final_report.pdf))
+- [Executive summary](notes/exec_summary.qmd) ([PDF](notes/exec_summary.pdf))
 
 ## Project overview
 

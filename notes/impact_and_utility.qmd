@@ -58,7 +58,9 @@ format:
     titlepage-footer: |
       The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
       \
-      eurofab.org
+      eurofab.org\
+      \
+      \footnotesize\textit{Basemaps © CARTO, © OpenStreetMap contributors.}
     titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 
@@ -95,7 +97,6 @@ The Construction Sector Development Agency of the Ministry of Environment, Lithu
 4ct found the data valuable for their primary focus - comparing larger-scale urban areas and deriving summary results to support urban planning and design initiatives. Similar to SSVA, and as specialized users, they also requested direct access to the underlying raw data.
 
 The Prague Institute for Planning (IPR) expressed interest in integrating the new classification into their urban planning materials. They also sought to extend their analytical scope beyond official administrative boundaries to encompass surrounding commuter-heavy suburban areas. Additionally, there was interest in leveraging this classification to automate certain manual processes involved in the production of new land use master plans.
-
 
 In summary, the key strengths observed included:
 

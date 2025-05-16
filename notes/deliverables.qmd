@@ -1,6 +1,6 @@
 ---
 title: "Software and Example datasets generated during Verification Exercises"
-subtitle: "Technical Note D6"
+subtitle: "Technical Note D6-7"
 author:
   - name: Krasen Samardzhiev
     affiliations:
@@ -36,7 +36,7 @@ format:
     coverpage: true
     coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
     coverpage-footer: |
-      Technical Note D6\
+      Technical Note D6-7\
       Software and Example datasets generated during Verification Exercises
     coverpage-bg-image: "../figures/himoc.png"
     coverpage-theme:
@@ -58,7 +58,9 @@ format:
     titlepage-footer: |
       The activities reported in this document were carried under a programme of, and funded by, the European Space Agency. View expressed in the publication can in no way be taken to reflect the official opinion of the European Space Agency. \
       \
-      eurofab.org
+      eurofab.org\
+      \
+      \footnotesize\textit{Basemaps © CARTO, © OpenStreetMap contributors.}
     titlepage-logo: "../figures/esa.jpg"
 bibliography: ../references.bib
 ---
@@ -68,7 +70,7 @@ bibliography: ../references.bib
 In this note we present the software and datasets generated for the project and described in the relevant technical notes:
 - Interactive morphometric web application
 - Morphometric characterisation pipeline for Microsoft Building footprints
-- Morphometric characterisation pipeline for OvertureMaps Building footprints
+- Morphometric characterisation pipeline for Overture Maps Building footprints
 - AI Method for Urban Fabric classification and morphometric characterization
 - AI temporal data cube of Urban Fabric classifications
 
@@ -83,9 +85,9 @@ We developed an interactive web app that displays the entire ground truth morpho
 ### Morphometric characterisation pipeline for Microsoft Building footprints
 The entire morphometric characterisation pipeline for the processing of Microsoft Building Footprints, including reproducible notebooks and an environment is open-sourced and available on the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 
-### Morphometric characterisation pipeline for OvertureMaps Building footprints
+### Morphometric characterisation pipeline for Overture Maps Building footprints
 
-The above reproducible pipeline was further adapted to process OvertureMaps data and is also available at the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
+The above reproducible pipeline was further adapted to process Overture Maps data and is also available at the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 
 ## EO
 
@@ -99,13 +101,19 @@ All the work supporting this analysis can be found on GitHub. The main predictio
 ```
 # Run the pipeline
 pipeline.spatial_sig_prediction(
-    geo_path= "../spatial_signatures/eo/data/example/london_25_25_grid_clipped.geojson", ## Vector file (geojson or parquet) of analysis area (grid).
-    vrt_file= "../satellite_demoland/data/mosaic_cube/vrt_allbands/2017_combined.vrt", ## Vrt file of the satellite composite
-    xgb_weights = "../spatial_signatures/classifier/k12_h5_slided_gb_xgb_model.bin", ## Model weights for XGBoost classifier
-    model_weights = "../satellite_demoland/models/satlas/weights/satlas-model-v1-lowres.pth", ## Model weights for embedding model (Satlas)
-    output_path= "../vjgo8416-demoland/spatial_signatures/eo/data/predictions/test_london_h6.parquet", ## Output file with predictions, prediction probabilities and geometries
-    h3_resolution=5 ## h3 resolution to be added to analysis (spatial context)
-)`
+    ## Vector file (geojson or parquet) of analysis area (grid).
+    geo_path= "london_25_25_grid_clipped.geojson",
+    ## Vrt file of the satellite composite
+    vrt_file= "mosaic_cube/vrt_allbands/2017_combined.vrt",
+    ## Model weights for XGBoost classifier
+    xgb_weights = "k12_h5_slided_gb_xgb_model.bin",
+    ## Model weights for embedding model (Satlas)
+    model_weights = "satlas/weights/satlas-model-v1-lowres.pth",
+    ## Output file with predictions, prediction probabilities and geometries
+    output_path= "predictions/test_london_h6.parquet",
+    ## h3 resolution to be added to analysis (spatial context)
+    h3_resolution=5,
+)
 ```
 
 More details and documentation on how to run the pipeline can be found in the example on the [EuroFab project EO repository](https://github.com/eurofab-project/eo/blob/main/notebooks/run_pipeline.ipynb).
@@ -140,3 +148,22 @@ Here are some example visualisations showing London and Liverpool from the datas
 ![Liverpool, 7 classes](../figures/results/liverpool_k7.png){.nostretch fig-align="center" height="400"}
 
 ![Liverpool, 12 classes](../figures/results/liverpool_k12.png){.nostretch fig-align="center" height="400"}
+
+# Project documentation
+
+Complete project documentation, including the presentation slides, code, data, and all the technical notes is available from the project homepage [eurofab.org](https://eurofab.org).
+
+Individual sites linked from the homepage contain:
+
+- Technical notes - [eurofab.org/technical-notes/](https://eurofab.org/technical-notes/)
+- Presentations - [eurofab.org/talks/](https://eurofab.org/talks/)
+- Morphometric work stream - [eurofab.org/morphometrics/](https://eurofab.org/morphometrics/)
+- Earth Observation work stream - [eurofab.org/eo/](https://eurofab.org/eo/)
+
+Each of the sites is publicly hosted on GitHub and built into HTML using GitHub Actions.
+
+- Homepage - [github.com/eurofab-project/eurofab-project.github.io](https://github.com/eurofab-project/eurofab-project.github.io)
+- Technical notes - [github.com/eurofab-project/technical-notes/](https://github.com/eurofab-project/technical-notes/)
+- Presentations - [github.com/eurofab-project/talks/](https://github.com/eurofab-project/talks/)
+- Morphometric work stream - [github.com/eurofab-project/morphometrics/](https://github.com/eurofab-project/morphometrics/)
+- Earth Observation work stream - [github.com/eurofab-project/eo/](https://github.com/eurofab-project/eo/)
