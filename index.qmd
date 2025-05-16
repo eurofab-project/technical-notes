@@ -42,7 +42,7 @@ developing scientific and technical solutions based on novel AI methods, in conj
 strategically shaping the outputs and framework to serve various stakeholders directly involved
 in policy, planning, and research.
 
-For more details, please see the project [hompage](https://eurofab-project.github.io/).
+For more details, please see the project [homepage](https://eurofab-project.github.io/).
 
 ![](assets/logos.png)
 
