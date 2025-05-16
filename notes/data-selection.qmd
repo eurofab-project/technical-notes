@@ -214,6 +214,10 @@ The types of street segments used in the analysis are limited to the ones listed
 
 Another type of segment that is filtered out are tunnels , since the analysis strictly focuses on two dimensions and therefore undergrounds structures adversely affect the calculation of boundaries and characters.
 
+### Formats
+
+The data contains over a hundred million geometries, hence require use of file formats suited for such a volume. We have opted for a GeoParquet, an OGC community standard built on top of Apache Parquet and Apache Arrow ecosystem. This ensures efficient I/O operations and partial reads.
+
 
 ## Limitations
 
@@ -231,9 +235,16 @@ We use satellite images as input into the AI model to predict urban fabric. The 
 
 Sentinel-2 data is particularly suitable for this application due to its consistent and openly available global coverage, which is ideal for projects requiring cross-regional comparisons. Its temporal flexibility, enabled by composites from multiple time points, allows for the analysis of urban patterns over time. With a resolution of 10 meters per pixel, Sentinel-2 provides the highest level of detail among openly available datasets, making it sufficient to distinguish urban features at the neighborhood scale. Additionally, its compatibility with many geospatial AI models pre-trained on Sentinel-2 data supports the use of existing methods and facilitates transfer learning.
 
+Furthermore, we use annual Sentinel-2 composites created for each year from 2016 to 2021. These composites include only cloud-free RGB images from their specific year. We acquired these using the Google Earth Engine API through automated Python scripts (as described in [GEE pipeline](https://github.com/urbangrammarai/gee_pipeline)). The same mosaics can be retrieved for any year in which Sentinel 2 has operated and will operate in the future. It is not expected that future snapshots would require different processing or showcase strikingly different spectral compositions. The same applies to different geographical contexts. Therefore, we assume that the data is representative of the total volume that would be needed to scale the analysis to pan-European scale in future.
+
+All of the satellite imagery is processed for the area of Great Britain where the models are tested against existing urban fabric classification.
+
+The data is stored as tiled cloud-optimised GeoTIFFs with a virtual raster tile (VRT) system on top for easier access.
+
 ## Urban fabric classes
 
 The urban fabric predictions from our AI model are based on labels from the Spatial Signatures Framework [@arribas2022spatial; @fleischmann2022geographical], which provides a typology of British urban environments characterized by both form (physical structure) and function (usage). This framework captures the complexity of urban areas, offering insights into how different spaces look and operate. While our primary focus is on urban fabric classification centered on form—an approach that may be simpler since form is visible in imagery—we currently use the Spatial Signatures Framework as a proxy due to its conceptual alignment with our goals for urban characterization. This decision is also influenced by the limited duration of the project and the fact that the morphotope-based classification only became available in Q4 2024. To ensure progress in developing the AI model, we use separate input classifications for the morphological and AI components of the project. The expectation is that the two classifications are conceptually similar, allowing the model architecture developed for Spatial Signatures to later support building an equally or more precise predictive model for the morphotope-based classification.
 
+The data is retrieved as an OGC GeoPackage.
 
 # References {.unnumbered}
