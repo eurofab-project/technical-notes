@@ -183,7 +183,7 @@ Therefore, any approach that uses satellite-derived building footprints should b
 ## Street data
 Street network data is the other major data source used in numerical morphometric analysis.
 It is used to identify spatial relationships, delineate boundaries for other elements and calculate morphological features of the streets themselves, such as length or width.
-There are numerous sources for street network data, however the major one is OpenStreetMap and its derivate - OvertureMaps.
+There are numerous sources for street network data, however the major one is OpenStreetMap and its derivate - Overture Maps.
 
 ### Overture transportation layer
 

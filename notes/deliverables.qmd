@@ -68,7 +68,7 @@ bibliography: ../references.bib
 In this note we present the software and datasets generated for the project and described in the relevant technical notes:
 - Interactive morphometric web application
 - Morphometric characterisation pipeline for Microsoft Building footprints
-- Morphometric characterisation pipeline for OvertureMaps Building footprints
+- Morphometric characterisation pipeline for Overture Maps Building footprints
 - AI Method for Urban Fabric classification and morphometric characterization
 - AI temporal data cube of Urban Fabric classifications
 
@@ -83,9 +83,9 @@ We developed an interactive web app that displays the entire ground truth morpho
 ### Morphometric characterisation pipeline for Microsoft Building footprints
 The entire morphometric characterisation pipeline for the processing of Microsoft Building Footprints, including reproducible notebooks and an environment is open-sourced and available on the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 
-### Morphometric characterisation pipeline for OvertureMaps Building footprints
+### Morphometric characterisation pipeline for Overture Maps Building footprints
 
-The above reproducible pipeline was further adapted to process OvertureMaps data and is also available at the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
+The above reproducible pipeline was further adapted to process Overture Maps data and is also available at the [EuroFab GitHub](https://github.com/eurofab-project/morphometrics/tree/main).
 
 ## EO
 
