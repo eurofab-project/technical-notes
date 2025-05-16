@@ -80,8 +80,7 @@ The EuroFab project emphasises close collaboration with the end-users of the fin
 
 # Stakeholder identification and engagement
 
-## Stakeholder engagement
-The project team has participated in and co-organised 2 events with the objective to identify and consolidate the stakeholders involved in the mapping exercise.
+The project team has participated in and co-organised 2 events with the objective to identify and consolidate the stakeholders involved in the mapping exercises. The bulkl of the stakeholder work however, was carried out in detailed workshops with key stakeholders - The Construction Sector Development Agency of the Ministry of Environment, Lithuania (SSVA) - a national organisation, 4ct - a private company in the urban planning sector, and the Prague Institute for Planning (IPR) - a local planning body.
 
 ### URBIS 24
 
@@ -104,20 +103,32 @@ Overall, the discussion provided useful inputs to fine-tune the survey that is u
 Amongst the audience participants, worth mentioning the Institute of Urban and Regional Development of Poland, which expressed the interest in engaging the project activities and offering the possibility the mobilise their constituency.
 
 
-### Detailed workshops
+### Detailed workshops & key stakeholder engagements
 
-There are 2 further in-person events to happen in Prague, scheduled for Q1 of 2025. The schedule had to be adjusted as both parts expressed their interest in being more involved in the collaboration once there are tangible preliminary data products they could further help shaping to their needs.
+There are two in-person events to happen in Prague, scheduled for Q1 of 2025. The schedule had to be adjusted as both parts expressed their interest in being more involved in the collaboration once there are tangible preliminary data products they could further help shaping to their needs.
 
 One workshop will be held with the Prague Institute of Planning and Development, with a focus on validating the usefulness of the WP300 outputs for their application in policy and planning. It is worth noting, that the work published in @fleischmann2022methodological has been incorporated into Prague's planning documentation within the 'Územně analytické podklady' (Territorial analytical documents) since 2020, making IPR the unique stakeholder with a long-term experience with morphological classification of the sort used within the EuroFab.
 
 Another workshop will be held with the 4ct, a private company within urban planning and institutional development sphere, focusing more on the application of the project outputs within private consulting for both public and private clients. It is assumed that the requirements will partially differ from those of IPR and other public entities.
 
-Lasltly, there are several online workshops sheduled to
+Lastly, there are several online workshops sheduled to take place with The Construction Sector Development Agency of the Ministry of Environment, Lithuania (SSVA) to go over the methodology and work in detail. Since Lithuania was not part of the original scope of the pilot study, we had to adjust several aspects of the project to accomodate them.
 
 # Performance specification
 
+Second, was the difficulty of affirming a correct quantatative metric that describes data quality or analysis. THe issue stemed first from the myriad of applications that the stakeholders were interested in , but also from the fact that there is no available large scale ground truth data. This leads different stakeholders to focus on different aspects of the analysis, of interest to their particular application. Similarly, there is even less consensus on what accurate urban fabtic classfication across time looks like. The issue is that there is even less available data, and most detailed analysis covers small areas and is based on qualitative work itself.
+Third, the limited scope of the pilot study proved another obstacle. Multiple stakeholders expressed a desire to combine the results with other datasets and then provide information about teh usefullnes, however it would have taken them longer to achieve this thant he pilot study timeframe. A potential way to identify performance metrics was to co-develop secondary derived products together. Some recomendaions about overcoming this are available in teh techincal note 5 - Imapct and Utility.
+
+The events and workshops yielded several key insights regarding the potential for pan-European classification, the practical applicability of the results and how to asses their quality.
+
+First, a consistent requirement was that for most planning work grid squares exceeding 100 meters are generally too large for meaningful analysis. In fact, the majority of detailed analysis necessitates a much more granular scale. The morphometric work carried out at the building scale proved particularly well-received, primarily because even raw morphometric characteristics at this fine resolution are difficult and time-consuming to calculate manually. This insight highlighted another potential use case for the pan-European analysis.
+
+Second, a significant challenge was encountered in establishing robust quantitative metrics to accurately describe data quality or analysis performance. This issue stemmed from two main factors: the diverse range of stakeholder applications (each having different priorities for 'quality' or 'accuracy'), and critically, the absence of comprehensive large-scale ground truth data. Stakeholders tend to prioritize different facets of the analysis relevant to their particular application. Some are even not interested in the classification, and want to use the raw characteristics to label the configurations of buildings and streets using local terms and vocabularies. Similarly, an even greater lack of consensus exists regarding what constitutes accurate urban fabric classification across time. The challenge in this case is even bigger, since there is a larger scarcity of available longitudinal data, with most detailed analyses confined to small geographic areas and primarily relying on qualitative assessments, which are inherently difficult to standardize for quantitative validation.
+
+Third, the limited scope of the pilot study presented another obstacle. Multiple stakeholders indicated a strong interest in integrating the project results with other complementary datasets (e.g., socio-economic data, environmental indicators) to fully assess their utility and impact. However, the existing timeframe of the pilot study proved insufficient for such comprehensive data integration and subsequent long-term evaluation. A proposed solution for identifying more robust and broadly accepted performance metrics involves the collaborative co-development of secondary derived products. For instance, instead of just providing a classification, working with stakeholders to develop an city or region urban fabric summary or 'green space accessibility score' directly from the classifications could provide more immediate, measurable utility. Further recommendations for overcoming this limitation are available in Technical Note 5 – Impact and Utility.
 
 # Regulations
+
+A notable positive outcome from stakeholder engagement was the strong appreciation for the use of open-source products as both data input and for generating final results. Stakeholders emphasized that this enables to them to avoid potential problems related to licenses or regularions. This outcome supports EuroFab's foundational commitment to openness represents a key strategic asset for ensuring its long-term impact, widespread adoption, and overall sustainability. This includes maintaining the public GitHub repositories (e.g., `eurofab-project/morphometrics`, `eurofab-project/eo`) for all relevant code, tools, and documentation. The scope of the open-source work can also be extended to establish and maintain online forums, mailing lists, and developer channels (e.g., Slack, Discord) to provide support to users and foster a collaborative environment for contributors.
 
 
 # Stakeholder Use Cases and Requirements
