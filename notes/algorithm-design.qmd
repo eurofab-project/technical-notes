@@ -605,8 +605,8 @@ The dataset is divided into 80% for training and 20% for testing across both tas
 
 The figures below show how the training and testing datasets sampled across the whole study area:
 
-![](../figures/algo_design/train_df.png){.nostretch fig-align="left" height="400"}
-![](../figures/algo_design/test_df.png){.nostretch fig-align="right" height="400"}
+![](../figures/algo_design/train_df.png){.nostretch fig-align="left" height="300"}
+![](../figures/algo_design/test_df.png){.nostretch fig-align="right" height="300"}
 
 We used standard, pre-configured neural network setups without tuning the hyperparameters, due to the constraints of the project. As a result, we did not include a validation split in these experiments.
 
@@ -818,6 +818,7 @@ Deployment on all data in the end; pipeline will look the same in the end (sampl
 
 H3 regional sampling showed slightly lower performance, hinting to some spatial leakage through random sampling.
 
+\AddToHookNext{env/longtable/begin}{\footnotesize}
 
 | **Approach**     | **Res.** | **Sampling**        | **Clas/seg**          | **Regional info**    | **Global Acc**       | **Macro Acc**      | **F1(macro)**      | **IoU**          |
 |-------------------|----------|---------------------|------------------------|----------------------|----------------------|--------------------|--------------------|------------------|
@@ -851,7 +852,6 @@ H3 regional sampling showed slightly lower performance, hinting to some spatial 
     - sampling across different countries, the final model will not just be trained on England but on a range of sample countries, so we are not anticipating any issues with generalisability
 
 
-=======
 **Data Limitations**
 
 Class imbalance is a significant challenge in the dataset. To address this, we experimented with classification models using oversampling and undersampling techniques. Additionally, we trained a weighted XGBoost model, which applied weights based on the class distribution. However, these approaches did not result in improved performance. If class imbalance remains a persistent issue, a potential solution is to merge similar classes with smaller instance counts to improve representation.
