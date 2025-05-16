@@ -77,7 +77,8 @@ account for products and services generation and delivery.
 
 The EuroFab project emphasises close collaboration with the end-users of the final project outputs. We are in recurring contact with various stakeholders and taking their feedback into account when carryout the technical work. This document describes the stakeholder engagement carried out to date, with the purpose of consolidating their requirements and idea for the maximum adoption and impact of our work. The work on the stakeholder requirements is currently ongoing as we needed to adapt to their (stakeholders’) activity schedule which is quite tight, since we want to involve not just representatives from the networks/associations themselves, but also their constituency.
 
-# Stakeholder requirements specification
+
+# Stakeholder identification and engagement
 
 ## Stakeholder engagement
 The project team has participated in and co-organised 2 events with the objective to identify and consolidate the stakeholders involved in the mapping exercise.
@@ -102,7 +103,8 @@ Overall, the discussion provided useful inputs to fine-tune the survey that is u
 
 Amongst the audience participants, worth mentioning the Institute of Urban and Regional Development of Poland, which expressed the interest in engaging the project activities and offering the possibility the mobilise their constituency.
 
-## Future stakeholder engagement
+
+### Detailed workshops
 
 There are 2 further in-person events to happen in Prague, scheduled for Q1 of 2025. The schedule had to be adjusted as both parts expressed their interest in being more involved in the collaboration once there are tangible preliminary data products they could further help shaping to their needs.
 
@@ -110,9 +112,44 @@ One workshop will be held with the Prague Institute of Planning and Development,
 
 Another workshop will be held with the 4ct, a private company within urban planning and institutional development sphere, focusing more on the application of the project outputs within private consulting for both public and private clients. It is assumed that the requirements will partially differ from those of IPR and other public entities.
 
-## Stakeholder requirements
+Lasltly, there are several online workshops sheduled to
 
-This technical note is planned to be expanded in due course to include resulting detailed requirements of identified end users concerning the
-proposed solution.
+# Performance specification
+
+
+# Regulations
+
+
+# Stakeholder Use Cases and Requirements
+
+We have gathered multiple insights and potential uses cases from the stakeholder sessions:
+
+- Data Integration
+- Taxonomy Description and Naming
+- Comparative Urban Analysis:
+- Expanding Data Coverage
+- Reducing Manual Effort in Land Use Analysis
+- Geographical Scale of Results
+- Taxonomic Tree & Evaluation
+- Input data quality
+
+A significant finding from the stakeholder engagements is the strong interest in integrating the EuroFab data with land use, geodemographic, land value and other spatial datasets. However, stakeholders differed in their technical ability to make such a merger themselves. This led to discussions about multiple potential derived data products such as classifications that incorporate both morphological and land use or other functional information.
+
+The stakeholders showed significant interest in the taxonomic tree, discussing both its advantages and disadvantages. Potential use cases included, identifying the relationships between different urban forms, as well as comparisons at different scales between regions and cities. SSVA, in particular, conducted a detailed evaluation of the hierarchy within the Lithuanian context and proposed several modifications so it fits better the local context.
+
+Significant time was spend discussing the issues of how to describe and name the taxonomic tree and the clusters. Different applications required different names, and even the same application (for example, for land use planning), but in different countries required different names and descriptions. One discussed approach to this was to give clusters and the taxonomy abstract names that focus only on the morphology. This would later make it easier for users to adapt and refine the classification names and descriptions according to their specific needs and application contexts.
+
+A key application identified through discussions with 4ct, IPR, and SSVA is the use of EuroFab data for comparative urban analysis - stakeholders expressed a strong interest in leveraging the data to compare cities, regions, and even cross-border areas. This capability is seen as valuable for guiding planning decisions, facilitating knowledge transfer between local planning authorities and land developers, and understanding the factors that shape urban development patterns. This emphases on comparisons also underscored the need to expand the geographic coverage of the data.
+
+We have already taken steps to address this requirement. Due to the new stakeholders from Lithuania, we had to process the urban fabric of the whole country. This required adjustments to the processing pipeline, which improved its scalability and performance and currently, its easier to include new countries in the analysis. We also note that  even though Lithuania is excluded from the final modeling results with Microsoft and OvertureMaps data, it is present in the interactive web application.
+
+There were also multiple discussions with stakeholders about the geographical scale of the results. IPR expressed interest in both fine-grained units, such as morphotopes (local contiguous areas of similar urban morphology), and coarser aggregations, such as the hexagon-based aggregation featured in the web application. Conversely, 4ct and SSVA indicated a need for building-level information, as well as access to the raw data.
+
+Related discussions covered input data quality and additional morphological variables to be included in the classification. The issues with the quality and inconsistencies of building footprints was raised multiple times, as well as problems with the street network. This was especially relevant for building height, which is a characteristic all stakeholders expressed interest in. However, we also discussed the unavailability of this data and the accuracy problems of existing building height data products.
+
+Lastly, The Prague Institute of Planning and Development (IPR) highlighted the potential of EuroFab outputs to help with generating the official land use plan for the city. Furthermore, they expressed interest in potentially integrating the EuroFab data into their urban analytics products for Prague.
+
+
+
 
 # References {.unnumbered}
