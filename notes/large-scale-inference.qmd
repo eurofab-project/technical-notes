@@ -65,38 +65,13 @@ bibliography: ../references.bib
 ---
 
 
-<!-- - Introduction
-- European Morphometric Classification Strategy
-	- Data-readiness
-	- Risk assessment
-	- Europe-wide classification strategy
-
-
-- European Space-Time Urban Fabric Strategy
-	- Infrastructural, technical and methodological aspects involved in scaling
-	- Risk assessment
-	- Europe-wide deployment strategy
-
-
-- Scaled up stakeholder engagement
-	- Current state
-		- achievements, outstanding gaps, possible solutions
-	- Suitability of the data product for the definition of derived indicators
-	- Application potential
-		- examples of how to use the data products for the development of derived indicators, for different policy areas.
-
-
-- Productionalisation strategy:
-
-    -->
-
 ## Introduction
 
 This Technical Note presents a strategic roadmap for advancing the EuroFab project's urban fabric classification system from its current capabilities to a pan-European operational capacity.
 
-Ultimately, EuroFab seeks to pave the road for a world where stakeholders, from local authorities to supernational organisations, are able to track and monitor the pattern of urban development across time, in detail directly relevant for planning, and at scale. The pilot study in Central Europe and the UK consisted of three related parts - two machine learning and AI data processing pipelines, and a stakeholder engagement component. The current pilot study demonstrated the viability of using alternative data sources to produce multiscale descriptions of the built environment, based on analysis of individual buildings, street segments and their interactions. Furthermore, the stakeholder engagement part highlighted the multiple applications which stakeholders see for such a dataset.
+Ultimately, EuroFab seeks to pave the road for a world where stakeholders, from local authorities to supernational organisations, are able to track and monitor the pattern of urban development across time, in detail directly relevant for planning, and at scale. The pilot study in Central Europe and the UK consisted of three related parts - a machine learning morphometric pipeline, a AI vision model, and a stakeholder engagement component. The current pilot study demonstrated the viability of using alternative data sources to produce multiscale descriptions of the built environment, based on analysis of individual buildings, street segments and their interactions. Furthermore, the stakeholder engagement part highlighted the multiple applications which stakeholders see for such a dataset.
 
-The overall strategy can be summarised as consisting of three steps. First, using the first pipeline to generate detailed training data, at a large scale. Second, training the AI vision model on the outputs from step one, to fill data gaps and produce a temporal dimension for the European urban fabric classification. Third, to productise the results and expand the stakeholder engament in order to drive adoption and derive secondary indicators and datasets for specific applications.
+The overall scaling and productionalisation strategy can be summarised as consisting of three steps. First, using the first pipeline to generate detailed training data, at a large scale. Second, training the AI vision model on the outputs from step one, to fill data gaps and produce a temporal dimension for the European urban fabric classification. Third, to productise the results and expand the stakeholder engament in order to drive adoption and derive secondary indicators and datasets for specific applications.
 
 Transitioning the EuroFab system from a successful research project with functional processing pipelines to a robust, reliable, and continuously updated data product presents considerable technical and organizational challenges. Serving a diverse range of stakeholders across Europe with consistent and high-quality urban fabric information requires improvement and upscaling of data processing capabilities, the establishment of a sustainable operational framework that covers potential risks, and a commitment to continuous improvement and user engagement.
 
@@ -104,10 +79,7 @@ The roadmap in this technical note addresses these multifaceted challenges, prov
 
 ## European Morphometric Classification Strategy
 
-The results from the pilot study indicate that it is possble to to fill the gaps in openly available cadastral data with alternative data sources, namely OvertureMaps and Microsoft Building footprints. Broadly the work showcased the potential to deliver pan-European classification of urban fabric as a combination of morphological processing and predictive modelling.
-
-
-The pan-European classification can be used by stakeholders on its own, but it will also be the training data for the expanded temporal AI models.
+The results from the pilot study indicate that it is possble to to fill the gaps in openly available cadastral data with alternative data sources, namely OvertureMaps and Microsoft Building footprints. Broadly the work showcased the potential to deliver pan-European classification of urban fabric as a combination of morphological processing and predictive modelling. This classification can be used by stakeholders on its own, but it will also be the training data for the expanded temporal AI models.
 
 ### Infrastructural, technical and methodological aspects involved in scaling
 
@@ -115,7 +87,7 @@ The pan-European pipeline will build on the pilot study work and will consist of
 
 There are three types of expected changes to the current methodology.
 
-First, in a technical aspect, the methodology will need to be updated to work with the latest available geographical open source packages, in order to keep as close as possible to the cadastral classification. The ground truth cadastral classification is a live product, which feeds upstream changes to open source repositories and has multiple contributors working on it. Therefore, it changes over time adapting to and contributing to the latest available morphological open source software. However, the effort required is expected to be low to medium, since the work wil be primarily of technical/software development nature and will not lead to any methodological changes.
+First, the methodology will need to be updated to work with the latest available geographical open source packages, in order to keep as close as possible to the cadastral classification. The ground truth cadastral classification is a live product, which feeds upstream changes to open source repositories and has multiple contributors working on it. Therefore, it changes over time adapting to and contributing to the state-of-the-art morphological open source software. However, the effort required is expected to be low to medium, since the work wil be primarily of technical/software development nature and will not lead to any methodological changes.
 
 Methodologically, it is expected that the first and second stages will need only minor changes. However, there will be a significant data pre-processing effort required in mapping the available data resources and assesing their quality for the whole of Europe. The third and fourth stage may require more adaptions in order to account for the new scale and data. Potential pitfalls and solutions are discussed in the subsequent sections.
 
@@ -125,7 +97,7 @@ There are no new infrastructual requirements, the methodology is expected to sca
 
 The main risks identified are:
 
-* **Sourcing and processing European building footprints.**  Before applying the methodology to the European continent there needs to be an extensive mapping of the available data sources. One finding from the work is the difficulty of working with even cadastral data, since every country, or even different regions within the same country have different definitions of what a building is. The data needs to be downloaded and standardised for the first two steps of the analysis. This could potentially result in data from different sources, in different parts of Europe.
+* **Sourcing and processing European building footprints.**  Before applying the methodology to the European continent there needs to be an extensive mapping of the available data sources. One finding from the pilot work is the difficulty of working with cadastral data, since every country, or even different regions within the same country, have different definitions of what a building is. The data needs to be downloaded and standardised for the first two steps of the analysis. This could potentially result in data from different sources, in different parts of Europe.
 
 * **No available data for some regions:** It is possible that there will be regions with no available building footprint data at all. These will need to be handled in order to provide consistent coverage. 
 
@@ -133,17 +105,21 @@ The main risks identified are:
 
 ### Europe-wide classification strategy
 
-* **Heterogenous data sources:** The scope of the pilot study was already extended to test, how well the models handle heterogenous data. The results suggest that better quality data from heterogenous sources, specifically OvertureMaps data, leads to more accurate predictions and that the pipeline can already handle this heterogeneity. However, the underlying building data can have new issues, which we have not encountered in the current regions - for example topological, cover issues or issues with the street network. This might lead to more technical adaptions of the methology.
+* **Continous with the cadastral classification:** There are no major challenges expected for this work, however it will require continous updates of the models. It is expected that each update of the ground truth data will improve the performance of the models.
 
-* **No available data for some regions:** In cases where there are no building footprints available at all, the vision model can be used directly to fill in the gaps, since Sentinel 2 has full coverage of Europe. This means that such a region could potentially represent an unseen before urban class, and therefore needs to be analysed in more detail.
+* **Heterogenous data sources:** The scope of the pilot study was already extended to test how well the models handle heterogenous data. The results suggest that better quality data from heterogenous sources, specifically OvertureMaps data, leads to more accurate predictions and that the pipeline can already handle this heterogeneity. However, the underlying building data can have new issues, which we have not encountered in the current regions - for example topological problems, cover issues or issues with the street network. These challenges are expected to be solvable, but will increase the required data pre-processing work. Extending and improving the OvertureMaps data processing pipeline is a good starting point for all of this analysis.
 
-* **Unknown urban fabric classes:**  The likelyhood of unseen urban classes drops as the scope of the ground truth cadastral classification grows. The current classification covers - Germany, Poland, Lithuania, Slovakia, Czechia and Austria. However, there is cadastral data available for other European Countries such as Spain, Belgium, France and the Netherlands. It is expected that these will be included in subsequent classifications and therefore increase the types of urban fabric covered.
+* **No available data for some regions:** In cases where there are no building footprints available at all, the vision model can be used directly to fill in the gaps, since Sentinel 2 has full coverage of Europe. However, this means that such a region could potentially represent an unseen before urban class, and therefore needs to be analysed in more detail.
 
-* **Tuning models:**  The current morphometric models are HistGradientBoostingClassifier with unlimited depth and number of nodes, trained on hundreads of thousands of examples per class. However, these scheme will need to change as the size of the datasets increases, or alternatively multiple models will need to be trained and tested. The detailed spatial testing schemes implemented in the pilot study will guide the development of the new models, where the main tasks will be hyper-parameter tuning and proper subseting of the training data. The data availability and data pre-processing work will also have a large impact on the model tuning and training. It is possible that only specific regions, within specific countries are problematic and therefore most of the modeling focus should go there.
+* **Unknown urban fabric classes:**  The likelyhood of unseen urban classes drops as the scope of the ground truth cadastral classification grows. The current classification covers - Germany, Poland, Lithuania, Slovakia, Czechia and Austria. There is cadastral data available for other European Countries such as Spain, Belgium, France and the Netherlands. It is expected that these will be included in subsequent cadastral classifications and therefore increase the types of urban fabric covered. This further increases the importance of continously updating the existing morphometric pipeline for alignment with the cadastral ground truth, and with the newly available open source software.
+
+* **Tuning models:**  The current morphometric models are HistGradientBoostingClassifier with unlimited depth and number of nodes, trained on hundreads of thousands of examples per class. However, this scheme will need to change as the size of the datasets increases, or alternatively multiple models will need to be trained and tested. The detailed spatial testing schemes implemented in the pilot study will guide the development of the new models, where the main tasks will be hyper-parameter tuning and proper subseting of the training data. The data availability and data pre-processing work will also have a large impact on the model tuning and training. It is possible that only specific regions, within specific countries are problematic and therefore most of the modeling focus should go there.
+
+##  European Space-Time Urban Fabric Strategy
 
 ### Infrastructural, technical and methodological aspects involved in scaling
 
-The core of EuroFab's current Earth Observation analytical capability is the Spatial Signatures Pipeline, detailed in the eurofab-project/eo GitHub repository. This pipeline is engineered to generate spatial signature predictions using satellite imagery as its primary input. Firsts, yt integrates computer vision models to create feature embeddings from satellite imagery. These embeddings are subsequently processed by an XGBoost model, which performs the classification of individual image chips into predefined urban fabric classes. The following aspects of this baseline processing chain needs to be adapted and scaled:
+The core of EuroFab's current Earth Observation analytical capability is the Spatial Signatures Pipeline, detailed in the eurofab-project/eo GitHub repository. This pipeline is engineered to generate spatial signature predictions using satellite imagery as its primary input. Firsts, it integrates computer vision models to create feature embeddings from satellite imagery. These embeddings are subsequently processed by an XGBoost model, which performs the classification of individual image chips into predefined urban fabric classes. The following aspects of this baseline processing chain needs to be adapted and scaled:
 
 * **Sourcing and processing historical European Sentinel 2 data:** The current pipeline is processing historical Sentintel 2 data only for the UK. The data processing and storage have to be expanded to cover the whole of Europe.
 
@@ -166,38 +142,34 @@ The following are the three challenges that need to be tackled for the scaling o
 
 ### Europe-wide deployment strategy
 
-* **Leveraging Copernicus Services:** The Copernicus programme, with its commitment to free, full, and open data access, is the cornerstone for sourcing satellite imagery. Primarily, data from the Sentinel-2 (multispectral optical) mission will provide consistent, systematic, and frequently updated coverage of the entire European continent. These datasets are fundamental inputs for the raster-based analysis performed by the EuroFab pipeline.
+* **Leveraging Copernicus Services:** The Copernicus programme, with its commitment to free, full, and open data access, will be the cornerstone for sourcing satellite imagery. Primarily, data from the Sentinel-2 (multispectral optical) mission will provide consistent historic coverage of the entire European continent. These datasets are fundamental inputs for the raster-based analysis performed by the EuroFab pipeline and enable the temporal classification.
 
-* **Leveraging the new morphometric classification results as ground truth:** It is expected that changing the ground truth classes from the spatial signatures to the new morphometric results will not lead to changes in the pipeline. Although teh spatial signatures capture functional information, almost all morphometric characters used in deriving the new classification are alredy used in the spatial signatures derivation. Therefore, the current AI vision model pipeline is already taking urban form into account.
+* **Leveraging the new morphometric classification results as ground truth:** It is expected that changing the ground truth classes from the spatial signatures to the new morphometric results will not lead to changes in the pipeline. Although the spatial signatures capture functional information, almost all morphometric characters used in deriving the new classification are alredy used in the spatial signatures derivation. Therefore, the current AI vision model pipeline is already processing urban form information.
 
-* **Generalisability Testing**: The performance of the model will be tested using the same robust generalisibility testing framework used in the pilot study's morphological pipeline. This was not possible for the current AI pipeline due to data shortage, however with the expansion of the study area and available data more complex testing screnarios become viable.
+* **Generalisability Testing**: The performance of the model will be tested using the same robust generalisibility testing framework used in the pilot study's morphological pipeline. This was not possible for the current AI pipeline due to data shortage, however with the expansion of the study area and available data more complex testing screnarios become viable. Furthermore, the generalisability task becomes easier as the scale of the morphometric pipeline used to generate the training data scales to the whole of Europe. Instead of having to predict urban form in multiple unseen countries, the model will have to do in-fill predictions - predict urban fabric for regions, where local urban fabric information is available.
 
-* **Evaluation of urban predictions across time** Similarly, the larger quantatity of data, as well as the new testing frameworks will enable better model performance and therefore better certainty in the temporal classification.
+* **Evaluation of urban predictions across time** Similarly, the larger quantatity of data, as well as the new testing frameworks will enable better model performance and therefore better certainty in the temporal classification. Furthermore, the expanded stakeholder engagement and derivation of secondary datasets will further increase confidence in the results.
 
-* **Methodological processing** The current pipeline needs localised information to generate the embeddings and predictions, therefore it is expected that the memory and computing requirements will scale linearly and will not require changes to the underlying methodology. Most of the development time will be spend on preprocessing the data and for training generating the embeddings from the satallite images.
-
-
+* **Methodological processing** The current pipeline needs localised information to generate the embeddings and predictions, therefore it is expected that the memory and computing requirements will scale linearly and will not require changes to the underlying methodology. Most of the development time will be spend on preprocessing the data and for training generating the embeddings from the satallite images. In order to do these steps in a reasonable timeframe it is expected that training and inference will require a small cluster of high-end GPUs, with the inference ran on a yearly basis.
 
 
 ## Scaled up stakeholder engagement
 
-The stakeholder engagement in the pilot study confirmed the need for a detailed urban classification at a granular level and resulted in multiple feature requests for secondary indators, specific functionality and reports. A pan-european detailed urban classification can act as the foundation for multiple derived data products adapted to particular use cases. Requested examples included comparisons between countries at different scales - neighbourhoods, cities and regions; access to the building-level morphological data of the taxonomy; and the ability to figure out where newly-designed areas would fall within the taxonomy before they are built. Furthermore, there were multiple requests to combine the classification with other data sources.
+The stakeholder engagement in the pilot study confirmed the need for a detailed urban classification at a granular level and resulted in multiple feature requests for secondary indicators, specific functionality and reports. Overall, a pan-european detailed urban classification can act as the foundation for multiple derived data products adapted to particular use cases. Requested examples included comparisons between countries at different scales - neighbourhoods, cities and regions; access to the building-level morphological data; and the ability to figure out where newly-designed areas would be classified before they are built. Furthermore, there were multiple requests to combine the classification with other data sources.
 
-The larger scale of the new results will enable us to continue and enhance the stakeholder work:
+The larger scale of the pan-European results will enable us to continue and enhance the stakeholder work:
 
-*  **Continue workshops and conference work:** The most sucessfull colaborations and insights came from workshops and conferences. All of these benefits still count for the pan-european Study.
+*  **Workshops and conference work:** Some of the most sucessfull colaborations and insights came from workshops and conferences. The pan-European scale of the new product will increase the number of relevant and interested stakeholders, thefore continuing the workshop and conference work is expected to continue delivering value for the project as whole.
 
-*  **Focus on specific Euroepan cities and regions:** Stakeholders were typically interested in their local areas or countries, as well as the larger scale data.Even the pilot study extent of five central european countries and the UK proved limiting. For example, the Lithuanian department was interested and we had to adapt and include them in the research. This needs to be scaled up with the new pan-european extent.
+*  **Focus on specific European cities and regions:** Stakeholders were typically interested in their local areas or countries, as well as the larger scale data. Even the pilot study extent of five central european countries and the UK proved limiting. For example, the SSVA (Construction Sector Development Agency of the Ministry of Environment, Lithuania) was interested and we had to adapt and include Lithuania in the research. The scale of the pan-European product will make the onboarding of interested new stakeholders much easier.
 
-*  **Collaborations & codevelopment:** The focus of the work was on establishing relationships, and extended collaborations on specific applications and data products was not possible due to the short duration of the project. True co-development in an operational context means evolving beyond simple feedback collection. It involves establishing formal partnerships where stakeholders actively contribute resources – such as local datasets for training/validation, domain expertise, or personnel for joint validation campaigns – and, in return, share in the benefits and responsibilities of the service. This could involve Memoranda of Understanding with national mapping agencies, urban planning institutes, or research consortia, thereby deeply embedding the EuroFab service into their operational workflows and decision-making processes.
+*  **Collaborations & codevelopment:** The focus of the current stakeholder work was on establishing relationships, and extended collaborations on specific applications and data products was not possible due to the short duration of the pilot. True co-development in an operational context means evolving beyond simple feedback collection. It involves establishing formal partnerships where stakeholders actively contribute resources – such as local datasets for training/validation, domain expertise, or personnel for joint validation campaigns – and, in return, share in the benefits and responsibilities of the new data products. This would result in deeply embedding the EuroFab service into their operational workflows and decision-making processes.
 
- * **Developing derived products:** For specific strategic use cases we can extent the stakeholder work and guide the development of drived products. This work will also result in detailed examples and documentation of how to use the data products for the development of derived indicators, for different policy areas. Some applications that came up during the development work were combining the classification with land use data and geomdemographic factors, generating summaris of the morphonetric chacater of cities, access to the full taxonomy, as well as raw morphometric characters data at the building level.
+* **Developing derived products:** For specific strategic use cases we can extent the stakeholder work and guide the development of derived products. This work will also result in detailed examples and documentation of how to use the foundational space-time urban classification product for the development of derived indicators, for different policy areas. Some applications that came up during the development work were combining the classification with land use data and geodemographic factors, generating summaries of the morphonetric character of cities, access to the full taxonomy, as well as raw morphometric characters data at the building level.
 
-* **Relationships and egagement with people developing derived products:** There were multiple proposals for companies to develop their own derived products for specific cases. These include local and private comapanies in the urban planning and environmental management sectors. Ongoing enagement and support can be provided for them.
+* **Relationships and egagement with people developing derived products:** There were multiple proposals for companies to develop their own derived products for specific cases. These include local and private companies in the urban planning and environmental management sectors. Ongoing enagement and support can be provided for them.
 
-* **Open source community:** EuroFab's commitment to openness is a key asset for its long-term impact and sustainability. The project's commitment to "open-source software, algorithms and open datasets" \[2\] must be continued and expanded. This includes maintaining public GitHub repositories (e.g., `eurofab-project/morphometrics`, `eurofab-project/eo`) for all relevant code, tools, and documentation. The work can also be extended to establish and maintain online forums, mailing lists, and developer channels (e.g., Slack, Discord) to provide support to users and foster a collaborative environment for contributors.
-
-
+* **Open source community:** EuroFab's commitment to openness is a key asset for its long-term impact and sustainability. The project's commitment to "open-source software, algorithms and open datasets" must be continued and expanded. This includes maintaining the public GitHub repositories (e.g., `eurofab-project/morphometrics`, `eurofab-project/eo`) for all relevant code, tools, and documentation. The work can also be extended to establish and maintain online forums, mailing lists, and developer channels (e.g., Slack, Discord) to provide support to users and foster a collaborative environment for contributors.
 
 
 ## Productionisation
@@ -206,13 +178,15 @@ Moving EuroFab from a research project to an operational service requires a well
 
 
 * **Defining Operational Service Levels and Output Products:** A tiered approach to service delivery can cater to diverse user needs and ensure sustainability.
-    * *Baseline Products:* These would include pan-European urban fabric maps based on the core classification scheme, updated regularly (e.g., annually or biennially). These products should be openly accessible.
-    * *Derived Indicators:* Offer services to generate higher-level indicators from the base urban fabric data. Examples include metrics related to green space accessibility, urban sprawl patterns, impervious surface percentage, building density, or indicators supporting SDG11 monitoring. Many examples of urban indicators exist which could be adapted or inspired by, such as those related to sustainable urban development, quality of life, or environmental performance.
+    * *Baseline Products:* These would include pan-European urban fabric maps and the underlying data based on the core classification scheme. These products should be openly accessible and updated regularly (e.g., annually or biennially).
+    * *Derived Indicators:* Offer services to generate higher-level indicators from the base urban fabric data. Examples include metrics related to urban sprawl patterns, structure of cities, countries and regions, as well as access to the underlying morphological data ( if available). 
 
-* **Potential Integration with Existing European EO Platforms:** To maximize impact and avoid creating isolated systems, EuroFab services should be integrated with or exposed through relevant existing European platforms.
+* **Access and Integration:** The resulting datasets will require specialised hosting due to their large size. The development of the morpgological web app showed the viability of using the Czech national ressearch infrastructure for this purpose. Since it is a scalable cloud storage, and the pan-european datasets have to be in cloud-native formats - geotiff and parquet for the vision and morphometric models respectively. Furthermore, to maximize impact and avoid creating isolated systems, EuroFab services should be integrated with or exposed through relevant existing European platforms and cloud data standards. 
 
+* **User Adoption and Trust:** Stakeholder and end-user engamgenet has been an important part of the pilot study. The pan-european classification will be expand on this work to drive dataset adaption and improve quality. The quality feedback from stakeholders will be implemented using transparent and publicly accessible Cal/Val procedures. The further investment in stakeholder engagement, co-design processes training, and clear documentation will also improve user confidence in the data product and drive adoption.
 
-* **Model Retraining and Update Cadence:** - A clear strategy for model retraining is needed. Triggers for retraining could be yearly updates or the new availability of significant new volumes of high-quality training data.
+* **Timeline:** The proposed timeline for the full operationalisation is 2 years. This will give enough time to scale the methodology, built up the additional services, consolidate stakeholder requirements and  operationalise the results.
 
+* **Team Composition:** The proposed team composition is the same as the pilot study. A six person team, two from each instiitution already involved. The only difference with the current structure is the change of the affiliation of Turing Team, which is now under the University of Liverpool in the UK. The OECD team will be responsible for the stakeholder engagement, the Charles University team will be responsible for the scaling of the morphometric pipeline and the University of Liverpool team will work on the AI vision model.
 
-* **User Adoption and Trust:** Implement transparent and publicly accessible Cal/Val procedures and results; integrate XAI techniques to make model outputs understandable; invest heavily in stakeholder engagement, co-design processes 3, training, and clear documentation.
+* **Funding:** The project team will apply for international and national grants - UKRI, Horizon, ESA for example.
