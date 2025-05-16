@@ -64,6 +64,22 @@ bibliography: ../references.bib
 
 ---
 
+<!--
+From the Statement of Work
+
+This documentation element shall contain the following elements:
+
+- an assessment of the extent to which target performance levels for content,
+processing time etc were met as well as an identification of instances where target
+performance levels were not met and the consequences of these situations.
+- An assessment of the benefits and impacts resulting from the use of the new
+information layers.
+- An assessment of the extent to which applicable working practices, operational
+regulations etc were complied with and a discussion of situations where non-
+compliances were detected/observed.
+- Recommendations for actions to be executed to support transfer to full operations.
+ -->
+
 # Stakeholder Impact and Utility Assessment
 
 We have presented the EuroFab project and related products at various events and sessions. At Urbis 24, the project sparked interest in fulfilling unmet data requirements for energy and climate applications, leading to a potential engagement with Covenant of Mayors members via interviews or surveys. The World Urban Forum facilitated the establishment of new stakeholder relationships, including productive sessions with the SSVA (Construction Sector Development Agency of the Ministry of Environment, Lithuania). Furthermore, we held numerous sessions with the Prague Institute of Planning and Development (IPR) and 4ct.

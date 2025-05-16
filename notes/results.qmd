@@ -595,5 +595,3 @@ Evaluating the accuracy of predictions over time is inherently challenging due t
 
 - Transferability across geographic and morphological contexts
 The models demonstrate strong generalization within Great Britain and across several Central European countries. However, their performance varies in regions with distinct urban morphologies, socio-economic conditions, or planning traditions not well represented in the training data. Expanding the training set to include more diverse examples of urban fabric will likely improve transferability and robustness across broader European or global contexts.
-
-# References {.unnumbered}

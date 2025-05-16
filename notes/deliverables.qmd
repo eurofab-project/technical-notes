@@ -140,7 +140,3 @@ Here are some example visualisations showing London and Liverpool from the datas
 ![Liverpool, 7 classes](../figures/results/liverpool_k7.png){.nostretch fig-align="center" height="400"}
 
 ![Liverpool, 12 classes](../figures/results/liverpool_k12.png){.nostretch fig-align="center" height="400"}
-
-
-
-# References {.unnumbered}

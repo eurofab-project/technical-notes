@@ -54,6 +54,25 @@ bibliography: ../references.bib
 
 ---
 
+<!--
+From the Statement of Work
+
+This documentation element shall contain the following elements:
+
+- The identification of priority users for which requirements have been assessed, their
+mandates with respect to the application domain being considered, the monitoring,
+assessment, and response actions for which they are responsible.
+- The requirements for information to support the operational responsibilities including
+an elaboration of content, update frequency, coverage, spatial resolution/sampling
+and associated performance and accuracy levels to be ensured.
+- The identification of the applicable regulations, legislation, working practices and
+their current sources of information. In addition, current cooperation, and exchange
+frameworks within which the target users are already operating shall be described,
+together with an assessment as to how these can be and should be taken into
+account for products and services generation and delivery.
+- Use Case Descriptions and derived User and System/Service Requirements.
+ -->
+
 # Executive summary
 
 The EuroFab project emphasises close collaboration with the end-users of the final project outputs. We are in recurring contact with various stakeholders and taking their feedback into account when carryout the technical work. This document describes the stakeholder engagement carried out to date, with the purpose of consolidating their requirements and idea for the maximum adoption and impact of our work. The work on the stakeholder requirements is currently ongoing as we needed to adapt to their (stakeholders’) activity schedule which is quite tight, since we want to involve not just representatives from the networks/associations themselves, but also their constituency.
