@@ -1,6 +1,6 @@
 ---
 title: "Large scale inference and Operationalisation"
-subtitle: "Technical Note D7"
+subtitle: "Technical Note D8"
 author:
   - name: Krasen Samardzhiev
     affiliations:
@@ -36,7 +36,7 @@ format:
     coverpage: true
     coverpage-title: "European Urban Fabric Classification Using Artificial Intelligence"
     coverpage-footer: |
-      Technical Note D7\
+      Technical Note D8\
       Large scale inference and Operationalisation
     coverpage-bg-image: "../figures/himoc.png"
     coverpage-theme:
