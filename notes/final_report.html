@@ -147,7 +147,6 @@ div.csl-indent {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
-  <li><a href="#project-documentation" id="toc-project-documentation" class="nav-link" data-scroll-target="#project-documentation">Project documentation</a></li>
   <li><a href="#morphological-machine-learning-model" id="toc-morphological-machine-learning-model" class="nav-link" data-scroll-target="#morphological-machine-learning-model">Morphological machine learning model</a>
   <ul class="collapse">
   <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a>
@@ -213,6 +212,7 @@ div.csl-indent {
   <li><a href="#example-datasets-generated-during-verification-exercises" id="toc-example-datasets-generated-during-verification-exercises" class="nav-link" data-scroll-target="#example-datasets-generated-during-verification-exercises">Example datasets generated during Verification Exercises</a></li>
   </ul></li>
   </ul></li>
+  <li><a href="#project-documentation" id="toc-project-documentation" class="nav-link" data-scroll-target="#project-documentation">Project documentation</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="final_report.pdf"><i class="bi bi-file-pdf"></i>PDF (titlepage)</a></li></ul></div></nav>
@@ -287,25 +287,6 @@ div.csl-indent {
 <p>The basis for our work are two models - one based on satellite-derived building footprints; and a second, based on a direct use of Sentinel-2 visible bands. The overall approach is to use the first machine learning model to produce training data at scale for the second AI model, since currently such datasets do not exist, and to finally use the AI model to derive a detailed temporal classification of urban form in Europe. To further verify the validity of our approach and the usefulness of the results, we further carry out consultations with stakeholders from the private sector, local planning departments and government organisations. This work will give us insights into how to adapt the methodology and data for practical use cases.</p>
 <p>The next three sections of the report describe in more detail the methodological approaches and results of the three work streams - the first machine learning morphological model, the second AI vision model, and the stakeholder engagement. The conclusion section interprets these findings and proposes how to scale the methodology for the whole of Europe, while highlighting potential limitations. The last Open Science section highlights the open source software and datasets developed during the project.</p>
 <p>More details about the methodology, background and results of each stage of the project are available in the respective technical notes. The methodology and results from the report are being prepared for scientific publication in leading urban analytics journals.</p>
-</section>
-<section id="project-documentation" class="level1">
-<h1>Project documentation</h1>
-<p>Complete project documentation, including the presentation slides, code, data, and all the technical notes is available from the project homepage <a href="https://eurofab.org">eurofab.org</a>.</p>
-<p>Individual sites linked from the homepage contain:</p>
-<ul>
-<li>Technical notes - <a href="https://eurofab.org/technical-notes/">eurofab.org/technical-notes/</a></li>
-<li>Presentations - <a href="https://eurofab.org/talks/">eurofab.org/talks/</a></li>
-<li>Morphometric work stream - <a href="https://eurofab.org/morphometrics/">eurofab.org/morphometrics/</a></li>
-<li>Earth Observation work stream - <a href="https://eurofab.org/eo/">eurofab.org/eo/</a></li>
-</ul>
-<p>Each of the sites is publicly hosted on GitHub and built into HTML using GitHub Actions.</p>
-<ul>
-<li>Homepage - <a href="https://github.com/eurofab-project/eurofab-project.github.io">github.com/eurofab-project/eurofab-project.github.io</a></li>
-<li>Technical notes - <a href="https://github.com/eurofab-project/technical-notes/">github.com/eurofab-project/technical-notes/</a></li>
-<li>Presentations - <a href="https://github.com/eurofab-project/talks/">github.com/eurofab-project/talks/</a></li>
-<li>Morphometric work stream - <a href="https://github.com/eurofab-project/morphometrics/">github.com/eurofab-project/morphometrics/</a></li>
-<li>Earth Observation work stream - <a href="https://github.com/eurofab-project/eo/">github.com/eurofab-project/eo/</a></li>
-</ul>
 </section>
 <section id="morphological-machine-learning-model" class="level1">
 <h1>Morphological machine learning model</h1>
@@ -2172,7 +2153,7 @@ Figure&nbsp;5: Example Level 4 predictions for the areas around Vienna (Austria)
 </section>
 <section id="ai-model" class="level3">
 <h3 class="anchored" data-anchor-id="ai-model">AI model</h3>
-<p>The final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the <a href="https://github.com/eurofab-project/eo/tree/main">GitHub repository</a>.</p>
+<p>The final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the <a href="https://eurofab.org/">project website</a>.</p>
 </section>
 <section id="example-datasets-generated-during-verification-exercises" class="level3">
 <h3 class="anchored" data-anchor-id="example-datasets-generated-during-verification-exercises">Example datasets generated during Verification Exercises</h3>
@@ -2209,6 +2190,25 @@ Figure&nbsp;5: Example Level 4 predictions for the areas around Vienna (Austria)
 </section>
 </section>
 </section>
+</section>
+<section id="project-documentation" class="level1">
+<h1>Project documentation</h1>
+<p>Complete project documentation, including the presentation slides, code, data, and all the technical notes is available from the project homepage <a href="https://eurofab.org">eurofab.org</a>.</p>
+<p>Individual sites linked from the homepage contain:</p>
+<ul>
+<li>Technical notes - <a href="https://eurofab.org/technical-notes/">eurofab.org/technical-notes/</a></li>
+<li>Presentations - <a href="https://eurofab.org/talks/">eurofab.org/talks/</a></li>
+<li>Morphometric work stream - <a href="https://eurofab.org/morphometrics/">eurofab.org/morphometrics/</a></li>
+<li>Earth Observation work stream - <a href="https://eurofab.org/eo/">eurofab.org/eo/</a></li>
+</ul>
+<p>Each of the sites is publicly hosted on GitHub and built into HTML using GitHub Actions.</p>
+<ul>
+<li>Homepage - <a href="https://github.com/eurofab-project/eurofab-project.github.io">github.com/eurofab-project/eurofab-project.github.io</a></li>
+<li>Technical notes - <a href="https://github.com/eurofab-project/technical-notes/">github.com/eurofab-project/technical-notes/</a></li>
+<li>Presentations - <a href="https://github.com/eurofab-project/talks/">github.com/eurofab-project/talks/</a></li>
+<li>Morphometric work stream - <a href="https://github.com/eurofab-project/morphometrics/">github.com/eurofab-project/morphometrics/</a></li>
+<li>Earth Observation work stream - <a href="https://github.com/eurofab-project/eo/">github.com/eurofab-project/eo/</a></li>
+</ul>
 </section>
 <section id="references" class="level1 unnumbered">
 

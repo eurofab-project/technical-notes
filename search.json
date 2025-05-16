@@ -305,7 +305,7 @@
     "href": "notes/final_report.html#example-datasets",
     "title": "EuroFab: European Urban Fabric Classification Using Artificial Intelligence",
     "section": "Example datasets",
-    "text": "Example datasets\n\nMorphometric model\nThe final morphometric model is around 40GB and takes around 10 hours to train. The full script and notebooks, including a reproducible environment is available at the project GitHub. A non-interactive version of the notebooks used in the pipeline is available on the EuroFab Project Website .\n\n\n\n\n\n\nFigure 5: Example Level 4 predictions for the areas around Vienna (Austria), Munich (Germany), Wroclaw (Poland) and Brno (Czechia)\n\n\n\n\n\nAI model\nThe final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the GitHub repository.\n\n\nExample datasets generated during Verification Exercises\nHere are some example visualisations showing London and Liverpool from the dataset:\n\nLondon\n\n\n\nLondon, 7 classes\n\n\n\n\n\nLondon, 12 classes\n\n\n\n\nLiverpool\n\n\n\nLiverpool, 7 classes\n\n\n\n\n\nLiverpool, 12 classes"
+    "text": "Example datasets\n\nMorphometric model\nThe final morphometric model is around 40GB and takes around 10 hours to train. The full script and notebooks, including a reproducible environment is available at the project GitHub. A non-interactive version of the notebooks used in the pipeline is available on the EuroFab Project Website .\n\n\n\n\n\n\nFigure 5: Example Level 4 predictions for the areas around Vienna (Austria), Munich (Germany), Wroclaw (Poland) and Brno (Czechia)\n\n\n\n\n\nAI model\nThe final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the project website.\n\n\nExample datasets generated during Verification Exercises\nHere are some example visualisations showing London and Liverpool from the dataset:\n\nLondon\n\n\n\nLondon, 7 classes\n\n\n\n\n\nLondon, 12 classes\n\n\n\n\nLiverpool\n\n\n\nLiverpool, 7 classes\n\n\n\n\n\nLiverpool, 12 classes"
   },
   {
     "objectID": "notes/final_report.html#footnotes",
@@ -473,7 +473,7 @@
     "href": "notes/deliverables.html#ai-model",
     "title": "Software and Example datasets generated during Verification Exercises",
     "section": "AI model",
-    "text": "AI model\nThe final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the GitHub repository."
+    "text": "AI model\nThe final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the project website."
   },
   {
     "objectID": "notes/deliverables.html#example-datasets-generated-during-verification-exercises",
