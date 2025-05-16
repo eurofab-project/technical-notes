@@ -131,8 +131,7 @@ A non-interactive version of the notebooks used in the pipeline is available on 
 
 ## AI model
 
-The final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the [GitHub repository](https://github.com/eurofab-project/eo/tree/main).
-
+The final data cube including predictions for the years 2016 to 2021 for 7 and 12 classes can be found on the [project website](https://eurofab.org/).
 
 ## Example datasets generated during Verification Exercises
 
