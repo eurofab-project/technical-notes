@@ -361,7 +361,7 @@
     "href": "index.html#list-of-notes",
     "title": "Technical notes",
     "section": "List of notes",
-    "text": "List of notes\n\nConsolidated Stakeholder Requirements Specification (PDF)\nAlgorithm Design and Theoretical Basis Description (PDF)\nReference Data Selection (PDF)\nTest and Verification Results (PDF)\nSoftware and Example datasets generated during Verification Exercises (PDF)\nStakeholder Impact and Utility Assessment (PDF)"
+    "text": "List of notes\n\nD1: Consolidated Stakeholder Requirements Specification (PDF)\nD2: Algorithm Design and Theoretical Basis Description (PDF)\nD3: Reference Data Selection (PDF)\nD4: Test and Verification Results (PDF)\nD5: Stakeholder Impact and Utility Assessment (PDF)\nD6-7: Software and Example datasets generated during Verification Exercises (PDF)\nD8: Large scale inference and Operationalisation (PDF)\nFinal report (PDF)\nExecutive summarry (PDF)"
   },
   {
     "objectID": "index.html#project-overview",
