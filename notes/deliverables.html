@@ -111,6 +111,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#london" id="toc-london" class="nav-link" data-scroll-target="#london">London</a></li>
   <li><a href="#liverpool" id="toc-liverpool" class="nav-link" data-scroll-target="#liverpool">Liverpool</a></li>
   </ul></li>
+  <li><a href="#project-documentation" id="toc-project-documentation" class="nav-link" data-scroll-target="#project-documentation">Project documentation</a></li>
   </ul>
 <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="deliverables.pdf"><i class="bi bi-file-pdf"></i>PDF (titlepage)</a></li></ul></div></nav>
     </div>
@@ -120,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Software and Example datasets generated during Verification Exercises</h1>
-<p class="subtitle lead">Technical Note D6</p>
+<p class="subtitle lead">Technical Note D6-7</p>
 </div>
 
 
@@ -204,13 +205,19 @@ ul.task-list li input[type="checkbox"] {
 <p>All the work supporting this analysis can be found on GitHub. The main prediction pipeline, which includes data preprocessing, embedding creation, and spatial signature prediction, can be used as follows:</p>
 <pre><code># Run the pipeline
 pipeline.spatial_sig_prediction(
-    geo_path= "../spatial_signatures/eo/data/example/london_25_25_grid_clipped.geojson", ## Vector file (geojson or parquet) of analysis area (grid).
-    vrt_file= "../satellite_demoland/data/mosaic_cube/vrt_allbands/2017_combined.vrt", ## Vrt file of the satellite composite
-    xgb_weights = "../spatial_signatures/classifier/k12_h5_slided_gb_xgb_model.bin", ## Model weights for XGBoost classifier
-    model_weights = "../satellite_demoland/models/satlas/weights/satlas-model-v1-lowres.pth", ## Model weights for embedding model (Satlas)
-    output_path= "../vjgo8416-demoland/spatial_signatures/eo/data/predictions/test_london_h6.parquet", ## Output file with predictions, prediction probabilities and geometries
-    h3_resolution=5 ## h3 resolution to be added to analysis (spatial context)
-)`</code></pre>
+    ## Vector file (geojson or parquet) of analysis area (grid).
+    geo_path= "london_25_25_grid_clipped.geojson",
+    ## Vrt file of the satellite composite
+    vrt_file= "mosaic_cube/vrt_allbands/2017_combined.vrt",
+    ## Model weights for XGBoost classifier
+    xgb_weights = "k12_h5_slided_gb_xgb_model.bin",
+    ## Model weights for embedding model (Satlas)
+    model_weights = "satlas/weights/satlas-model-v1-lowres.pth",
+    ## Output file with predictions, prediction probabilities and geometries
+    output_path= "predictions/test_london_h6.parquet",
+    ## h3 resolution to be added to analysis (spatial context)
+    h3_resolution=5,
+)</code></pre>
 <p>More details and documentation on how to run the pipeline can be found in the example on the <a href="https://github.com/eurofab-project/eo/blob/main/notebooks/run_pipeline.ipynb">EuroFab project EO repository</a>.</p>
 </section>
 </section>
@@ -267,9 +274,28 @@ Figure&nbsp;1: Example Level 4 predictions for the areas around Vienna (Austria)
 <figcaption>Liverpool, 12 classes</figcaption>
 </figure>
 </div>
-
-
 </section>
+</section>
+<section id="project-documentation" class="level1">
+<h1>Project documentation</h1>
+<p>Complete project documentation, including the presentation slides, code, data, and all the technical notes is available from the project homepage <a href="https://eurofab.org">eurofab.org</a>.</p>
+<p>Individual sites linked from the homepage contain:</p>
+<ul>
+<li>Technical notes - <a href="https://eurofab.org/technical-notes/">eurofab.org/technical-notes/</a></li>
+<li>Presentations - <a href="https://eurofab.org/talks/">eurofab.org/talks/</a></li>
+<li>Morphometric work stream - <a href="https://eurofab.org/morphometrics/">eurofab.org/morphometrics/</a></li>
+<li>Earth Observation work stream - <a href="https://eurofab.org/eo/">eurofab.org/eo/</a></li>
+</ul>
+<p>Each of the sites is publicly hosted on GitHub and built into HTML using GitHub Actions.</p>
+<ul>
+<li>Homepage - <a href="https://github.com/eurofab-project/eurofab-project.github.io">github.com/eurofab-project/eurofab-project.github.io</a></li>
+<li>Technical notes - <a href="https://github.com/eurofab-project/technical-notes/">github.com/eurofab-project/technical-notes/</a></li>
+<li>Presentations - <a href="https://github.com/eurofab-project/talks/">github.com/eurofab-project/talks/</a></li>
+<li>Morphometric work stream - <a href="https://github.com/eurofab-project/morphometrics/">github.com/eurofab-project/morphometrics/</a></li>
+<li>Earth Observation work stream - <a href="https://github.com/eurofab-project/eo/">github.com/eurofab-project/eo/</a></li>
+</ul>
+
+
 </section>
 
 </main> <!-- /main -->
