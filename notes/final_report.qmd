@@ -83,6 +83,25 @@ The next three sections of the report describe in more detail the methodological
 
 More details about the methodology, background and results of each stage of the project are available in the respective technical notes. The methodology and results from the report are being prepared for scientific publication in leading urban analytics journals.
 
+# Project documentation
+
+Complete project documentation, including the presentation slides, code, data, and all the technical notes is available from the project homepage [eurofab.org](https://eurofab.org).
+
+Individual sites linked from the homepage contain:
+
+- Technical notes - [eurofab.org/technical-notes/](https://eurofab.org/technical-notes/)
+- Presentations - [eurofab.org/talks/](https://eurofab.org/talks/)
+- Morphometric work stream - [eurofab.org/morphometrics/](https://eurofab.org/morphometrics/)
+- Earth Observation work stream - [eurofab.org/eo/](https://eurofab.org/eo/)
+
+Each of the sites is publicly hosted on GitHub and built into HTML using GitHub Actions.
+
+- Homepage - [github.com/eurofab-project/eurofab-project.github.io](https://github.com/eurofab-project/eurofab-project.github.io)
+- Technical notes - [github.com/eurofab-project/technical-notes/](https://github.com/eurofab-project/technical-notes/)
+- Presentations - [github.com/eurofab-project/talks/](https://github.com/eurofab-project/talks/)
+- Morphometric work stream - [github.com/eurofab-project/morphometrics/](https://github.com/eurofab-project/morphometrics/)
+- Earth Observation work stream - [github.com/eurofab-project/eo/](https://github.com/eurofab-project/eo/)
+
 
 # Morphological machine learning model
 
@@ -690,13 +709,19 @@ All the work supporting this analysis can be found on GitHub. The main predictio
 ```
 # Run the pipeline
 pipeline.spatial_sig_prediction(
-    geo_path= "../spatial_signatures/eo/data/example/london_25_25_grid_clipped.geojson", ## Vector file (geojson or parquet) of analysis area (grid).
-    vrt_file= "../satellite_demoland/data/mosaic_cube/vrt_allbands/2017_combined.vrt", ## Vrt file of the satellite composite
-    xgb_weights = "../spatial_signatures/classifier/k12_h5_slided_gb_xgb_model.bin", ## Model weights for XGBoost classifier
-    model_weights = "../satellite_demoland/models/satlas/weights/satlas-model-v1-lowres.pth", ## Model weights for embedding model (Satlas)
-    output_path= "../vjgo8416-demoland/spatial_signatures/eo/data/predictions/test_london_h6.parquet", ## Output file with predictions, prediction probabilities and geometries
-    h3_resolution=5 ## h3 resolution to be added to analysis (spatial context)
-)`
+    ## Vector file (geojson or parquet) of analysis area (grid).
+    geo_path= "london_25_25_grid_clipped.geojson",
+    ## Vrt file of the satellite composite
+    vrt_file= "mosaic_cube/vrt_allbands/2017_combined.vrt",
+    ## Model weights for XGBoost classifier
+    xgb_weights = "k12_h5_slided_gb_xgb_model.bin",
+    ## Model weights for embedding model (Satlas)
+    model_weights = "satlas/weights/satlas-model-v1-lowres.pth",
+    ## Output file with predictions, prediction probabilities and geometries
+    output_path= "predictions/test_london_h6.parquet",
+    ## h3 resolution to be added to analysis (spatial context)
+    h3_resolution=5,
+)
 ```
 
 More details and documentation on how to run the pipeline can be found in the example on the [EuroFab project EO repository](https://github.com/eurofab-project/eo/blob/main/notebooks/run_pipeline.ipynb).
