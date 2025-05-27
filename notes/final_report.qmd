@@ -83,6 +83,25 @@ The next three sections of the report describe in more detail the methodological
 
 More details about the methodology, background and results of each stage of the project are available in the respective technical notes. The methodology and results from the report are being prepared for scientific publication in leading urban analytics journals.
 
+# Glosary
+
+
+* **Urban Moprhometrics** - A study of urban form through the means of quantitative assessment of its constituent elements - buildings, streets, plots and their configurations.
+
+* **Moprhometric characters / Moprhological characteristics** - Quantatative features of an element of the built enviroment - building area, street width, local street meshedness, etc.
+
+* **Urban fabric / Urban form** - The spatial layout of the physical elements that make up a city.
+
+* **Urban fabric classification** - The breakdown of urban fabric/form into specific classes such as standalone buildings, interconnected blocks and others. Different applications and approaches result in different classes at different scales.
+
+* **Urban fabric / form type** -  A specific class such as standalone buildings, interconnected blocks or continuous urban fabric and others from a specific classification.
+
+* **Spatial signatures** - A typology of British urban environments characterised by both form (physical structure) and function (usage) [@arribas2022spatial; @fleischmann2022geographical]. This framework captures the complexity of urban areas, offering insights into how different spaces look and operate.
+
+* **Spatial train/test split** - Spliting the data into training and testing subsets, while taking into account spatial proximity. The goal is to have testing data which is geographically separate from the training data, in order to minimise spatial leakage. Spatial leakage comes from the fact that many geographical phenomena exhibit spatial autocorrelation and nearby observations tend to be more similar (or dissimilar of there is negative spatial linakge) to eachother. Therefore, splits in which the training and testing data is geographically nearby eachtoer, tend to transfer information from the test data to the training data, therefore artifically increasing model performance.
+
+
+
 # Morphological machine learning model
 
 ## Methodology
@@ -179,7 +198,7 @@ The taxonomy of ground truth classes from [@primus] and available as an interact
 
 @fig-traintest shows the all experiments that will be performed for each dataset. The main goal with so many training / testing configurations is to get detailed statistics about the expected model performance in realistic scenarios - predicting urban form in various types of new environments. Two models - a global random model and a global spatially explicit model - are trained to highlight the effects of spatial lag in model training and testing, while the country specific models are trained to evaluate the ability of the models to generalise outside of the training data scope. The train / test configuration for the spatially explicit model first delineates the study area into h3 level second hexagon cells with an area of around 500 sqm. The dataset is then split into train and test subsets randomly, but ensuring that all buildings within a hexagon are either part of the train or test subset.
 
-In total we test 24 models to gain information about the predictability of detailed urban form classes. All experiments are repeated independently for each dataset - once for the Overture and once for the Microsoft building footprints - and for each of Level 3 and Level 4 of the taxonomy. This is done to verify in which cases, what data can be used to derive detailed urban form classifications. The models for each experiment are HistogramGradientBoostingClassifier and share the same parameters - no max depth, no max leaf nodes, max_features = 0.5, learning_rate = .03 .
+In total we test 24 models to gain information about the predictability of detailed urban form classes. All experiments are repeated independently for each dataset - once for the Overture and once for the Microsoft building footprints - and for each of Level 3 and Level 4 of the taxonomy. This is done to verify in which cases, what data can be used to derive detailed urban form classifications. The models for each experiment are HistogramGradientBoostingClassifier and share the same parameters - no maximum depth, no maximum leaf nodes, max_features = 0.5, learning_rate = .03 . All training was done on one machine - Ubuntu 24.04 LTS, AMD Ryzen 9 9900X 12-Core Processor, 128 GB RAM. Total training time for all 24 models was around 12 hours, and each model was around 40gb. The training time and model size can be significantly reduced, without mich loss of accuracy by specifying the maximum depth, or the maximum leaf nodes parameters.
 
 ## Results
 
@@ -518,6 +537,7 @@ The table below summarises classifier performance for both classification scheme
 
 Including spatial context (H3 resolution) notably improved classification accuracy and F1 scores, demonstrating the importance of spatial context in predicting urban fabric classes. As anticipated, the model with fewer classes (7) performed better compared to the one with 12 classes.
 
+
 ## Temporal Analysis
 
 We used the trained XGBoost classifier to make predictions across the years 2016 to 2021. The overall overlap between the initial year (2016) and final year (2021) remained high at 88%, confirming that Spatial Signatures classes remained relatively stable across the study period. However, minor variations may indicate either genuine change or model uncertainty.
@@ -566,6 +586,15 @@ Lastly, we analysed the inverse-probability-based distances of urban fabric clas
 ![Probability of change across classes](https://eurofab.org/talks/figures/202502_progress_turing/1d_transitions.png)
 
 This analysis shows urban fabric classes such as *Urbanity*, *Warehouse/Park land*, *Dense urban neighbourhoods*, and *Connected residential neighbourhoods* have shorter inverse distances, indicating higher levels of dynamic change or redevelopment. Conversely, classes such as *Wild countryside* and *Countryside agriculture* have longer distances, suggesting greater temporal stability. Although these results align with expectations about urban and rural dynamics, they may also reflect the classifier's varying uncertainty across these visually distinct environments.
+
+## Final model parameterisation.
+
+After all experiments the best performing AI pipeline was using the SatlasPretrain model [@bastani2023satlaspretrain] operating at the 25×25 pixel scale (250×250m resolution) to generate embeddings with integrated H3 resolution 5 regional context. Specifically, the embedding model is  a Vision Transformer (ViT) - Swin Transformer V2 - with a Feature Pyramid Network (FPN) - [128, 256, 512, 1024] and out_channels=128 to generate image embeddings. The h3 resulution 5 centroid was added as two extra features to the embeddings. 
+
+We used standard, pre-configured neural network setups without tuning the hyperparameters, due to the limited amount of training data and class imbalances. As a result, we did not include a validation split in these experiments. Simiolarly, the XGBoostClassifer used the default hypterparameters from the xgboost python package.
+
+The model was trained and tested using 5-fold split at H3 resolution 6  ensuring an 80/20 training-testing split for the whole of the UK. This is a similar split to the morphometric pipeline, but at a higher resoultion, again due to the data limitations.
+
 
 ## Discussion
 
@@ -630,6 +659,15 @@ Related discussions covered input data quality and additional morphological vari
 
 Lastly, The Prague Institute of Planning and Development (IPR) highlighted the potential of EuroFab outputs to help with generating the official land use plan for the city. Furthermore, they expressed interest in potentially integrating the EuroFab data into their urban analytics products for Prague.
 
+## Direct stakeholder impact on the project
+
+The most significant impact of stakeholder engagement on the project had to do with the format of the final data product and its presentation method. We provided stakeholders with multiple data types to evaluate and determine the most useful format for their specific analytical needs and usage patterns. Throughout these engagement sessions, the interactive website was the most preferred format and was subseqeuntly used for all consulatations. It showcased both the hierarchical structure and the possible formats and scales of the results. Multiple data formats were developed and assessed, including representations such as a regular grid, enclosed tessellation cells, or detailed building footprints. Each of these formats was identified by stakeholders as valuable for different applications; for instance, a gridded format might be optimal for large-area environmental analysis, whereas building-level data is crucial for detailed urban planning or infrastructure management. Lastly, these results helped in the naming and interpretation of the clusters.
+
+Secondly, the inclusion of Construction Sector Development Agency of the Ministry of Environment, Lithuania (SSVA) as a key stakeholder engagement led to the expansion of the pilot's scope to include the country in certain parts of the research. This experience also helped identify the areas that will need to be updated for the comprehensive pan-European scale planned for the future operational product and how to streamline the process of onboarding new interested stakeholders.
+
+Thirdly, the decision to extend the morphometric pipeline to incorporate Overture Maps data was, in part, guided by expressed stakeholder interest, given that Overture Maps represents a new and increasingly popular open-source repository of global building information. Overture Maps generally offers greater detail, wider geographical coverage, and more frequent updates compared to the satellite-derived Microsoft building footprint data. However, a key characteristic of Overture Maps is its heterogeneity, as its data is aggregated from diverse sources within standardisation. Our work provides a critical case study evaluating the quality of the data available through Overture Maps and exploring its practical utility, for instance, in applications like comparative urban morphology analysis or assessing settlement patterns.
+
+Lastly, stakeholder engagement was one of the key factors influencing the strategic direction for the follow-up study. On multiple occasions during our interactions, stakeholders expressed a strong and clear interest in future collaborations, opportunities for co-development of tailored solutions, and the creation of derived analytical products. For example, linking the project's morphological results with socio-economic datasets or for aggregating the results at custom scales to facilitate  city or regional comparisons based on quantitative measures of urban form.
 
 
 # Conclusion
@@ -656,6 +694,59 @@ Evaluating the accuracy of predictions over time is inherently challenging due t
 
 - Transferability across geographic and morphological contexts
 The models demonstrate strong generalisation within Great Britain and across several Central European countries. However, their performance varies in regions with distinct urban morphologies, socio-economic conditions, or planning traditions not well represented in the training data. Expanding the training set to include more diverse examples of urban fabric will likely improve transferability and robustness across broader European or global contexts.
+
+
+# Future work
+
+Ultimately, EuroFab seeks to pave the road for a world where stakeholders, from local authorities to supranational organisations, are able to track and monitor the patterns of European urban development across time, in detail directly relevant for planning. The pilot study in Central Europe and the UK consisted of three related parts - a machine learning morphometric pipeline, a AI vision model, and a stakeholder engagement component. The current pilot study demonstrated the viability of using alternative data sources to produce multiscale descriptions of the built environment, based on analysis of individual buildings, street segments and their interactions. Furthermore, the stakeholder engagement part highlighted the multiple applications which stakeholders see for such a dataset.
+
+The overarching strategy for scaling and productionalising the EuroFab system involves three principal phases. First, using the morphometric pipeline to generate detailed urban classification at a pan-European scale. Second, training the AI vision model on the outputs from step one, to fill data gaps and to produce a temporal classification based on historical satellite data. Third, productising the refined classification results and expanding stakeholder engagement activities. This will be crucial for driving user adoption and facilitating the derivation of secondary indicators and specialised datasets tailored to specific applications, such as regional development analysis or climate change impact assessments.
+
+This new phase will also adress the limitations of the pilot study. The three limitations presented above primarily have to do with the limited geograpic extent of the study area. Although it covers multiple countries and tens of millions of data points, the pilot study demonstrated the benefits of larger data coverage for both models. We propose to adress the three challenges - dependence on ground truth and input data quality, uncertainty in temporal and spatial predictions, and transferability across geographic and morphological contexts - through updates and scaling up of the pipelines developed in this pilot study.
+
+## Morphometric pipeline
+
+The results from the pilot study demonstrated the potential to deliver pan-European classification of urban fabric as a combination of morphological processing and predictive modelling. Specifically, that it is possible to fill the gaps in openly available cadastral data with alternative data sources, namely Overture Maps and Microsoft Building footprints. The resulting classification can be used by stakeholders on its own, but it will also be the training data for the expanded temporal AI models. The following changes will be required to do this:
+
+* **Alignment with Cadastral Classification:** Maintaining continuous alignment with the evolving cadastral classification is crucial to keeping the morphometric pipeline up-to-data. There are no major challenges expected for this work, however it will require continuous updates of the entire pipeline, including models and data processing. Nevertheless, it is expected that each update of the ground truth data will improve the performance of the models.
+
+* **Heterogenous data sources:** The scope of the pilot study was already extended so that the models and morphological processing pipeline can handle heterogenous data. The results suggest that better quality data from heterogenous sources, specifically Overture Maps data, leads to more accurate predictions. However, the underlying building data from new European regions can have previously unseen issues in the pilot study area. These could include issues such as topological inconsistencies (e.g., overlapping building polygons), incomplete coverage, or discrepancies in the street network data used for contextual analysis. While these challenges are considered solvable, they will likely increase the complexity and volume of the required data pre-processing work. Extending and improving the Overture Maps data processing pipeline is a good starting point for all of these and other data integration tasks.
+
+* **Data Gaps:** In regions where there are no building footprints available at all, the vision model can be used directly to fill in the gaps, since Sentinel 2 has full coverage of Europe. However, such a region could potentially represent an unobserved urban class, and therefore needs to be analysed in more detail.
+
+* **Unknown urban fabric types:**  The likelihood of unseen urban classes lessens as the geographical scope of the ground truth cadastral classification grows. The current classification covers Germany, Poland, Lithuania, Slovakia, Czechia and Austria. There is cadastral data available for other European Countries such as Spain, Belgium, France and the Netherlands. It is expected that these will be included in subsequent cadastral classifications and therefore increase the types of urban fabric covered. This prospect further increases the importance of continuously aligning the existing morphometric pipeline with the cadastral ground truth, as well as with the latest advancements in open-source geospatial software.
+
+* **Model Tuning and Optimisation:**  The current morphometric models are HistGradientBoostingClassifier with unlimited depth and number of nodes, trained on hundreds of thousands of examples per class. However, this scheme will need to change as the size of the datasets increases, or alternatively multiple models will need to be trained and tested. The detailed spatial testing schemes implemented in the pilot study can guide the development of the new models, where the main anticipated challenges will be hyper-parameter tuning, addressing class imbalances and accurate subletting of the training data. The data availability and data pre-processing work will also have a large impact on the model tuning and training. It is possible that only specific types regions lack cadastral data, or are not covered by the ground truth classification and therefore will require most of the modelling focus.
+
+## AI vision model
+
+The core of EuroFab's current Earth Observation analytical capability is the Spatial Signatures Pipeline, detailed in the eurofab-project/eo GitHub repository. This pipeline is engineered to generate spatial signature predictions using satellite imagery as its primary input. First, it integrates computer vision models to create feature embeddings from Sentinel 2 imagery. These embeddings are subsequently processed by an XGBoost model, which performs the classification of individual image chips -groups of pixels -  into predefined urban fabric classes. The following aspects of this baseline processing chain needs to be adapted and scaled:
+
+* **Leveraging Copernicus Services:** The Copernicus programme, with its commitment to free, full, and open data access, will be the cornerstone for sourcing satellite imagery. Primarily, data from the Sentinel-2 (multispectral optical) mission will be used to derive consistent historic coverage of the urban fabric in the entire European continent. These data will be the core input for the raster-based analyses performed by the EuroFab pipeline and will enable the temporal classification and change detection of urban fabric.
+
+* **Leveraging the new morphometric classification results as ground truth:** It is expected that replacing the ground truth classes from spatial signatures to the new morphometric results will not lead to significant changes in the pipeline. Although the spatial signatures capture functional information, almost all morphometric characters used in deriving the new classification are already used in the spatial signatures derivation. Therefore, the current AI vision model pipeline is already processing urban form information. There is one significant change that will need to be accounted for. The new ground truth classification focuses exclusively on areas that have buildings, therefore large expanses of non-built up area such as fields and forests are excluded by definition. This will actually reduce processing times and help with class imbalances, however some changes in the processing pipeline will be neccassary.
+
+* **Generalisability Testing**: The performance of the vision model will be tested using the same robust generalisability testing framework used in the pilot study's morphological pipeline. This was not possible for the pilot AI pipeline due to the limited extent of the available data. However, with the expansion of the study area data more complex testing scenarios become viable. Furthermore, the generalisability task becomes easier as the scale of the morphometric pipeline used to generate the training data increases to cover the whole of Europe. Rather than having to predict urban form in multiple entirely unseen contexts, the vision model will have to do in-fill predictions - —classifying urban fabric for regions where contextual information from surrounding, already classified areas is available, thus benefiting from a richer, more representative training dataset.
+
+* **Evaluation of urban predictions across time** Similarly, the larger quantity of data, as well as the new testing frameworks will enable better model performance and more certainty in the temporal classification results. Furthermore, the expanded stakeholder engagement and derivation of secondary datasets will  provide valuable real-world validation, and increased confidence in the results.
+
+* **Methodological processing** The existing AI pipeline architecture relies on localised information - processing image pixels and chips with limited local context - to generate embeddings and subsequent predictions. Therefore, it is anticipated that memory and computing requirements will scale in a broadly linear fashion with the increase in data volume, without necessitating fundamental changes to the core methodology. However, it is expected that significantly more resources will be required for preprocessing the data and for training generating the embeddings from the satellite images for the whole of Europe. In order to do these steps in a reasonable timeframe it is expected that training and inference will require a small cluster of high-end GPUs, with the inference ran on a yearly basis.
+
+## Stakeholder engagement
+
+The stakeholder work in the pilot study confirmed the need for a detailed urban classification at a granular level. The engagement also resulted in multiple feature requests for secondary indicators, specific functionality and reports. The new pan-European detailed urban classification has the potential to serve as a foundational dataset for a multitude of derived data products, each adapted to particular use cases and stakeholder requirements. Examples of requested applications included: comparative analyses between countries at various spatial scales (neighbourhoods, cities, regions); direct access to building-level morphological data for micro-scale studies; and predictive classification capabilities to assess how newly designed or planned urban areas might be categorised before construction. Furthermore, stakeholders expressed strong interest in combining the EuroFab classification with other complementary datasets, such as socio-economic data, environmental hazard maps, or transport network information.
+
+The expanded geographical scale and enhanced detail of the new pan-European results will enable us to continue and enhance the stakeholder work in several ways.
+
+*  **Workshops and conference work:** Experience from the pilot phase demonstrated that workshops and conference presentations are highly effective mechanisms for fostering collaborations and gathering valuable insights. The pan-European scale of the new product will increase the number of relevant and interested stakeholders. Therefore, sustained engagement through targeted workshops and active participation in key European conferences is expected to continue delivering substantial value to the project as a whole.
+
+*  **Engagement with Specific Cities and Regions:** Stakeholders consistently expressed interested in their local areas or countries, as well as larger pan-European data. Even the pilot study extent of five Central European countries and the UK proved limiting. For example, the inclusion of SSVA (Construction Sector Development Agency of the Ministry of Environment, Lithuania) as one of the key stakeholder engagements, necessitated the inclusion of Lithuania in the some parts of the pilot's research. The comprehensive pan-European scale of the operational product will significantly streamline the process of onboarding new interested stakeholders, as their specific geographical areas of interest will inherently be covered.
+
+*  **Collaborations & co-development:** The focus of the current stakeholder work was on establishing relationships and gathering feedback. Extended collaborations on specific applications and data products was not possible due to the short duration of the pilot. The expanded scope and duration of the pan-European classification project will lead to stakeholder engagement beyond simple feedback collection. This can involve establishing formal partnerships where stakeholders actively contribute resources – such as local datasets for training/validation, domain expertise, or personnel for joint validation campaigns – and, in return, share in the benefits and responsibilities of the new data products. Such collaborative ventures are designed to deeply embed the EuroFab service and its outputs into the stakeholders' existing operational workflows and critical decision-making processes, thereby maximising its real-world impact.
+
+* **Developing derived products:** For specific, strategically important use cases (e.g., monitoring progress towards Sustainable Development Goal 11 on sustainable cities), the project can extend its stakeholder engagement to actively guide the co-development of tailored derived products. This work will also result in detailed examples and documentation of how to use the foundational space-time urban classification product for the development of derived indicators in different policy areas. Some desirable indicators that came up during the development work were combining the classification with land use data and geodemographic factors, generating summaries of the morphometric character of cities, access to the full taxonomy, as well as raw morphometric characters data at the building level.
+
+* **Supporting Third-Party Development of Derived Products:**  The pilot study also revealed interest from commercial entities and research groups in developing their own derived products for specific niche applications. These were local consultancies and private companies operating in sectors such as urban planning, real estate analytics, and environmental management. A framework for ongoing engagement and technical support can be established to facilitate and encourage these third-party developments, potentially through API access or developer toolkits.
 
 
 
